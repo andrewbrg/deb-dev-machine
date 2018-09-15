@@ -22,7 +22,7 @@ breakLine() {
 ###############################################################
 ## GLOBALS
 ###############################################################
-REPO_URL="https://gist.githubusercontent.com/andrewbrg/0974722a74d4578b97dcb161266715c0/raw/"
+REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/"
 
 ###############################################################
 ## INSTALLATION
@@ -49,6 +49,7 @@ title "Installing pre-requisite packages";
     curl \
     nano \
     vim \
+    preload \
     gksu;
     
     sudo updatedb;
@@ -229,7 +230,7 @@ if [ ! -d /opt/postman/ ]; then
         sudo rm -rf Postman*;
         sudo rm -rf postman.tar.gz;
         sudo ln -s /opt/postman/Postman /usr/bin/postman;
-        sudo curl -L ${REPO_URL}"dbd4b3ea4d1dd2ec7bc08fc64bc90454e81a5c76/postman.desktop" \
+        sudo curl -L ${REPO_URL}"postman.desktop" \
         -o ~/.local/share/applications/postman.desktop;
     breakLine;
 fi
@@ -240,10 +241,10 @@ if [ ! -d /opt/sublime_text/ ]; then
         sudo apt install -y sublime-text;
         sudo pip install -U CodeIntel;
         
-        curl -L ${REPO_URL}"282e80d531c774ea47b64f79396fa055b619598b/Package%2520Control.sublime-settings" \
+        curl -L ${REPO_URL}"Package%20Control.sublime-settings" \
         -o "/home/$(whoami)/.config/sublime-text-3/Packages/User/Package Control.sublime-settings";
         
-        curl -L ${REPO_URL}"3f96d7ce378dc67470ecdcd2ec8a6211888f2eb0/Preferences.sublime-settings" \
+        curl -L ${REPO_URL}"Preferences.sublime-settings" \
         -o "/home/$(whoami)/.config/sublime-text-3/Packages/User/Preferences.sublime-settings";
         
         curl -L "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" -o bin.zip
@@ -262,7 +263,7 @@ if [ ! -d /opt/phpstorm/ ]; then
         sudo rm -rf phpstorm.tar.gz;
         sudo rm -rf PhpStorm-*;
         
-        sudo curl -L ${REPO_URL}"5ca1dc77e75513a0733e888fe7123f1801e7ef7d/jetbrains-phpstorm.desktop" \
+        sudo curl -L ${REPO_URL}"jetbrains-phpstorm.desktop" \
         -o "~/.local/share/applications/jetbrains-phpstorm.desktop";
     breakLine;
 fi
