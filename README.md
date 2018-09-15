@@ -8,7 +8,9 @@ sudo bash setup.sh;
 rm setup.sh;
 ```
 
-This script has been tested on Debian 9 stretch installations as well as ChromeOS Debian containers.
+This script can be run via the terminal and will get a fresh debian installation up and running with most (if not all) of the dev tools you would require.
+
+Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers.
 
 You can expect the following to be automatically insalled and readily accessable:
 
