@@ -50,7 +50,9 @@ title "Installing pre-requisite packages";
     nano \
     vim \
     preload \
-    gksu;
+    gksu \
+    gnome-software \
+    gnome-packagekit;
     
     sudo updatedb;
 breakLine;
