@@ -217,8 +217,9 @@ title "Installing Firefox";
 breakLine;
 
 # Wine
-title "Installing Wine";
+title "Installing Wine & Mono";
     sudo apt install -y --install-recommends winehq-stable;
+    sudo apt install -y mono-vbnc;
 breakLine;
 
 # Postman
