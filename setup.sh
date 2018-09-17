@@ -218,8 +218,27 @@ breakLine;
 
 # Wine
 title "Installing Wine & Mono";
-    sudo apt install -y --install-recommends winehq-stable;
-    sudo apt install -y mono-vbnc;
+    sudo apt install -y \
+    wine \
+    wine32 \
+    wine64 \
+    libwine \
+    libwine:i386 \
+    fonts-wine \
+    mono-vbnc;
+
+    curl -L ${REPO_URL}"wine_fontsmoothing.sh" -o ~/wine_fontsmoothing.sh;
+    sudo bash ~/wine_fontsmoothing.sh;
+    rm ~/wine_fontsmoothing.sh;
+    
+    curl -L "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -o ~/winetricks;
+    chmod +x ~/winetricks;
+    ~/winetricks allfonts;
+    sudo rm ~/winetricks;
+    
+    curl -L "http://www.gratos.be/wincustomize/compressed/Gnome_Project_by_mickyz.zip" -o ~/gnome_theme.zip;
+    unzip ~/gnome_theme.zip -d ~/.wine/drive_c/Resources/Themes/Gnome/;
+    rm ~/gnome_theme.zip;
 breakLine;
 
 # Postman
