@@ -236,9 +236,9 @@ title "Installing Wine & Mono";
     ~/winetricks allfonts;
     sudo rm ~/winetricks;
     
-    curl -L "http://www.gratos.be/wincustomize/compressed/Gnome_Project_by_mickyz.zip" -o ~/gnome_theme.zip;
-    unzip ~/gnome_theme.zip -d ~/.wine/drive_c/Resources/Themes/Gnome/;
-    rm ~/gnome_theme.zip;
+    curl -L "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" -o ~/Royale_2007.zip;
+    unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
+    rm ~/Royale_2007.zip;
 breakLine;
 
 # Postman
