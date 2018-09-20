@@ -211,11 +211,6 @@ title "Installing Python & PIP";
     sudo pip install --upgrade setuptools;
 breakLine;
 
-# Firefox
-title "Installing Firefox";
-    sudo apt install -y firefox-esr-l10n-en-gb;
-breakLine;
-
 # Wine
 title "Installing Wine & Mono";
     sudo apt install -y \
