@@ -47,6 +47,7 @@ You can expect the following to be automatically insalled and readily accessable
 - Docker
 - Docker Compose
 - Kubernetes
+- MySQL community server v8.0.10+
 
 **Libraries**
 - Apache Cordova
