@@ -31,6 +31,8 @@ You can expect the following to be automatically insalled and readily accessable
 - gksu
 - preload
 - wine
+- gnome-software
+- gnome-packagekit
 
 **Services**
 - Git
@@ -56,6 +58,7 @@ You can expect the following to be automatically insalled and readily accessable
 - Postman
 - Firefox
 - DBeaver
+- SQLite Browser
 - Sublime Text (with material theme and plugins)
 - PHPStorm 2018.2.2
 
