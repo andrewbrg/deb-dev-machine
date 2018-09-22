@@ -203,6 +203,24 @@ title "Installing SQLite Browser";
     sudo apt install -y sqlitebrowser;
 breakLine;    
 
+# MySQL Community Server 8
+title "MySQL Community Server 8 (user interaction required)";
+    sudo apt install -y gdebi-core;
+    curl -L "https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb" -o mysql.deb;
+    sudo gdebi mysql.deb;
+    sudo rm mysql.deb;
+    sudo apt update -y;
+    
+    sudo mkdir /var/run/mysqld/;
+    sudo touch /var/run/mysqld/mysqld.sock;
+    sudo chown -R $(whoami) /var/run/mysqld/;
+    sudo chmod -R 777 /var/run/mysqld/;
+    
+    sudo apt install -y mysql-server;
+    sudo systemctl start mysql;
+    sudo systemctl enable mysql;
+breakLine;
+
 # Ruby
 title "Installing Ruby & DAPP";
     sudo apt install -y ruby-dev gcc pkg-config;
