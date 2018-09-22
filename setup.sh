@@ -198,6 +198,11 @@ title "Installing DBeaver SQL Client";
     sudo rm dbeaver.deb;
 breakLine;
 
+# SQLite Browser
+title "Installing SQLite Browser";
+    sudo apt install -y sqlitebrowser;
+breakLine;    
+
 # Ruby
 title "Installing Ruby & DAPP";
     sudo apt install -y ruby-dev gcc pkg-config;
