@@ -12,7 +12,7 @@ This script can be run via the terminal and will get a fresh debian installation
 
 Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers.
 
-You can expect the following to be automatically insalled and readily accessable:
+You can expect the following to be automatically installed and readily accessable:
 
 **Utilities**
 - ca-certificates
