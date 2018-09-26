@@ -1,11 +1,13 @@
 # Debian 9 Developer Machine
 Quickly install common Developer tools, IDEs &amp; services on Debian 9. In order to use the installer run the following:
 
+__Note__: Please do NOT run the script with sudo, run it as your own user!
+
 ```
 cd ~/
 sudo apt install -y wget
 wget https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/setup.sh -O setup.sh;
-sudo bash setup.sh;
+bash setup.sh;
 rm setup.sh;
 ```
 
