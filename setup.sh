@@ -33,7 +33,7 @@ breakLine;
 
 title "Installing pre-requisite packages";
     sudo chown -R $(whoami) ~/
-    sudo cd ~/;
+    cd ~/;
     sudo apt update;
     sudo apt install -y \
     ca-certificates \
