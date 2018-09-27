@@ -208,7 +208,6 @@ title "Installing Memcached";
     sudo apt install -y memcached;
     sudo systemctl start memcached;
     sudo systemctl enable memcached;
-    sudo systemctl status memcached;
 breakLine;
 
 # Redis
@@ -217,7 +216,6 @@ title "Installing Redis";
     sudo apt install -y redis-server;
     sudo systemctl start redis;
     sudo systemctl enable redis;
-    sudo systemctl status redis;
 breakLine;
 
 # PHP 7.2
@@ -392,7 +390,6 @@ title "MySQL Community Server 8 (user interaction required)";
     sudo apt install -y mysql-server;
     sudo systemctl start mysql;
     sudo systemctl enable mysql;
-    sudo systemctl status mysql;
 breakLine;
 
 # Clean
