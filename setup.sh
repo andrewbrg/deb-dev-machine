@@ -276,7 +276,7 @@ title "Installing Wine & Mono";
     notify "Installing windows fonts for wine apps";
     curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
     sudo chmod +x ~/winetricks;
-    sudo ./winetricks allfonts;
+    ./winetricks allfonts;
     echo "y" | rm ~/winetricks;
     
     notify "Applying font smoothing to wine apps";
