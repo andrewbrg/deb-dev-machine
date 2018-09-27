@@ -378,8 +378,8 @@ fi
 title "MySQL Community Server 8 (user interaction required)";
     curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb" "mysql.deb";
     sudo gdebi ~/mysql.deb;
-    clear;
     sudo rm ~/mysql.deb;
+    clear;
     sudo apt update -y;
     
     notify "Creating required directories";
