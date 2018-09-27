@@ -17,6 +17,8 @@ Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian co
 
 You can expect the following to be automatically installed and readily accessable:
 
+**Total installation size including the OS itself is approx. 7GB**
+
 **Utilities**
 - ca-certificates
 - apt-transport-https
@@ -33,7 +35,8 @@ You can expect the following to be automatically installed and readily accessabl
 - vim
 - gksu
 - preload
-- wine
+- wine (with Royale 2007 Theme & Smooth fonts)
+- mono
 - gnome-software
 - gnome-packagekit
 
@@ -43,6 +46,8 @@ You can expect the following to be automatically installed and readily accessabl
 - Composer
 - Ruby
 - Python
+- Pip
+- Dapp
 - Memcahed
 - Redis
 - Node 8
@@ -50,7 +55,6 @@ You can expect the following to be automatically installed and readily accessabl
 - Docker
 - Docker Compose
 - Kubernetes
-- MySQL community server v8.0.10+
 
 **Libraries**
 - Apache Cordova
@@ -60,9 +64,9 @@ You can expect the following to be automatically installed and readily accessabl
 
 **Software**
 - Postman
-- Firefox
 - DBeaver
 - SQLite Browser
 - Sublime Text (with material theme and plugins)
 - PHPStorm 2018.2.2
-
+- Software center
+- Package updater
