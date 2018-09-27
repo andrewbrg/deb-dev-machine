@@ -24,16 +24,7 @@ notify() {
 }
 
 curlToFile() {
-    filePath="$1";
-    dirPath=${filePath%/*};
-
     notify "Downloading: $1 ----> $2";
-    
-    if [ ! $dirPath == $filePath ]; then
-        sudo mkdir -p "$dirPath";
-    fi;
-    
-    sudo touch "$2";
     sudo curl -fSL "$1" -o "$2";
 }
 
@@ -87,7 +78,6 @@ title "Installing pre-requisite packages";
     cabextract \
     preload \
     gksu \
-    gdebi-core \
     gnome-software \
     gnome-packagekit;
     
@@ -280,14 +270,9 @@ breakLine;
 # Wine
 ##########################################################
 title "Installing Wine & Mono";
-    sudo apt install -y \
-    wine \
-    wine32 \
-    wine64 \
-    libwine \
-    libwine:i386 \
-    fonts-wine \
-    mono-vbnc;
+
+    sudo apt install -y --install-recommends winehq-stable;
+    sudo apt install -y mono-vbnc;
 
     notify "Installing windows fonts for wine apps";
     curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
@@ -306,6 +291,7 @@ title "Installing Wine & Mono";
     curlToFile "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" "Royale_2007.zip";
     
     sudo chown -R $(whoami) ~/;
+    mkdir -p ~/.wine/drive_c/Resources/Themes/;
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
     echo "y" | rm ~/Royale_2007.zip;
 breakLine;
@@ -338,11 +324,13 @@ if [ ! -d /opt/sublime_text/ ]; then
         
         sudo chown -R $(whoami) ~/;
         
+        mkdir -p ~/.config/sublime-text-3/Packages/User/;
+        
         notify "Adding pre-installed packages for sublime";
-        curlToFile ${REPO_URL}"Package Control.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
+        curlToFile "${REPO_URL}PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
         
         notify "Applying default preferences to sublime";
-        curlToFile ${REPO_URL}"Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
+        curlToFile "${REPO_URL}Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
         
         notify "Installing additional binaries for sublime auto-complete";
         curlToFile "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" "bin.zip";
@@ -370,27 +358,6 @@ if [ ! -d /opt/phpstorm/ ]; then
         curlToFile ${REPO_URL}"jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
     breakLine;
 fi
-
-# MySQL Community Server 8
-##########################################################
-title "MySQL Community Server 8 (user interaction required)";
-    curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb" "mysql.deb";
-    sudo gdebi ~/mysql.deb;
-    sudo rm ~/mysql.deb;
-    clear;
-    sudo apt update -y;
-    
-    notify "Creating required directories";
-    sudo mkdir /var/run/mysqld/;
-    sudo touch /var/run/mysqld/mysqld.sock;
-    sudo chown -R $(whoami) /var/run/mysqld/;
-    sudo chmod -R 777 /var/run/mysqld/;
-    
-    notify "Starting MySQL installation";
-    sudo apt install -y mysql-server;
-    sudo systemctl start mysql;
-    sudo systemctl enable mysql;
-breakLine;
 
 # Clean
 ##########################################################
