@@ -61,8 +61,7 @@ title "Installing pre-requisite packages";
     sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
     
-    sudo apt install -y \
-    ca-certificates \
+    sudo apt install -y ca-certificates \
     apt-transport-https \
     software-properties-common \
     wget \
