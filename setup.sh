@@ -19,38 +19,75 @@ breakLine() {
     sleep .5
 }
 
+notify() {
+    printf "\033[1;46m$1 \033[0m \n";
+}
+
+curlToFile() {
+    filePath="$1";
+    dirPath=${filePath%/*};
+
+    notify "Downloading: $1 ----> $2";
+    
+    if [ ! $dirPath == $filePath ]; then
+        sudo mkdir -p "$dirPath";
+    fi;
+    
+    sudo touch "$2";
+    sudo curl -fSL "$1" -o "$2";
+}
+
 ###############################################################
 ## GLOBALS
 ###############################################################
-REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/"
+REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
 ###############################################################
 ## INSTALLATION
 ###############################################################
+
+# Disallow running with sudo or su
+##########################################################
+if [ "$EUID" -eq 0 ]
+  then printf "\033[1;101mNein, nein, nein... Please do NOT run this script as root! \033[0m \n";
+  exit;
+fi
+
+# Secure the root user
+##########################################################
 title "Set your root password";
     sudo passwd root;
 breakLine;
 
+# Preperation
+##########################################################
 title "Installing pre-requisite packages";
     sudo chown -R $(whoami) ~/
     cd ~/;
+    
     sudo apt update;
+    
+    sudo apt dist-upgrade -y;
+    sudo apt autoremove -y --purge;
+    
     sudo apt install -y \
     ca-certificates \
     apt-transport-https \
     software-properties-common \
     wget \
+    curl \
     htop \
     mlocate \
     gnupg2 \
     cmake \
     libssh2-1-dev \
     libssl-dev \
-    curl \
     nano \
     vim \
+    cabextract \
     preload \
     gksu \
+    gdebi-core \
     gnome-software \
     gnome-packagekit;
     
@@ -58,41 +95,48 @@ title "Installing pre-requisite packages";
 breakLine;
 
 # Repositories
+##########################################################
 title "Adding repositories";
     # PHP Repo
     if [ ! -f /etc/apt/sources.list.d/php.list ]; then
-        curl -sL "https://packages.sury.org/php/apt.gpg" | sudo apt-key add -;
+        notify "Adding PHP sury repository";
+        curl -fsSL "https://packages.sury.org/php/apt.gpg" | sudo apt-key add -;
         echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list;
     fi
     
     # Kubernetes Repo
     if [ ! -f /etc/apt/sources.list.d/kubernetes.list ]; then
-        curl -sL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
+        notify "Adding Kubernetes repository";
+        curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
         echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list;
     fi
 
     # Yarn Repo
     if [ ! -f /etc/apt/sources.list.d/yarn.list ]; then
-        curl -sL "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -;
+        notify "Adding Yarn repository";
+        curl -fsSL "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -;
         echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list;
     fi
 
     # Sublime Text Repo
     if [ ! -f /etc/apt/sources.list.d/sublime-text.list ]; then
-        curl -sL "https://download.sublimetext.com/sublimehq-pub.gpg" | sudo apt-key add -;
+        notify "Adding Sublime text repository";
+        curl -fsSL "https://download.sublimetext.com/sublimehq-pub.gpg" | sudo apt-key add -;
         echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list;
     fi
     
     # Wine Repo
-    if [ ! -f /var/lib/dpkg/info/winehq-stable.list ]; then
+    if [ ! -f /var/lib/dpkg/info/wine.list ]; then
+        notify "Adding Wine repository";
         sudo dpkg --add-architecture i386;
-        curl -sL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
+        curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
         sudo apt-add-repository "https://dl.winehq.org/wine-builds/debian/";
     fi
     
     # Docker Repo
     if [ ! -f /var/lib/dpkg/info/docker-ce.list ]; then
-        curl -sL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
+        notify "Adding Docker repository";
+        curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable";
     fi
 
@@ -100,11 +144,13 @@ title "Adding repositories";
 breakLine;
 
 # Git
+##########################################################
 title "Installing Git";
     sudo apt install -y git;
 breakLine;
 
 # Node 8
+##########################################################
 if [ ! -d /etc/apt/sources.list.d/nodesource.list ]; then
     title "Installing Node 8";
         curl -L "https://deb.nodesource.com/setup_8.x" | sudo -E bash -;
@@ -114,63 +160,76 @@ if [ ! -d /etc/apt/sources.list.d/nodesource.list ]; then
 fi
 
 # React Native
+##########################################################
 title "Installing React Native";
     sudo npm install -g create-react-native-app;
 breakLine;
 
 # Apache Cordova
+##########################################################
 title "Installing Apache Cordova";
     sudo npm install -g cordova;
 breakLine;
 
 # Phone Gap
+##########################################################
 title "Installing Phone Gap";
     sudo npm install -g phonegap;
 breakLine;
 
 # Yarn
+##########################################################
 title "Installing Yarn";
     sudo apt install -y yarn;
 breakLine;
 
 # Docker
+##########################################################
 title "Installing Docker CE";
     sudo apt install -y docker-ce;
 breakLine;
 
 # Docker Compose
+##########################################################
 title "Installing Docker Compose";
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" \
-    -o /usr/local/bin/docker-compose;
+    curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
     sudo chmod +x /usr/local/bin/docker-compose
 breakLine;
 
 # Kubernetes
+##########################################################
 title "Installing Kubernetes";
     sudo apt install -y kubectl;
 breakLine;
 
 # Memcached
+##########################################################
 title "Installing Memcached";
     sudo apt install -y memcached;
     sudo systemctl start memcached;
     sudo systemctl enable memcached;
+    sudo systemctl status memcached;
 breakLine;
 
 # Redis
+##########################################################
 title "Installing Redis";
     sudo apt install -y redis-server;
     sudo systemctl start redis;
     sudo systemctl enable redis;
+    sudo systemctl status redis;
 breakLine;
 
 # PHP 7.2
+##########################################################
 title "Installing PHP 7.2";
     sudo apt install -y php7.2 php7.2-{bcmath,cli,common,curl,dev,gd,mbstring,mysql,sqlite,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis;
+    php --version;
 breakLine;
 
 # Composer
+##########################################################
 title "Installing Composer";
     php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');";
     sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer;
@@ -184,8 +243,8 @@ title "Installing Laravel Installer";
 breakLine;
 
 # DBeaver
+##########################################################
 title "Installing DBeaver SQL Client";
-    curl -L "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" -o dbeaver.deb;
     sudo apt install -y \
     ca-certificates-java* \
     java-common* \
@@ -194,40 +253,26 @@ title "Installing DBeaver SQL Client";
     openjdk-8-jre-headless* \
     xbitmaps*;
     
-    sudo dpkg -i dbeaver.deb;
-    sudo rm dbeaver.deb;
+    curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" "dbeaver.deb";
+    sudo dpkg -i ~/dbeaver.deb;
+    sudo rm ~/dbeaver.deb;
 breakLine;
 
 # SQLite Browser
+##########################################################
 title "Installing SQLite Browser";
     sudo apt install -y sqlitebrowser;
 breakLine;    
 
-# MySQL Community Server 8
-title "MySQL Community Server 8 (user interaction required)";
-    sudo apt install -y gdebi-core;
-    curl -L "https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb" -o mysql.deb;
-    sudo gdebi mysql.deb;
-    sudo rm mysql.deb;
-    sudo apt update -y;
-    
-    sudo mkdir /var/run/mysqld/;
-    sudo touch /var/run/mysqld/mysqld.sock;
-    sudo chown -R $(whoami) /var/run/mysqld/;
-    sudo chmod -R 777 /var/run/mysqld/;
-    
-    sudo apt install -y mysql-server;
-    sudo systemctl start mysql;
-    sudo systemctl enable mysql;
-breakLine;
-
 # Ruby
+##########################################################
 title "Installing Ruby & DAPP";
     sudo apt install -y ruby-dev gcc pkg-config;
     sudo gem install dapp;
 breakLine;
 
 # Python
+##########################################################
 title "Installing Python & PIP";
     sudo apt install -y python-pip;
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo python;
@@ -235,6 +280,7 @@ title "Installing Python & PIP";
 breakLine;
 
 # Wine
+##########################################################
 title "Installing Wine & Mono";
     sudo apt install -y \
     wine \
@@ -245,74 +291,116 @@ title "Installing Wine & Mono";
     fonts-wine \
     mono-vbnc;
 
-    curl -L ${REPO_URL}"wine_fontsmoothing.sh" -o ~/wine_fontsmoothing.sh;
-    sudo bash ~/wine_fontsmoothing.sh;
-    rm ~/wine_fontsmoothing.sh;
+    notify "Installing windows fonts for wine apps";
+    curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
+    sudo chmod +x ~/winetricks;
+    sudo ./winetricks allfonts;
+    echo "y" | rm ~/winetricks;
     
-    curl -L "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -o ~/winetricks;
-    chmod +x ~/winetricks;
-    ~/winetricks allfonts;
-    sudo rm ~/winetricks;
+    notify "Applying font smoothing to wine apps";
+    curlToFile ${REPO_URL}"wine_fontsmoothing.sh" "wine_fontsmoothing";
+    sudo chmod +x ~/wine_fontsmoothing;
+    sudo ./wine_fontsmoothing;
+    echo "y" | rm ~/wine_fontsmoothing;
+    clear;
     
-    curl -L "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" -o ~/Royale_2007.zip;
+    notify "Installing Royale 2007 theme for windows apps";
+    curlToFile "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" "Royale_2007.zip";
+    
+    sudo chown -R $(whoami) ~/;
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
-    rm ~/Royale_2007.zip;
+    echo "y" | rm ~/Royale_2007.zip;
 breakLine;
 
 # Postman
+##########################################################
 if [ ! -d /opt/postman/ ]; then
     title "Installing Postman";
-        sudo curl -L "https://dl.pstmn.io/download/latest/linux64" -o postman.tar.gz;
-        sudo tar xfz postman.tar.gz;
-        sudo dpkg -i postman.tar.gz;
+        curlToFile "https://dl.pstmn.io/download/latest/linux64" "postman.tar.gz";
+        sudo tar xfz ~/postman.tar.gz;
+        
+        sudo rm -rf /opt/postman/;
         sudo mkdir /opt/postman/;
-        sudo mv Postman*/* /opt/postman/;
-        sudo rm -rf Postman*;
-        sudo rm -rf postman.tar.gz;
+        sudo mv ~/Postman*/* /opt/postman/;
+        sudo rm -rf ~/Postman*;
+        sudo rm -rf ~/postman.tar.gz;
         sudo ln -s /opt/postman/Postman /usr/bin/postman;
-        sudo curl -L ${REPO_URL}"postman.desktop" \
-        -o ~/.local/share/applications/postman.desktop;
+        
+        notify "Adding desktop file for Postman";
+        curlToFile ${REPO_URL}"postman.desktop" "/usr/share/applications/postman.desktop";
     breakLine;
 fi
 
 # Sublime Text
+##########################################################
 if [ ! -d /opt/sublime_text/ ]; then
     title "Installing Sublime Text";
         sudo apt install -y sublime-text;
         sudo pip install -U CodeIntel;
         
-        curl -L ${REPO_URL}"Package%20Control.sublime-settings" \
-        -o "/home/$(whoami)/.config/sublime-text-3/Packages/User/Package Control.sublime-settings";
+        sudo chown -R $(whoami) ~/;
         
-        curl -L ${REPO_URL}"Preferences.sublime-settings" \
-        -o "/home/$(whoami)/.config/sublime-text-3/Packages/User/Preferences.sublime-settings";
+        notify "Adding pre-installed packages for sublime";
+        curlToFile ${REPO_URL}"Package Control.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
         
-        curl -L "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" -o bin.zip
-        sudo unzip bin.zip -d "/home/$(whoami)/.config/sublime-text-3/Installed Packages/PyV8";
-        sudo rm bin.zip;
+        notify "Applying default preferences to sublime";
+        curlToFile ${REPO_URL}"Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
+        
+        notify "Installing additional binaries for sublime auto-complete";
+        curlToFile "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" "bin.zip";
+        
+        sudo mkdir -p "~/.config/sublime-text-3/Installed Packages/PyV8/";
+        sudo unzip ~/bin.zip -d "~/.config/sublime-text-3/Installed Packages/PyV8/";
+        sudo rm ~/bin.zip;
     breakLine;
 fi
 
 # PHP Storm
+##########################################################
 if [ ! -d /opt/phpstorm/ ]; then
     title "Installing PhpStorm IDE";
-        curl -L "https://download.jetbrains.com/webide/PhpStorm-2018.2.2.tar.gz" -o phpstorm.tar.gz;
-        sudo tar xfz phpstorm.tar.gz;
-        sudo mkdir /opt/phpstorm/;
-        sudo mv PhpStorm-*/* /opt/phpstorm/;
-        sudo rm -rf phpstorm.tar.gz;
-        sudo rm -rf PhpStorm-*;
+        curlToFile "https://download.jetbrains.com/webide/PhpStorm-2018.2.2.tar.gz" "phpstorm.tar.gz";
+        sudo tar xfz ~/phpstorm.tar.gz;
         
-        sudo curl -L ${REPO_URL}"jetbrains-phpstorm.desktop" \
-        -o "~/.local/share/applications/jetbrains-phpstorm.desktop";
+        sudo rm -rf /opt/phpstorm/;
+        sudo mkdir /opt/phpstorm/;
+        sudo mv ~/PhpStorm-*/* /opt/phpstorm/;
+        sudo rm -rf ~/phpstorm.tar.gz;
+        sudo rm -rf ~/PhpStorm-*;
+        
+        notify "Adding desktop file for PhpStorm";
+        curlToFile ${REPO_URL}"jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
     breakLine;
 fi
 
+# MySQL Community Server 8
+##########################################################
+title "MySQL Community Server 8 (user interaction required)";
+    curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb" "mysql.deb";
+    sudo gdebi ~/mysql.deb;
+    clear;
+    sudo rm ~/mysql.deb;
+    sudo apt update -y;
+    
+    notify "Creating required directories";
+    sudo mkdir /var/run/mysqld/;
+    sudo touch /var/run/mysqld/mysqld.sock;
+    sudo chown -R $(whoami) /var/run/mysqld/;
+    sudo chmod -R 777 /var/run/mysqld/;
+    
+    notify "Starting MySQL installation";
+    sudo apt install -y mysql-server;
+    sudo systemctl start mysql;
+    sudo systemctl enable mysql;
+    sudo systemctl status mysql;
+breakLine;
+
 # Clean
+##########################################################
 title "Finalising & cleaning up...";
     sudo apt --fix-broken install -y;
     sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
 breakLine;
 
-echo "Installation complete.";
+notify "Installation complete...";
