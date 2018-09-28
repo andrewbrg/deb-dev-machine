@@ -334,7 +334,7 @@ if [ ! -d /opt/sublime_text/ ]; then
         notify "Installing additional binaries for sublime auto-complete";
         curlToFile "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" "bin.zip";
         
-        sudo mkdir -p "~/.config/sublime-text-3/Installed Packages/PyV8/";
+        sudo mkdir -p ".config/sublime-text-3/Installed Packages/PyV8/";
         sudo unzip ~/bin.zip -d ".config/sublime-text-3/Installed Packages/PyV8/";
         sudo rm ~/bin.zip;
     breakLine;
