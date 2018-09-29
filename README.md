@@ -1,6 +1,8 @@
 # Debian 9 Developer Machine
 Quickly install common Developer tools, IDEs &amp; services on Debian 9. In order to use the installer run the following:
 
+![GUI Preview](https://preview.ibb.co/iU3DDe/options.jpg)
+
 __Note__: Please do NOT run the script with sudo, run it as your own user!
 
 ```
