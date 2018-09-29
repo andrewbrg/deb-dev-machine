@@ -66,7 +66,9 @@ You can expect the following to be automatically installed and readily accessabl
 - Postman
 - DBeaver
 - SQLite Browser
-- Sublime Text (with material theme and plugins)
-- PHPStorm 2018.2.2
 - Software center
 - Package updater
+- Sublime Text (with material theme and plugins)
+- PHPStorm 2018.2.2
+- Atom IDE
+- VS Code IDE
