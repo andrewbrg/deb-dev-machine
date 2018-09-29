@@ -4,22 +4,23 @@
 ## HELPERS
 ###############################################################
 title() {
-    printf "\033[1;42m"
-    printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' '
-    printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" | tr ' ' ' '
-    printf '%*s'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' '
-    printf "\033[0m"
-    printf "\n\n"
+    printf "\033[1;42m";
+    printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
+    printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" | tr ' ' ' ';
+    printf '%*s'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
+    printf "\033[0m";
+    printf "\n\n";
 }
 
 breakLine() {
-    printf "\n"
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    printf "\n\n"
-    sleep .5
+    printf "\n";
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -;
+    printf "\n\n";
+    sleep .5;
 }
 
 notify() {
+    printf "\n";
     printf "\033[1;46m$1 \033[0m \n";
 }
 
@@ -138,7 +139,22 @@ title "Adding repositories";
         curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable";
     fi
-
+    
+    # Atom IDE
+    if [ ! -f /etc/apt/sources.list.d/atom.list ]; then
+        notify "Adding Atom IDE repository";
+        curl -fsSL https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -;
+        echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee /etc/apt/sources.list.d/atom.list;
+    fi
+    
+    # VS Code
+    if [ ! -f /etc/apt/sources.list.d/vscode.list ]; then
+        notify "Adding VS Code repository";
+        curl "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor > microsoft.gpg;
+        sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/;
+        echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list;
+    fi
+        
     sudo apt update;
 breakLine;
 
@@ -174,6 +190,12 @@ breakLine;
 ##########################################################
 title "Installing Phone Gap";
     sudo npm install -g phonegap;
+breakLine;
+
+# Webpack
+##########################################################
+title "Installing Webpack";
+    sudo npm install -g webpack;
 breakLine;
 
 # Yarn
@@ -220,9 +242,18 @@ title "Installing Laravel Installer";
     echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.bashrc;
 breakLine;
 
+# SQLite Browser
+##########################################################
+title "Installing SQLite Browser";
+    sudo apt install -y sqlitebrowser;
+breakLine;    
+
+
+
 # DBeaver
 ##########################################################
 title "Installing DBeaver SQL Client";
+if [ "$(askUser "Do you want to install DBeaver?")" -eq 1 ]; then
     sudo apt install -y \
     ca-certificates-java* \
     java-common* \
@@ -234,14 +265,8 @@ title "Installing DBeaver SQL Client";
     curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" "dbeaver.deb";
     sudo dpkg -i ~/dbeaver.deb;
     sudo rm ~/dbeaver.deb;
+fi
 breakLine;
-
-# SQLite Browser
-##########################################################
-title "Installing SQLite Browser";
-    sudo apt install -y sqlitebrowser;
-breakLine;    
-
 
 # Docker
 ##########################################################
@@ -309,6 +334,7 @@ breakLine;
 ##########################################################
 if [ ! -d /opt/postman/ ]; then
     title "Installing Postman";
+    if [ "$(askUser "Do you want to install Postman?")" -eq 1 ]; then
         curlToFile "https://dl.pstmn.io/download/latest/linux64" "postman.tar.gz";
         sudo tar xfz ~/postman.tar.gz;
         
@@ -321,13 +347,31 @@ if [ ! -d /opt/postman/ ]; then
         
         notify "Adding desktop file for Postman";
         curlToFile ${REPO_URL}"postman.desktop" "/usr/share/applications/postman.desktop";
+    fi
     breakLine;
 fi
+
+# Atom IDE
+##########################################################
+title "Installing Atom IDE";
+if [ "$(askUser "Do you want to install Atom?")" -eq 1 ]; then
+    sudo apt install -y atom;
+fi
+breakLine;
+
+# VS Code
+##########################################################
+title "Installing VS Code IDE";
+if [ "$(askUser "Do you want to install VS Code?")" -eq 1 ]; then
+    sudo apt install -y code;
+fi
+breakLine;
 
 # Sublime Text
 ##########################################################
 if [ ! -d /opt/sublime_text/ ]; then
     title "Installing Sublime Text";
+    if [ "$(askUser "Do you want to install Sublime Text?")" -eq 1 ]; then
         sudo apt install -y sublime-text;
         sudo pip install -U CodeIntel;
         
@@ -347,6 +391,7 @@ if [ ! -d /opt/sublime_text/ ]; then
         sudo mkdir -p ".config/sublime-text-3/Installed Packages/PyV8/";
         sudo unzip ~/bin.zip -d ".config/sublime-text-3/Installed Packages/PyV8/";
         sudo rm ~/bin.zip;
+    fi
     breakLine;
 fi
 
@@ -354,6 +399,7 @@ fi
 ##########################################################
 if [ ! -d /opt/phpstorm/ ]; then
     title "Installing PhpStorm IDE";
+    if [ "$(askUser "Do you want to install PhpStorm?")" -eq 1 ]; then
         curlToFile "https://download.jetbrains.com/webide/PhpStorm-2018.2.2.tar.gz" "phpstorm.tar.gz";
         sudo tar xfz ~/phpstorm.tar.gz;
         
@@ -365,6 +411,7 @@ if [ ! -d /opt/phpstorm/ ]; then
         
         notify "Adding desktop file for PhpStorm";
         curlToFile ${REPO_URL}"jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
+    fi
     breakLine;
 fi
 
