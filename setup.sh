@@ -455,8 +455,8 @@ options=(
     16 "Postman" on
     17 "Laravel installer" on
     18 "Wine" off
-    19 "SQLite DB browser" on
-    20 "DBeaver DB browser" off
+    19 "SQLite (database tool)" on
+    20 "DBeaver (database tool)" off
     21 "Atom IDE" off
     22 "VS Code IDE" off
     23 "Sublime Text IDE" on
