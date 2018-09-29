@@ -126,7 +126,7 @@ title "Adding repositories";
     fi
     
     # Wine Repo
-    if [ ! -f /var/lib/dpkg/info/wine.list ]; then
+    if [ ! -f /var/lib/dpkg/info/wine-stable.list ]; then
         notify "Adding Wine repository";
         sudo dpkg --add-architecture i386;
         curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
