@@ -178,25 +178,25 @@ fi
 # React Native
 ##########################################################
 title "Installing React Native";
-    sudo npm install -g create-react-native-app;
+    npm install -g create-react-native-app;
 breakLine;
 
 # Apache Cordova
 ##########################################################
 title "Installing Apache Cordova";
-    sudo npm install -g cordova;
+    npm install -g cordova;
 breakLine;
 
 # Phone Gap
 ##########################################################
 title "Installing Phone Gap";
-    sudo npm install -g phonegap;
+    npm install -g phonegap;
 breakLine;
 
 # Webpack
 ##########################################################
 title "Installing Webpack";
-    sudo npm install -g webpack;
+   npm install -g webpack;
 breakLine;
 
 # Yarn
