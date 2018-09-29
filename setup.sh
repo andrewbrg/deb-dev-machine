@@ -28,6 +28,16 @@ curlToFile() {
     sudo curl -fSL "$1" -o "$2";
 }
 
+askUser() {
+    while true; do
+        read -p " - $1 (y/n): " yn
+        case ${yn} in
+            [Yy]* ) echo 1; return 1;;
+            [Nn]* ) echo 0; return 0;;
+        esac
+    done
+}
+
 ###############################################################
 ## GLOBALS
 ###############################################################
@@ -172,25 +182,6 @@ title "Installing Yarn";
     sudo apt install -y yarn;
 breakLine;
 
-# Docker
-##########################################################
-title "Installing Docker CE";
-    sudo apt install -y docker-ce;
-breakLine;
-
-# Docker Compose
-##########################################################
-title "Installing Docker Compose";
-    curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
-    sudo chmod +x /usr/local/bin/docker-compose
-breakLine;
-
-# Kubernetes
-##########################################################
-title "Installing Kubernetes";
-    sudo apt install -y kubectl;
-breakLine;
-
 # Memcached
 ##########################################################
 title "Installing Memcached";
@@ -251,25 +242,43 @@ title "Installing SQLite Browser";
     sudo apt install -y sqlitebrowser;
 breakLine;    
 
+
+# Docker
+##########################################################
+title "Installing Docker with Kubernetes";
+if [ "$(askUser "Do you want to install Docker, Docker Compose & Kubernetes?")" -eq 1 ]; then
+    sudo apt install -y docker-ce;
+    
+    curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
+    sudo chmod +x /usr/local/bin/docker-compose
+    
+    sudo apt install -y kubectl;
+fi
+breakLine;
+
 # Ruby
 ##########################################################
 title "Installing Ruby & DAPP";
+if [ "$(askUser "Do you want to install Ruby & DAPP?")" -eq 1 ]; then
     sudo apt install -y ruby-dev gcc pkg-config;
     sudo gem install dapp;
+fi
 breakLine;
 
 # Python
 ##########################################################
 title "Installing Python & PIP";
+if [ "$(askUser "Do you want to install Python & PIP?")" -eq 1 ]; then
     sudo apt install -y python-pip;
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo python;
     sudo pip install --upgrade setuptools;
+fi
 breakLine;
 
 # Wine
 ##########################################################
 title "Installing Wine & Mono";
-
+if [ "$(askUser "Do you want to install WineHQ and Mono?")" -eq 1 ]; then
     sudo apt install -y --install-recommends winehq-stable;
     sudo apt install -y mono-vbnc;
 
@@ -293,6 +302,7 @@ title "Installing Wine & Mono";
     mkdir -p ~/.wine/drive_c/Resources/Themes/;
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
     echo "y" | rm ~/Royale_2007.zip;
+fi
 breakLine;
 
 # Postman
