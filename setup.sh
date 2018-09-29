@@ -155,6 +155,7 @@ title "Adding repositories";
         echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list;
     fi
         
+    notify "Updating apt...";
     sudo apt update;
 breakLine;
 
@@ -275,7 +276,7 @@ if [ "$(askUser "Do you want to install Docker, Docker Compose & Kubernetes?")" 
     sudo apt install -y docker-ce;
     
     curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
-    sudo chmod +x /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose;
     
     sudo apt install -y kubectl;
 fi
