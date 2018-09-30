@@ -512,6 +512,7 @@ do
         23) repoSublime ;;
     esac
 done
+printf "Required repositories have been added...";
 breakLine;
 
 title "Updating apt";
