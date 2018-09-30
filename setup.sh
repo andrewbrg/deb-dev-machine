@@ -358,7 +358,7 @@ installPostman() {
     sudo ln -s /opt/postman/Postman /usr/bin/postman;
     
     notify "Adding desktop file for Postman";
-    curlToFile ${repoUrl}"postman.desktop" "/usr/share/applications/postman.desktop";
+    curlToFile ${repoUrl}"desktop/postman.desktop" "/usr/share/applications/postman.desktop";
     breakLine;
 }
 
@@ -392,10 +392,10 @@ installSublime() {
     mkdir -p ~/.config/sublime-text-3/Packages/User/;
     
     notify "Adding pre-installed packages for sublime";
-    curlToFile "${repoUrl}PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
+    curlToFile "${repoUrl}settings/PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
     
     notify "Applying default preferences to sublime";
-    curlToFile "${repoUrl}Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
+    curlToFile "${repoUrl}settings/Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
     
     notify "Installing additional binaries for sublime auto-complete";
     curlToFile "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" "bin.zip";
@@ -420,7 +420,7 @@ installPhpStorm() {
     sudo rm -rf ~/PhpStorm-*;
     
     notify "Adding desktop file for PhpStorm";
-    curlToFile ${repoUrl}"jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
+    curlToFile ${repoUrl}"desktop/jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
     breakLine;
 }
 
@@ -512,12 +512,12 @@ do
         23) repoSublime ;;
     esac
 done
-printf "Required repositories have been added...";
+notify "Required repositories have been added...";
 breakLine;
 
 title "Updating apt";
     sudo apt update;
-    printf "The apt package manager is fully updated...";
+    notify "The apt package manager is fully updated...";
 breakLine;
 
 for choice in $choices
