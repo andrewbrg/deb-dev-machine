@@ -193,8 +193,8 @@ installWebpack() {
 # PHP 7.2
 ##########################################################
 installPhp() {
-    title "Installing PHP 7.2";
-    sudo apt install -y php7.2 php7.2-{bcmath,cli,common,curl,dev,gd,mbstring,mysql,sqlite,xml,zip} php-pear php-memcached php-redis;
+    title "Installing PHP 7.3";
+    sudo apt install -y php7.3 php7.3-{bcmath,cli,common,curl,dev,gd,mbstring,mysql,sqlite,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis;
     php --version;
     gotPhp=1;
@@ -439,7 +439,7 @@ cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un
 options=(
     01 "Git" on
     02 "Node v8" on
-    03 "PHP v7.2 with PECL" on
+    03 "PHP v7.3 with PECL" on
     04 "Ruby" off
     05 "Python" off
     06 "Yarn (package manager)" on
