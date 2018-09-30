@@ -7,10 +7,7 @@ __Note__: Please do NOT run the script with sudo, run it as your own user!
 
 ```
 cd ~/
-sudo apt install -y wget
-wget https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/setup.sh -O setup.sh;
-bash setup.sh;
-rm setup.sh;
+sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/setup.sh);
 ```
 
 This script can be run via the terminal and will get a fresh debian installation up and running with most (if not all) of the dev tools you would require.
