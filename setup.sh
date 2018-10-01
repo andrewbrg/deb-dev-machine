@@ -129,6 +129,14 @@ repoSublime() {
     fi
 }
 
+repoRemmina() {
+	if [ ! -f /etc/apt/sources.list.d/remmina.list ]; then
+		notify "Adding Remmina repository";
+		sudo touch /etc/apt/sources.list.d/remmina.list;
+		echo 'deb http://ftp.debian.org/debian stretch-backports main' | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
+    fi
+}
+
 
 ###############################################################
 ## INSTALLATION
@@ -424,6 +432,13 @@ installPhpStorm() {
     breakLine;
 }
 
+# Sublime Text
+##########################################################
+installRemmina() {
+	title "Installing Remmina Client";
+	sudo apt install -t -y stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret;
+    breakLine;
+}
 
 ###############################################################
 ## MAIN PROGRAM
@@ -451,7 +466,7 @@ options=(
     12 "Memcached server" on
     13 "Redis server" on
     14 "Docker CE (with docker compose)" off
-    15 "Kubernetes" off
+    15 "Kubernetes (Kubectl)" off
     16 "Postman" on
     17 "Laravel installer" on
     18 "Wine" off
@@ -462,6 +477,7 @@ options=(
     23 "Sublime Text IDE" on
     24 "PhpStorm IDE" off
     25 "Software Center" on
+    26 "Remmina (Remote Desktop Client)" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -510,6 +526,7 @@ do
         21) repoAtom ;;
         22) repoVsCode ;;
         23) repoSublime ;;
+		26) repoRemmina ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -578,6 +595,7 @@ do
         23) installSublime ;;
         24) installPhpStorm ;;
         25) installSoftwareCenter ;;
+		26) installRemmina ;;
     esac
 done
 
