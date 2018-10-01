@@ -71,3 +71,4 @@ You can expect the following to be automatically installed and readily accessabl
 - PHPStorm 2018.2.2
 - Atom IDE
 - VS Code IDE
+- Remmina Remote Desktop Client
