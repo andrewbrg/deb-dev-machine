@@ -129,6 +129,8 @@ repoSublime() {
     fi
 }
 
+# Remmina
+##########################################################
 repoRemmina() {
 	if [ ! -f /etc/apt/sources.list.d/remmina.list ]; then
 		notify "Adding Remmina repository";
@@ -432,11 +434,11 @@ installPhpStorm() {
     breakLine;
 }
 
-# Sublime Text
+# Remmina
 ##########################################################
 installRemmina() {
-	title "Installing Remmina Client";
-	sudo apt install -t -y stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret;
+    title "Installing Remmina Client";
+    sudo apt install -t -y stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret;
     breakLine;
 }
 
@@ -526,7 +528,7 @@ do
         21) repoAtom ;;
         22) repoVsCode ;;
         23) repoSublime ;;
-		26) repoRemmina ;;
+	26) repoRemmina ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -595,7 +597,7 @@ do
         23) installSublime ;;
         24) installPhpStorm ;;
         25) installSoftwareCenter ;;
-		26) installRemmina ;;
+	26) installRemmina ;;
     esac
 done
 
