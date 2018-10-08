@@ -438,7 +438,7 @@ installPhpStorm() {
 ##########################################################
 installRemmina() {
     title "Installing Remmina Client";
-    sudo apt install -t -y stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret;
+    sudo apt install -t stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret -y;
     breakLine;
 }
 
