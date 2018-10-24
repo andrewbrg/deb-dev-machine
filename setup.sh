@@ -444,6 +444,17 @@ installRemmina() {
     breakLine;
 }
 
+# Helm
+##########################################################
+installHelm() {
+    title "Installing Helm";
+    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz" -o helm-v2.11.0-linux-amd64.tar.gz;
+    tar -zxvf helm-v2.11.0-linux-amd64.tar.gz;
+    sudo mv linux-amd64/helm /usr/local/bin/helm;
+    sudo rm -rf linux-amd64 && sudo rm helm-v2.11.0-linux-amd64.tar.gz;
+    breakLine;
+}
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
@@ -482,6 +493,7 @@ options=(
     24 "PhpStorm IDE" off
     25 "Software Center" on
     26 "Remmina (Remote Desktop Client)" off
+    27 "Helm" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -530,7 +542,7 @@ do
         21) repoAtom ;;
         22) repoVsCode ;;
         23) repoSublime ;;
-	26) repoRemmina ;;
+        26) repoRemmina ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -598,8 +610,9 @@ do
         22) installVsCode ;;
         23) installSublime ;;
         24) installPhpStorm ;;
-        25) installSoftwareCenter ;;
-	26) installRemmina ;;
+        25) installSoftwareCenter ;;   
+        26) installRemmina ;;
+        27) installHelm ;;
     esac
 done
 
