@@ -54,6 +54,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Docker
 - Docker Compose
 - Kubernetes
+- Helm
 
 **Libraries**
 - Apache Cordova
