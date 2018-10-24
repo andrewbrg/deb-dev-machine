@@ -448,10 +448,10 @@ installRemmina() {
 ##########################################################
 installHelm() {
     title "Installing Helm";
-    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz" -o helm-v2.11.0-linux-amd64.tar.gz;
-    tar -zxvf helm-v2.11.0-linux-amd64.tar.gz;
+    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz" -o helm-v2.10.0-linux-amd64.tar.gz;
+    tar -zxvf helm-v2.10.0-linux-amd64.tar.gz;
     sudo mv linux-amd64/helm /usr/local/bin/helm;
-    sudo rm -rf linux-amd64 && sudo rm helm-v2.11.0-linux-amd64.tar.gz;
+    sudo rm -rf linux-amd64 && sudo rm helm-v2.10.0-linux-amd64.tar.gz;
     breakLine;
 }
 
@@ -493,7 +493,7 @@ options=(
     24 "PhpStorm IDE" off
     25 "Software Center" on
     26 "Remmina (Remote Desktop Client)" off
-    27 "Helm" off
+    27 "Helm" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
