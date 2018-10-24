@@ -74,8 +74,8 @@ repoDocker() {
         notify "Adding Docker repository";
         curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable";
-	sudo groupadd docker;
-	sudo usermod -aG docker $USER;
+    sudo groupadd docker;
+    sudo usermod -aG docker $USER;
     fi
 }
 
@@ -134,10 +134,10 @@ repoSublime() {
 # Remmina
 ##########################################################
 repoRemmina() {
-	if [ ! -f /etc/apt/sources.list.d/remmina.list ]; then
-		notify "Adding Remmina repository";
-		sudo touch /etc/apt/sources.list.d/remmina.list;
-		echo 'deb http://ftp.debian.org/debian stretch-backports main' | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
+    if [ ! -f /etc/apt/sources.list.d/remmina.list ]; then
+        notify "Adding Remmina repository";
+        sudo touch /etc/apt/sources.list.d/remmina.list;
+        echo 'deb http://ftp.debian.org/debian stretch-backports main' | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
     fi
 }
 
@@ -447,7 +447,7 @@ installRemmina() {
 # Helm
 ##########################################################
 installHelm() {
-    title "Installing Helm";
+    title "Installing Helm v2.10";
     curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz" -o helm-v2.10.0-linux-amd64.tar.gz;
     tar -zxvf helm-v2.10.0-linux-amd64.tar.gz;
     sudo mv linux-amd64/helm /usr/local/bin/helm;
@@ -493,7 +493,7 @@ options=(
     24 "PhpStorm IDE" off
     25 "Software Center" on
     26 "Remmina (Remote Desktop Client)" off
-    27 "Helm" on
+    27 "Helm v2.10" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
