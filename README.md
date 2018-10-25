@@ -34,11 +34,11 @@ You can expect the following to be automatically installed and readily accessabl
 - vim
 - gksu
 - preload
-- wine (with Royale 2007 Theme & Smooth fonts)
+- wine _(with Royale2007 Theme & Smooth fonts)_
 - mono
 - gnome-software
 - gnome-packagekit
-- Snapd
+- snapd
 
 **Services**
 - Git
