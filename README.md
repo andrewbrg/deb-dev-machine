@@ -68,6 +68,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Postman
 - DBeaver
 - SQLite Browser
+- Redis Desktop Manager
 - Software center
 - Package updater
 - Sublime Text (with material theme and plugins)
@@ -75,4 +76,3 @@ You can expect the following to be automatically installed and readily accessabl
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop Client
-- Redis Desktop Manager
