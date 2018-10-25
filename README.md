@@ -55,6 +55,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Docker Compose
 - Kubernetes
 - Helm
+- Snap
 
 **Libraries**
 - Apache Cordova
@@ -73,3 +74,4 @@ You can expect the following to be automatically installed and readily accessabl
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop Client
+- Redis Desktop Manager
