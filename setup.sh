@@ -240,7 +240,6 @@ installPython() {
     sudo apt install -y python-pip;
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo python;
     sudo pip install --upgrade setuptools;
-    sudo pip install sops;
     breakLine;
 }
 
