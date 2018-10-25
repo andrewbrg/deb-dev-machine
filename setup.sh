@@ -3,7 +3,7 @@
 # Disallow running with sudo or su
 ##########################################################
 if [ "$EUID" -eq 0 ]
-  then printf "\033[1;101mNein, nein, nein... Please do NOT run this script as root! \033[0m \n";
+  then printf "\033[1;101mNein, Nein, Nein!! Please do not run this script as root (no su or sudo)! \033[0m \n";
   exit;
 fi
 
@@ -229,6 +229,7 @@ installPython() {
     sudo apt install -y python-pip;
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo python;
     sudo pip install --upgrade setuptools;
+    sudo pip install sops;
     breakLine;
 }
 
