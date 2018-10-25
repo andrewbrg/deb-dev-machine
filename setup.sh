@@ -455,6 +455,14 @@ installHelm() {
     breakLine;
 }
 
+# Redis Desktop Manager
+##########################################################
+installRedisDesktopManager() {
+    title "Installing Redis Desktop Manager";
+    sudo snap install redis-desktop-manager;
+    breakLine;
+}
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
@@ -494,6 +502,7 @@ options=(
     25 "Software Center" on
     26 "Remmina (Remote Desktop Client)" off
     27 "Helm v2.10" on
+    28 "Redis Desktop Manager" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -523,7 +532,8 @@ title "Installing Pre-Requisite Packages";
     nano \
     vim \
     preload \
-    gksu;
+    gksu \
+    snapd;
     
     sudo updatedb;
 breakLine;
@@ -613,6 +623,7 @@ do
         25) installSoftwareCenter ;;   
         26) installRemmina ;;
         27) installHelm ;;
+        28) installRedisDesktopManager ;;
     esac
 done
 
