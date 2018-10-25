@@ -62,6 +62,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Phone Gap
 - React Native
 - Laravel Installer
+- Google Cloud SDK
 
 **Software**
 - Postman
