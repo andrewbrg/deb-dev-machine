@@ -42,6 +42,7 @@ curlToFile() {
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 gotPhp=0;
 gotNode=0;
+gotGoLang=0;
 
 ###############################################################
 ## REPOSITORIES
@@ -141,9 +142,9 @@ repoRemmina() {
     fi
 }
 
-# GCE
+# Google Cloud SDK
 ##########################################################
-repoGce() {
+repoGoogleSdk() {
     if [ ! -f /etc/apt/sources.list.d/google-cloud-sdk.list ]; then
         notify "Adding GCE repository";
         export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)";
@@ -243,6 +244,18 @@ installPython() {
     breakLine;
 }
 
+# GoLang
+##########################################################
+installGoLang() {
+    title "Installing GoLang";
+    sudo apt install -y golang;
+    echo 'export GOPATH=~/go' >> ~/.bashrc;
+    source ~/.bashrc;
+    mkdir $GOPATH;
+    gotGoLang=1;
+    breakLine;
+}
+
 # Yarn
 ##########################################################
 installYarn() {
@@ -316,6 +329,14 @@ installDbeaver() {
     breakLine;
 }
 
+# Redis Desktop Manager
+##########################################################
+installRedisDesktopManager() {
+    title "Installing Redis Desktop Manager";
+    sudo snap install redis-desktop-manager;
+    breakLine;
+}
+
 # Docker
 ##########################################################
 installDocker() {
@@ -331,6 +352,27 @@ installDocker() {
 installKubernetes() {
     title "Installing Kubernetes";
     sudo apt install -y kubectl;
+    breakLine;
+}
+
+# Helm
+##########################################################
+installHelm() {
+    title "Installing Helm v2.10";
+    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz" -o helm-v2.10.0-linux-amd64.tar.gz;
+    tar -zxvf helm-v2.10.0-linux-amd64.tar.gz;
+    sudo mv linux-amd64/helm /usr/local/bin/helm;
+    sudo rm -rf linux-amd64 && sudo rm helm-v2.10.0-linux-amd64.tar.gz;
+    breakLine;
+}
+
+# Sops
+##########################################################
+installSops() {
+    title "Installing Sops v3.1.1";
+    wget -O sops_3.1.1_amd64.deb "https://github.com/mozilla/sops/releases/download/3.1.1/sops_3.1.1_amd64.deb";
+    sudo dpkg -i sops_3.1.1_amd64.deb;
+    sudo rm sops_3.1.1_amd64.deb;
     breakLine;
 }
 
@@ -455,30 +497,11 @@ installRemmina() {
     breakLine;
 }
 
-# Helm
-##########################################################
-installHelm() {
-    title "Installing Helm v2.10";
-    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz" -o helm-v2.10.0-linux-amd64.tar.gz;
-    tar -zxvf helm-v2.10.0-linux-amd64.tar.gz;
-    sudo mv linux-amd64/helm /usr/local/bin/helm;
-    sudo rm -rf linux-amd64 && sudo rm helm-v2.10.0-linux-amd64.tar.gz;
-    breakLine;
-}
-
-# Redis Desktop Manager
-##########################################################
-installRedisDesktopManager() {
-    title "Installing Redis Desktop Manager";
-    sudo snap install redis-desktop-manager;
-    breakLine;
-}
-
 # Google Cloud SDK
 ##########################################################
-installGce() {
+installGoogleSdk() {
     title "Installing Google Cloud SDK";
-    sudo apt update && sudo apt install -y google-cloud-sdk;
+    sudo apt install -y google-cloud-sdk;
     breakLine;
 }
 
@@ -499,30 +522,32 @@ options=(
     03 "PHP v7.3 with PECL" on
     04 "Ruby" off
     05 "Python" off
-    06 "Yarn (package manager)" on
-    07 "Composer (package manager)" on
-    08 "React Native" on
-    09 "Apache Cordova" on
-    10 "Phonegap" on
-    11 "Webpack" on
-    12 "Memcached server" on
-    13 "Redis server" on
-    14 "Docker CE (with docker compose)" off
-    15 "Kubernetes (Kubectl)" off
-    16 "Helm v2.10" on
-    17 "Postman" on
-    18 "Laravel installer" on
-    19 "Wine" off
-    20 "SQLite (database tool)" on
-    21 "DBeaver (database tool)" off
-    22 "Redis Desktop Manager" on
-    23 "Atom IDE" off
-    24 "VS Code IDE" off
-    25 "Sublime Text IDE" on
-    26 "PhpStorm IDE" off
-    27 "Software Center" on
-    28 "Remmina (Remote Desktop Client)" off
-    29 "Google Cloud SDK" off
+    06 "GoLang" off
+    07 "Yarn (package manager)" on
+    08 "Composer (package manager)" on
+    09 "React Native" on
+    10 "Apache Cordova" on
+    11 "Phonegap" on
+    12 "Webpack" on
+    13 "Memcached server" on
+    14 "Redis server" on
+    15 "Docker CE (with docker compose)" off
+    16 "Kubernetes (Kubectl)" off
+    17 "Helm v2.10" on
+    18 "Sops v3.1.1" on
+    19 "Postman" on
+    20 "Laravel installer" on
+    21 "Wine" off
+    22 "SQLite (database tool)" on
+    23 "DBeaver (database tool)" off
+    24 "Redis Desktop Manager" on
+    25 "Atom IDE" off
+    26 "VS Code IDE" off
+    27 "Sublime Text IDE" on
+    28 "PhpStorm IDE" off
+    29 "Software Center" on
+    30 "Remmina (Remote Desktop Client)" off
+    31 "Google Cloud SDK" off
     
 );
 
@@ -564,17 +589,17 @@ for choice in $choices
 do
     case $choice in
         03) repoPhp ;;
-        07) repoPhp ;;
-        17) repoPhp ;;
-        06) repoYarn ;;
-        14) repoDocker ;;
-        15) repoKubernetes ;;
-        19) repoWine ;;
-        23) repoAtom ;;
-        24) repoVsCode ;;
-        25) repoSublime ;;
-        28) repoRemmina ;;
-        29) repoGce ;;
+        08) repoPhp ;;
+        20) repoPhp ;;
+        07) repoYarn ;;
+        15) repoDocker ;;
+        16) repoKubernetes ;;
+        21) repoWine ;;
+        25) repoAtom ;;
+        26) repoVsCode ;;
+        27) repoSublime ;;
+        30) repoRemmina ;;
+        31) repoGoogleSdk ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -593,66 +618,74 @@ do
         03) installPhp ;;
         04) installRuby ;;
         05) installPython ;;
-        06) installYarn ;;
-        07) 
+        06) installGoLang ;;
+        07) installYarn ;;
+        08) 
             if [ $gotPhp -ne 1 ]; then 
                 installPhp 
             fi
             installComposer
         ;;
-        08) 
+        09) 
             if [ $gotNode -ne 1 ]; then 
                 installNode 
             fi
             installReactNative
         ;;
-        09) 
+        10) 
             if [ $gotNode -ne 1 ]; then 
                 installNode 
             fi
             installCordova
         ;;
-        10) 
+        11) 
             if [ $gotNode -ne 1 ]; then 
                 installNode 
             fi
             installPhoneGap
         ;;
-        11) 
+        12) 
             if [ $gotNode -ne 1 ]; then 
                 installNode 
             fi
             installWebpack
         ;;
-        12) installMemcached ;;
-        13) installRedis ;;
-        14) installDocker ;;
-        15) installKubernetes ;;
-        16) installHelm ;;
-        17) installPostman ;;
+        13) installMemcached ;;
+        14) installRedis ;;
+        15) installDocker ;;
+        16) installKubernetes ;;
+        17) installHelm ;;
         18) 
+            if [ $gotGoLang -ne 1 ]; then 
+                installGoLang
+            fi
+            installSops
+        ;;
+        19) installPostman ;;
+        20) 
             if [ $gotPhp -ne 1 ]; then 
                 installPhp
             fi
             installLaravel
         ;;
-        19) installWine ;;
-        20) installSqLite ;;
-        21) installDbeaver ;;
-        22) installRedisDesktopManager ;;
-        23) installAtom ;;
-        24) installVsCode ;;
-        25) installSublime ;;
-        26) installPhpStorm ;;
-        27) installSoftwareCenter ;;   
-        28) installRemmina ;;
-        29) installGce ;;
+        21) installWine ;;
+        22) installSqLite ;;
+        23) installDbeaver ;;
+        24) installRedisDesktopManager ;;
+        25) installAtom ;;
+        26) installVsCode ;;
+        27) installSublime ;;
+        28) installPhpStorm ;;
+        29) installSoftwareCenter ;;   
+        30) installRemmina ;;
+        31) installGoogleSdk ;;
     esac
 done
 
 # Clean
 ##########################################################
 title "Finalising & Cleaning Up...";
+    sudo chown -R $(whoami) ~/;
     sudo apt --fix-broken install -y;
     sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
