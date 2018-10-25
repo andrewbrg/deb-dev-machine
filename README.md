@@ -38,6 +38,7 @@ You can expect the following to be automatically installed and readily accessabl
 - mono
 - gnome-software
 - gnome-packagekit
+- Snapd
 
 **Services**
 - Git
@@ -45,6 +46,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Composer
 - Ruby
 - Python
+- GoLang
 - Pip
 - Dapp
 - Memcahed
@@ -55,7 +57,7 @@ You can expect the following to be automatically installed and readily accessabl
 - Docker Compose
 - Kubernetes
 - Helm
-- Snap
+- Sops
 
 **Libraries**
 - Apache Cordova
