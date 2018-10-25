@@ -137,7 +137,18 @@ repoRemmina() {
     if [ ! -f /etc/apt/sources.list.d/remmina.list ]; then
         notify "Adding Remmina repository";
         sudo touch /etc/apt/sources.list.d/remmina.list;
-        echo 'deb http://ftp.debian.org/debian stretch-backports main' | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
+        echo "deb http://ftp.debian.org/debian stretch-backports main" | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
+    fi
+}
+
+# GCE
+##########################################################
+repoGce() {
+    if [ ! -f /etc/apt/sources.list.d/google-cloud-sdk.list ]; then
+        notify "Adding GCE repository";
+        export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)";
+        echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list;
+        curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
     fi
 }
 
@@ -464,6 +475,14 @@ installRedisDesktopManager() {
     breakLine;
 }
 
+# Google Cloud SDK
+##########################################################
+installGce() {
+    title "Installing Google Cloud SDK";
+    sudo apt update && sudo apt install -y google-cloud-sdk;
+    breakLine;
+}
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
@@ -491,19 +510,21 @@ options=(
     13 "Redis server" on
     14 "Docker CE (with docker compose)" off
     15 "Kubernetes (Kubectl)" off
-    16 "Postman" on
-    17 "Laravel installer" on
-    18 "Wine" off
-    19 "SQLite (database tool)" on
-    20 "DBeaver (database tool)" off
-    21 "Atom IDE" off
-    22 "VS Code IDE" off
-    23 "Sublime Text IDE" on
-    24 "PhpStorm IDE" off
-    25 "Software Center" on
-    26 "Remmina (Remote Desktop Client)" off
-    27 "Helm v2.10" on
-    28 "Redis Desktop Manager" on
+    16 "Helm v2.10" on
+    17 "Postman" on
+    18 "Laravel installer" on
+    19 "Wine" off
+    20 "SQLite (database tool)" on
+    21 "DBeaver (database tool)" off
+    22 "Redis Desktop Manager" on
+    23 "Atom IDE" off
+    24 "VS Code IDE" off
+    25 "Sublime Text IDE" on
+    26 "PhpStorm IDE" off
+    27 "Software Center" on
+    28 "Remmina (Remote Desktop Client)" off
+    29 "Google Cloud SDK" off
+    
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -549,11 +570,12 @@ do
         06) repoYarn ;;
         14) repoDocker ;;
         15) repoKubernetes ;;
-        18) repoWine ;;
-        21) repoAtom ;;
-        22) repoVsCode ;;
-        23) repoSublime ;;
-        26) repoRemmina ;;
+        19) repoWine ;;
+        23) repoAtom ;;
+        24) repoVsCode ;;
+        25) repoSublime ;;
+        28) repoRemmina ;;
+        29) repoGce ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -607,24 +629,25 @@ do
         13) installRedis ;;
         14) installDocker ;;
         15) installKubernetes ;;
-        16) installPostman ;;
-        17) 
+        16) installHelm ;;
+        17) installPostman ;;
+        18) 
             if [ $gotPhp -ne 1 ]; then 
                 installPhp
             fi
             installLaravel
         ;;
-        18) installWine ;;
-        19) installSqLite ;;
-        20) installDbeaver ;;
-        21) installAtom ;;
-        22) installVsCode ;;
-        23) installSublime ;;
-        24) installPhpStorm ;;
-        25) installSoftwareCenter ;;   
-        26) installRemmina ;;
-        27) installHelm ;;
-        28) installRedisDesktopManager ;;
+        19) installWine ;;
+        20) installSqLite ;;
+        21) installDbeaver ;;
+        22) installRedisDesktopManager ;;
+        23) installAtom ;;
+        24) installVsCode ;;
+        25) installSublime ;;
+        26) installPhpStorm ;;
+        27) installSoftwareCenter ;;   
+        28) installRemmina ;;
+        29) installGce ;;
     esac
 done
 
