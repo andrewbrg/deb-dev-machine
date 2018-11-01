@@ -508,6 +508,7 @@ installGoogleSdk() {
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
+sudo apt install -y dialog;
 
 cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/unselect options & <enter> start installation." \
 --ascii-lines \
