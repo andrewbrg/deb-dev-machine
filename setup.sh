@@ -221,6 +221,8 @@ installPhp() {
     sudo apt install -y php7.3 php7.3-{bcmath,cli,common,curl,dev,gd,mbstring,mysql,sqlite,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis;
     php --version;
+    
+    sudo pecl install igbinary ds;
     gotPhp=1;
     breakLine;
 }
