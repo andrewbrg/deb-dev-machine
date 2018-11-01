@@ -218,7 +218,7 @@ installWebpack() {
 ##########################################################
 installPhp() {
     title "Installing PHP 7.3";
-    sudo apt install -y php7.3 php7.3-{bcmath,cli,common,curl,dev,gd,mbstring,mysql,sqlite,xml,zip} php-pear php-memcached php-redis;
+    sudo apt install -y php7.3 php7.3-{bcmath,cli,common,curl,dev,ds,gd,intl,mbstring,mysql,sqlite,xdebug,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis;
     php --version;
     
