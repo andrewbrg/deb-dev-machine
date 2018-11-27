@@ -458,6 +458,9 @@ installSublime() {
     
     mkdir -p ~/.config/sublime-text-3/Packages/User/;
     
+    notify "Adding package control for sublime";
+    wget "https://packagecontrol.io/Package%20Control.sublime-package" -o ".config/sublime-text-3/Installed Packages/Package Control.sublime-package";
+    
     notify "Adding pre-installed packages for sublime";
     curlToFile "${repoUrl}settings/PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
     
