@@ -153,6 +153,15 @@ repoGoogleSdk() {
     fi
 }
 
+# VLC
+##########################################################
+repoVlc() {
+    if [ ! -f /etc/apt/sources.list.d/videolan-ubuntu-stable-daily-disco.list ]; then
+        notify "Adding VLC repository";
+        sudo add-apt-repository ppa:videolan/stable-daily
+    fi
+}
+
 
 ###############################################################
 ## INSTALLATION
@@ -510,11 +519,11 @@ installGoogleSdk() {
     breakLine;
 }
 
-# Google Cloud SDK
+# Popcorn Time
 ##########################################################
 installPopcorn() {
     title "Installing Popcorn Time";
-    sudo apt install -y libnss3;
+    sudo apt install -y libnss3 vlc;
     
     if [ -d /opt/popcorn-time ]; then
         sudo rm -rf /opt/popcorn-time/
@@ -626,6 +635,7 @@ do
         27) repoSublime ;;
         30) repoRemmina ;;
         31) repoGoogleSdk ;;
+        32) repoVlc ;;
     esac
 done
 notify "Required repositories have been added...";
