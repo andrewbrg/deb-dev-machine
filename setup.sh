@@ -510,6 +510,26 @@ installGoogleSdk() {
     breakLine;
 }
 
+# Google Cloud SDK
+##########################################################
+installPopcorn() {
+    title "Installing Popcorn Time";
+    sudo apt install -y libnss3;
+    
+    if [ -d /opt/popcorn-time ]; then
+        sudo rm -rf /opt/popcorn-time/
+    fi
+    
+    sudo mkdir /opt/popcorn-time;
+    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-0.3.10-Linux-64.tar.xz" | sudo tar Jx -C /opt/popcorn-time;
+    sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
+     
+    curlToFile ${repoUrl}"desktop/popcorn.desktop" "/usr/share/applications/popcorn.desktop";
+   
+    breakLine;
+}
+
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
@@ -554,7 +574,7 @@ options=(
     29 "Software Center" on
     30 "Remmina (Remote Desktop Client)" off
     31 "Google Cloud SDK" off
-    
+    32 "Popcorn Time" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -685,6 +705,7 @@ do
         29) installSoftwareCenter ;;   
         30) installRemmina ;;
         31) installGoogleSdk ;;
+        32) installPopcorn ;;
     esac
 done
 
