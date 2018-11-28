@@ -48,7 +48,7 @@ gotGoLang=0;
 ## REPOSITORIES
 ###############################################################
 
-# PHP 7.2
+# PHP 7.3
 ##########################################################
 repoPhp() {
     if [ ! -f /etc/apt/sources.list.d/php.list ]; then
@@ -171,11 +171,11 @@ installGit() {
     breakLine;
 }
 
-# Node 8
+# Node 9
 ##########################################################
 installNode() {
-    title "Installing Node 8";
-    curl -L "https://deb.nodesource.com/setup_8.x" | sudo -E bash -;
+    title "Installing Node 9";
+    curl -L "https://deb.nodesource.com/setup_9.x" | sudo -E bash -;
     sudo apt install -y nodejs;
     sudo chown -R $(whoami) /usr/lib/node_modules;
     gotNode=1;
@@ -214,7 +214,7 @@ installWebpack() {
     breakLine;
 }
 
-# PHP 7.2
+# PHP 7.3
 ##########################################################
 installPhp() {
     title "Installing PHP 7.3";
@@ -544,7 +544,7 @@ cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un
 
 options=(
     01 "Git" on
-    02 "Node v8" on
+    02 "Node v9" on
     03 "PHP v7.3 with PECL" on
     04 "Ruby" off
     05 "Python" off
