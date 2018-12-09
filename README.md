@@ -78,3 +78,23 @@ You can expect the following to be automatically installed and readily accessabl
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop Client
+
+## Issues with Docker in ChromeOS
+
+If docker gives the following error when starting (check `sudo journalctl -xe`):
+
+```
+modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open moddep file '/lib/modules/4.14.74-0777
+```
+
+The do the following:
+
+Hash out (comment out) the ExecSartPre line from `/lib/systemd/system/containerd.service`
+
+```
+sudo vim /lib/systemd/system/containerd.service
+
+sudo systemctl daemon-reload
+sudo systemctl restart containerd.service
+sudo systemctl restart docker
+```
