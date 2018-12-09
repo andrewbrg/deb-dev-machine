@@ -122,6 +122,7 @@ sudo vim /etc/docker/daemon.json;
       "path": "/usr/local/bin/runc-master"
     }
   },
+  "default-runtime": "runc-master"
 }
 ```
 
