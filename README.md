@@ -92,7 +92,7 @@ modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open mo
 1. Hash out _(comment out)_ the `ExecSartPre` line from: `/lib/systemd/system/containerd.service`
 
 ```
-sudo vim /lib/systemd/system/containerd.service
+sudo vim /lib/systemd/system/containerd.service;
 ```
 
 2. Install separate runc environment
