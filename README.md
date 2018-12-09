@@ -93,7 +93,11 @@ Hash out (comment out) the ExecSartPre line from `/lib/systemd/system/containerd
 
 ```
 sudo vim /lib/systemd/system/containerd.service
+```
 
+Then restart the docker services
+
+```
 sudo systemctl daemon-reload
 sudo systemctl restart containerd.service
 sudo systemctl restart docker
