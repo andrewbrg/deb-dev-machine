@@ -89,13 +89,13 @@ modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open mo
 
 **Then do the following:**
 
-1. Hash out (comment out) the ExecSartPre line from `/lib/systemd/system/containerd.service`
+1. Hash out _(comment out)_ the `ExecSartPre` line from: `/lib/systemd/system/containerd.service`
 
 ```
 sudo vim /lib/systemd/system/containerd.service
 ```
 
-2. Install seperate runc environment
+2. Install separate runc environment
 
 ```
 sudo apt install libseccomp-dev -y;
