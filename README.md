@@ -95,10 +95,46 @@ modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open mo
 sudo vim /lib/systemd/system/containerd.service
 ```
 
-2. Restart the docker services
+2. Install seperate runc environment
 
 ```
-sudo systemctl daemon-reload
-sudo systemctl restart containerd.service
-sudo systemctl restart docker
+sudo apt install libseccomp-dev -y;
+go get -v github.com/opencontainers/runc;
+
+cd $GOPATH/src/github.com/opencontainers/runc;
+make BUILDTAGS='seccomp apparmor';
+
+sudo ln -s $(realpath ./runc) /usr/local/bin/runc-master;
+```
+
+3. Point docker runc to the new environment
+
+```
+sudo mkdir /etc/docker;
+sudo touch /etc/docker/daemon.json;
+sudo vim /etc/docker/daemon.json;
+```
+
+```json
+{
+  "runtimes": {
+    "runc-master": {
+      "path": "/usr/local/bin/runc-master"
+    }
+  },
+}
+```
+
+4. Restart the docker services
+
+```
+sudo systemctl daemon-reload;
+sudo systemctl restart containerd.service;
+sudo systemctl restart docker;
+```
+
+5. Test the installation
+
+```
+docker run hello-world;
 ```
