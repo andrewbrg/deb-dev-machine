@@ -239,9 +239,9 @@ installPhp() {
 # Ruby
 ##########################################################
 installRuby() {
-    title "Installing Ruby & DAPP";
+    title "Installing Ruby with DAPP v0.27.14";
     sudo apt install -y ruby-dev gcc pkg-config;
-    sudo gem install dapp;
+    sudo gem install dapp -v 0.27.14;
     breakLine;
 }
 
@@ -555,7 +555,7 @@ options=(
     01 "Git" on
     02 "Node v9" on
     03 "PHP v7.3 with PECL" on
-    04 "Ruby" off
+    04 "Ruby with DAPP v0.27.14" on
     05 "Python" off
     06 "GoLang" off
     07 "Yarn (package manager)" on
