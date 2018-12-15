@@ -754,7 +754,7 @@ breakLine;
 
 notify "Great, the installation is complete =)";
 
-if [[ ${installedZsh} -e 1 ]]; then
+if [[ ${installedZsh} -eq 1 ]]; then
     notify "You installed the ZSH Plugin..."
     echo "For a complete setup access your terminal settings ('Ctrl-Shift-P' in ChromeOS) then:"
     echo "";
