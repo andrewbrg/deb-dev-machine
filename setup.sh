@@ -756,13 +756,17 @@ notify "Great, the installation is complete =)";
 
 if [[ ${installedZsh} -eq 1 ]]; then
     breakLine;
-    notify "You installed the ZSH Plugin..."
-    echo "For a complete setup access your terminal settings ('Ctrl+Shift+P' for Chromebook):"
+    notify "ZSH Plugin Detected..."
     echo "";
-    echo "1) Set user-css path to: ${repoUrl}zsh/powerline-fonts.css";
-    echo "2) Set font-family to: 'Hack'";
+    echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):"
     echo "";
-    echo "If you are on a chromebook you may alternatively import this file: ${repoUrl}zsh/crosh.json"
+    echo "   1) Set user-css path to: $(tput bold)${repoUrl}zsh/powerline-fonts.css$(tput sgr0)";
+    echo "   2) Set font-family to: $(tput bold)'Hack'$(tput sgr0)";
     echo "";
-    echo "Further information on the ZSH plugin can be found here: https://github.com/robbyrussell/oh-my-zsh";
+    echo "Alternatively, for chromebook users:";
+    echo "";
+    echo "   1) Import this file directly: $(tput bold)${repoUrl}zsh/crosh.json$(tput sgr0)";
+    echo "";
+    echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
+    echo "";
 fi
