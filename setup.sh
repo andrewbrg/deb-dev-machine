@@ -759,7 +759,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     notify "You installed the ZSH Plugin..."
     echo "For a complete setup access your terminal settings ('Ctrl+Shift+P' for Chromebook):"
     echo "";
-    echo "1) Set user-css path to: ${repoUrl}/zsh/powerline-fonts.css";
+    echo "1) Set user-css path to: ${repoUrl}zsh/powerline-fonts.css";
     echo "2) Set font-family to: 'Hack'";
     echo "";
     echo "If you are on a chromebook you may alternatively import this file: ${repoUrl}zsh/crosh.json"
