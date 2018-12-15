@@ -43,6 +43,7 @@ repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 gotPhp=0;
 gotNode=0;
 gotGoLang=0;
+installedZsh=0;
 
 ###############################################################
 ## REPOSITORIES
@@ -550,12 +551,7 @@ installZsh() {
     echo 'export GOPATH=~/go' >> ~/.zshrc;
     source ~/.zshrc;
 
-    notify "Important - Access your terminal settings ('Ctrl-Shift-P' in ChromeOS), then"
-    echo "1) Set user-css path to: https://cdn.rawgit.com/wernight/powerline-web-fonts/e4d967ca4f95d9fa0cf1d51afed2e5a5927d759e/PowerlineFonts.css";
-    echo "2) Set font to: DejaVu Sans Mono";
-    echo "";
-    echo "Full docs: https://github.com/robbyrussell/oh-my-zsh";
-    sleep 2;
+    installedZsh=1;
 
     breakLine;
 }
@@ -757,3 +753,13 @@ title "Finalising & Cleaning Up...";
 breakLine;
 
 notify "Great, the installation is complete =)";
+
+if [[ ${installedZsh} -e 1 ]]; then
+    notify "You installed the ZSH Plugin..."
+    echo "For a complete setup access your terminal settings ('Ctrl-Shift-P' in ChromeOS) then:"
+    echo "";
+    echo "1) Set user-css path to: https://cdn.rawgit.com/wernight/powerline-web-fonts/e4d967ca4f95d9fa0cf1d51afed2e5a5927d759e/PowerlineFonts.css";
+    echo "2) Set font to: DejaVu Sans Mono";
+    echo "";
+    echo "Full docs: https://github.com/robbyrussell/oh-my-zsh";
+fi
