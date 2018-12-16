@@ -368,7 +368,6 @@ installDocker() {
                 if [[ ${gotGoLang} -ne 1 ]]; then
                     breakLine;
                     installGoLang;
-                    breakLine;
                 fi
 
                 sudo apt install libseccomp-dev -y;
