@@ -37,13 +37,14 @@ curlToFile() {
 }
 
 ###############################################################
-## GLOBALS
+## REGISTERED VARIABLES
 ###############################################################
-repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
+gotZsh=0;
 gotPhp=0;
 gotNode=0;
 gotGoLang=0;
-installedZsh=0;
+
+repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
 ###############################################################
 ## REPOSITORIES
@@ -559,7 +560,7 @@ installPopcorn() {
     sudo apt install -y libnss3 vlc;
 
     if [[ -d /opt/popcorn-time ]]; then
-        sudo rm -rf /opt/popcorn-time/
+        sudo rm -rf /opt/popcorn-time/;
     fi
 
     sudo mkdir /opt/popcorn-time;
@@ -578,11 +579,20 @@ installZsh() {
 
     sudo apt install -y zsh fonts-powerline;
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
+
+    if [[ -f ${HOME}"/.zshrc" ]]; then
+        sudo rm ${HOME}"/.zshrc";
+    fi
+
+    if [[ -f ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ]]; then
+        sudo rm ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
+    fi
+
     curlToFile ${repoUrl}"zsh/.zsxhrc" ${HOME}"/.zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
-    installedZsh=1;
+    gotZsh=1;
 
     breakLine;
 }
@@ -785,7 +795,7 @@ breakLine;
 
 notify "Great, the installation is complete =)";
 
-if [[ ${installedZsh} -eq 1 ]]; then
+if [[ ${gotZsh} -eq 1 ]]; then
     breakLine;
     notify "ZSH Plugin Detected..."
     echo "";
