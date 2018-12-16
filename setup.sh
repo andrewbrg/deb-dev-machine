@@ -39,10 +39,20 @@ curlToFile() {
 ###############################################################
 ## REGISTERED VARIABLES
 ###############################################################
-gotZsh=0;
-gotPhp=0;
-gotNode=0;
-gotGoLang=0;
+installedGo=0;
+installedZsh=0;
+installedPhp=0;
+installedNode=0;
+installedSublime=0;
+
+versionPhp="7.3";
+versionGo="1.11.4";
+versionHelm="2.10.0";
+versionSops="3.1.1";
+versionDapp="0.27.14";
+versionNode="9";
+versionPopcorn="0.3.10";
+versionPhpStorm="2018.3.1";
 
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
@@ -50,7 +60,7 @@ repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 ## REPOSITORIES
 ###############################################################
 
-# PHP 7.3
+# PHP
 ##########################################################
 repoPhp() {
     if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
@@ -180,14 +190,14 @@ installGit() {
     breakLine;
 }
 
-# Node 9
+# Node
 ##########################################################
 installNode() {
-    title "Installing Node 9";
-    curl -L "https://deb.nodesource.com/setup_9.x" | sudo -E bash -;
+    title "Installing Node ${versionNode}";
+    curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
     sudo apt install -y nodejs;
     sudo chown -R $(whoami) /usr/lib/node_modules;
-    gotNode=1;
+    installedNode=1;
     breakLine;
 }
 
@@ -223,25 +233,25 @@ installWebpack() {
     breakLine;
 }
 
-# PHP 7.3
+# PHP
 ##########################################################
 installPhp() {
-    title "Installing PHP 7.3";
-    sudo apt install -y php7.3 php7.3-{bcmath,cli,common,curl,dev,gd,intl,mbstring,mysql,sqlite3,xml,zip} php-pear php-memcached php-redis;
+    title "Installing PHP ${versionPhp}";
+    sudo apt install -y php${versionPhp} php${versionPhp}-{bcmath,cli,common,curl,dev,gd,intl,mbstring,mysql,sqlite3,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis php-xdebug php-ds;
     php --version;
 
     sudo pecl install igbinary ds;
-    gotPhp=1;
+    installedPhp=1;
     breakLine;
 }
 
 # Ruby
 ##########################################################
 installRuby() {
-    title "Installing Ruby with DAPP v0.27.14";
+    title "Installing Ruby with DAPP v${versionDapp}";
     sudo apt install -y ruby-dev gcc pkg-config;
-    sudo gem install dapp -v 0.27.14;
+    sudo gem install dapp -v ${versionDapp};
     breakLine;
 }
 
@@ -258,8 +268,8 @@ installPython() {
 # GoLang
 ##########################################################
 installGoLang() {
-    title "Installing GoLang";
-    curlToFile "https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz" "go.tar.gz";
+    title "Installing GoLang ${versionGo}";
+    curlToFile "https://dl.google.com/go/go${versionGo}.linux-amd64.tar.gz" "go.tar.gz";
     tar xvf go.tar.gz;
 
     if [[ -d /usr/local/go ]]; then
@@ -277,7 +287,7 @@ installGoLang() {
     mkdir ${GOPATH};
     sudo chown -R root:root ${GOPATH};
 
-    gotGoLang=1;
+    installedGo=1;
     breakLine;
 }
 
@@ -379,7 +389,7 @@ installDocker() {
         read -p "(Y/n)" yn
         case ${yn} in
             [Yy]* )
-                if [[ ${gotGoLang} -ne 1 ]]; then
+                if [[ ${installedGo} -ne 1 ]]; then
                     breakLine;
                     installGoLang;
                 fi
@@ -416,21 +426,21 @@ installKubernetes() {
 # Helm
 ##########################################################
 installHelm() {
-    title "Installing Helm v2.10";
-    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz" -o helm-v2.10.0-linux-amd64.tar.gz;
-    tar -zxvf helm-v2.10.0-linux-amd64.tar.gz;
+    title "Installing Helm v${versionHelm}";
+    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v${versionHelm}-linux-amd64.tar.gz" -o helm.tar.gz;
+    tar -zxvf helm.tar.gz;
     sudo mv linux-amd64/helm /usr/local/bin/helm;
-    sudo rm -rf linux-amd64 && sudo rm helm-v2.10.0-linux-amd64.tar.gz;
+    sudo rm -rf linux-amd64 && sudo rm helm.tar.gz;
     breakLine;
 }
 
 # Sops
 ##########################################################
 installSops() {
-    title "Installing Sops v3.1.1";
-    wget -O sops_3.1.1_amd64.deb "https://github.com/mozilla/sops/releases/download/3.1.1/sops_3.1.1_amd64.deb";
-    sudo dpkg -i sops_3.1.1_amd64.deb;
-    sudo rm sops_3.1.1_amd64.deb;
+    title "Installing Sops v${versionSops}";
+    wget -O sops_${versionSops}_amd64.deb "https://github.com/mozilla/sops/releases/download/${versionSops}/sops_${versionSops}_amd64.deb";
+    sudo dpkg -i sops_${versionSops}_amd64.deb;
+    sudo rm sops_${versionSops}_amd64.deb;
     breakLine;
 }
 
@@ -438,7 +448,6 @@ installSops() {
 ##########################################################
 installWine() {
     title "Installing Wine & Mono";
-
     sudo apt install -y cabextract;
     sudo apt install -y --install-recommends winehq-stable;
     sudo apt install -y mono-vbnc;
@@ -505,7 +514,6 @@ installVsCode() {
 ##########################################################
 installSublime() {
     title "Installing Sublime Text";
-
     sudo apt install -y sublime-text;
     sudo apt install -y python-pip;
     sudo pip install -U CodeIntel;
@@ -529,14 +537,16 @@ installSublime() {
     sudo mkdir -p ".config/sublime-text-3/Installed Packages/PyV8/";
     sudo unzip ~/bin.zip -d ".config/sublime-text-3/Installed Packages/PyV8/";
     sudo rm ~/bin.zip;
+
+    installedSublime=1;
     breakLine;
 }
 
 # PHP Storm
 ##########################################################
 installPhpStorm() {
-    title "Installing PhpStorm IDE";
-    curlToFile "https://download.jetbrains.com/webide/PhpStorm-2018.2.2.tar.gz" "phpstorm.tar.gz";
+    title "Installing PhpStorm IDE ${versionPhpStorm}";
+    curlToFile "https://download.jetbrains.com/webide/PhpStorm-${versionPhpStorm}.tar.gz" "phpstorm.tar.gz";
     sudo tar xfz ~/phpstorm.tar.gz;
 
     sudo rm -rf /opt/phpstorm/;
@@ -569,19 +579,19 @@ installGoogleSdk() {
 # Popcorn Time
 ##########################################################
 installPopcorn() {
-    title "Installing Popcorn Time";
+    title "Installing Popcorn Time v${versionPopcorn}";
     sudo apt install -y libnss3 vlc;
 
     if [[ -d /opt/popcorn-time ]]; then
-        sudo rm -rf /opt/popcorn-time/;
+        sudo rm -rf /opt/popcorn-time;
     fi
 
     sudo mkdir /opt/popcorn-time;
-    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-0.3.10-Linux-64.tar.xz" | sudo tar Jx -C /opt/popcorn-time;
+    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.tar.xz" | sudo tar Jx -C /opt/popcorn-time;
     sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
 
+    notify "Adding desktop file for Popcorn Time";
     curlToFile ${repoUrl}"desktop/popcorn.desktop" "/usr/share/applications/popcorn.desktop";
-
     breakLine;
 }
 
@@ -606,7 +616,7 @@ installZsh() {
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
-    gotZsh=1;
+    installedZsh=1;
 
     breakLine;
 }
@@ -625,11 +635,11 @@ cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un
 
 options=(
     01 "Git" on
-    02 "Node v9" on
-    03 "PHP v7.3 with PECL" on
-    04 "Ruby with DAPP v0.27.14" on
+    02 "Node v${versionNode}" on
+    03 "PHP v${versionPhp} with PECL" on
+    04 "Ruby with DAPP v${versionDapp}" on
     05 "Python" off
-    06 "GoLang" off
+    06 "GoLang v${versionGo}" off
     07 "Yarn (package manager)" on
     08 "Composer (package manager)" on
     09 "React Native" on
@@ -640,8 +650,8 @@ options=(
     14 "Redis server" on
     15 "Docker CE (with docker compose)" off
     16 "Kubernetes (Kubectl)" off
-    17 "Helm v2.10" on
-    18 "Sops v3.1.1" on
+    17 "Helm v${versionHelm}" on
+    18 "Sops v${versionSops}" on
     19 "Postman" on
     20 "Laravel installer" on
     21 "Wine" off
@@ -651,11 +661,11 @@ options=(
     25 "Atom IDE" off
     26 "VS Code IDE" off
     27 "Sublime Text IDE" on
-    28 "PhpStorm IDE" off
+    28 "PhpStorm IDE v${versionPhpStorm}" off
     29 "Software Center" on
     30 "Remmina (Remote Desktop Client)" off
     31 "Google Cloud SDK" off
-    32 "Popcorn Time" off
+    32 "Popcorn Time v${versionPopcorn}" off
     33 "ZSH Terminal Plugin" on
 );
 
@@ -730,31 +740,31 @@ do
         06) installGoLang ;;
         07) installYarn ;;
         08)
-            if [[ ${gotPhp} -ne 1 ]]; then
+            if [[ ${installedPhp} -ne 1 ]]; then
                 installPhp;
             fi
             installComposer;
         ;;
         09)
-            if [[ ${gotNode} -ne 1 ]]; then
+            if [[ ${installedNode} -ne 1 ]]; then
                 installNode;
             fi
             installReactNative;
         ;;
         10)
-            if [[ ${gotNode} -ne 1 ]]; then
+            if [[ ${installedNode} -ne 1 ]]; then
                 installNode;
             fi
             installCordova;
         ;;
         11)
-            if [[ ${gotNode} -ne 1 ]]; then
+            if [[ ${installedNode} -ne 1 ]]; then
                 installNode;
             fi
             installPhoneGap;
         ;;
         12)
-            if [[ ${gotNode} -ne 1 ]]; then
+            if [[ ${installedNode} -ne 1 ]]; then
                 installNode;
             fi
             installWebpack;
@@ -765,14 +775,14 @@ do
         16) installKubernetes ;;
         17) installHelm ;;
         18)
-            if [[ ${gotGoLang} -ne 1 ]]; then
+            if [[ ${installedGo} -ne 1 ]]; then
                 installGoLang;
             fi
             installSops;
         ;;
         19) installPostman ;;
         20)
-            if [[ ${gotPhp} -ne 1 ]]; then
+            if [[ ${installedPhp} -ne 1 ]]; then
                 installPhp;
             fi
             installLaravel;
@@ -804,11 +814,11 @@ breakLine;
 
 notify "Great, the installation is complete =)";
 
-if [[ ${gotZsh} -eq 1 ]]; then
+if [[ ${installedZsh} -eq 1 ]]; then
     breakLine;
     notify "ZSH Plugin Detected..."
     echo "";
-    echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):"
+    echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):";
     echo "";
     echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
     echo "   2) Add $(tput bold)'Hack'$(tput sgr0) as a font-family entry.";
@@ -818,5 +828,15 @@ if [[ ${gotZsh} -eq 1 ]]; then
     echo "   1) Import this file directly: $(tput bold)${repoUrl}zsh/crosh.json$(tput sgr0)";
     echo "";
     echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
+
+fi
+
+if [[ ${installedSublime} -eq 1 ]]; then
+    breakLine;
+    notify "Sublime Text Detected..."
+    echo "";
+    echo "To complete the Sublime Text installation make sure to install the 'Package Control' plugin when first running Sublime."
     echo "";
 fi
+
+echo "";
