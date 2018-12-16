@@ -547,6 +547,7 @@ installZsh() {
     sudo apt install -y zsh fonts-powerline;
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
     curlToFile ${repoUrl}"zsh/.zshrc" ${HOME}"/.zshrc";
+    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
     installedZsh=1;
