@@ -259,10 +259,24 @@ installPython() {
 ##########################################################
 installGoLang() {
     title "Installing GoLang";
-    sudo apt install -y golang;
-    echo 'export GOPATH=~/go' >> ~/.bashrc;
-    source ~/.bashrc;
+    curlToFile "https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz" "go.tar.gz";
+    tar xvf go.tar.gz;
+
+    if [[ -d /usr/local/go ]]; then
+        sudo rm -rf /usr/local/go;
+    fi
+
+    sudo mv go /usr/local;
+    echo "y" | rm go.tar.gz;
+
+    echo 'export GOROOT="/usr/local/go"' >> ~/.profile;
+    echo 'export GOPATH="$HOME/go"' >> ~/.profile;
+    echo 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"' >> ~/.profile;
+
+    source ~/.profile;
     mkdir ${GOPATH};
+    sudo chown -R root:root ${GOPATH};
+
     gotGoLang=1;
     breakLine;
 }
@@ -580,11 +594,11 @@ installZsh() {
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
 
     if [[ -f ${HOME}"/.zshrc" ]]; then
-        sudo rm ${HOME}"/.zshrc";
+        sudo mv ${HOME}"/.zshrc" ${HOME}"/.zshrc.bak";
     fi
 
     if [[ -f ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ]]; then
-        sudo rm ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
+        sudo mv ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme.bak";
     fi
 
     cd ~/;
@@ -775,12 +789,7 @@ do
         30) installRemmina ;;
         31) installGoogleSdk ;;
         32) installPopcorn ;;
-        33)
-            if [[ ${gotGoLang} -ne 1 ]]; then
-                installGoLang;
-            fi
-            installZsh;
-        ;;
+        33) installZsh ;;
     esac
 done
 
@@ -802,7 +811,7 @@ if [[ ${gotZsh} -eq 1 ]]; then
     echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):"
     echo "";
     echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
-    echo "   2) Set font-family to: $(tput bold)'Hack'$(tput sgr0)";
+    echo "   2) Add $(tput bold)'Hack'$(tput sgr0) as a font-family entry.";
     echo "";
     echo "Alternatively, for chromebook users:";
     echo "";
