@@ -760,7 +760,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     echo "";
     echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):"
     echo "";
-    echo "   1) Set user-css path to: $(tput bold)${repoUrl}zsh/powerline-fonts.css$(tput sgr0)";
+    echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
     echo "   2) Set font-family to: $(tput bold)'Hack'$(tput sgr0)";
     echo "";
     echo "Alternatively, for chromebook users:";
