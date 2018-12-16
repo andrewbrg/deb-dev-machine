@@ -1,5 +1,5 @@
 @font-face {
     font-family: "Hack";
     src: local("Hack"),
-         url(fonts/Hack.woff2) format("woff2");
+         url(https://github.com/andrewbrg/deb9-dev-machine/blob/master/zsh/fonts/Hack.woff2) format("woff2");
 }
