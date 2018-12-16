@@ -38,7 +38,9 @@ You can expect the following to be automatically installed and readily accessabl
 - mono
 - gnome-software
 - gnome-packagekit
-- snapd
+- snapd _(may not work on chromebook devices)_
+- Zsh
+- Oh my Zsh
 
 **Services**
 - Git
