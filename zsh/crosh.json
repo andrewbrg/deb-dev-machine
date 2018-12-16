@@ -8,9 +8,8 @@
 		"default": {
 			"background-color": "rgba(19, 21, 26, 1)",
 			"enable-blink": false,
-			"font-family": "DejaVu Sans Mono",
-			"foreground-color": "rgba(223, 223, 223, 1)",
-			"user-css": "https://cdn.rawgit.com/wernight/powerline-web-fonts/e4d967ca4f95d9fa0cf1d51afed2e5a5927d759e/PowerlineFonts.css"
+			"font-family": "Hack",
+			"user-css": "https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css"
 		}
 	}
 }
