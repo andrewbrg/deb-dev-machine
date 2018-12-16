@@ -1,7 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME"/.oh-my-zsh"
 
-Path to GO
+# Path to GO
 export GOPATH=$HOME"/go"
 
 # Set name of the theme to load --- if set to "random", it will

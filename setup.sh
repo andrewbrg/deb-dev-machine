@@ -76,8 +76,6 @@ repoDocker() {
         notify "Adding Docker repository";
         curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable";
-    sudo groupadd docker;
-    sudo usermod -aG docker ${USER};
     fi
 }
 
@@ -357,9 +355,12 @@ installDocker() {
     curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
     sudo chmod +x /usr/local/bin/docker-compose;
 
+    sudo groupadd docker;
+    sudo usermod -aG docker ${USER};
+
     while true; do
-        read -p "Install a separate runc environment? (recommended for chromebook users)" yn
-        case $yn in
+        read -p "Install a separate runc environment? (recommended on chromebooks)" yn
+        case ${yn} in
             [Yy]* )
                 if [[ ${gotGoLang} -ne 1 ]]; then
                     installGoLang
@@ -368,7 +369,7 @@ installDocker() {
                 sudo apt install libseccomp-dev -y;
                 go get -v github.com/opencontainers/runc;
 
-                cd $GOPATH/src/github.com/opencontainers/runc;
+                cd ${GOPATH}/src/github.com/opencontainers/runc;
                 make BUILDTAGS='seccomp apparmor';
 
                 sudo ln -s $(realpath ./runc) /usr/local/bin/runc-master;
@@ -573,7 +574,7 @@ installZsh() {
 
     sudo apt install -y zsh fonts-powerline;
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
-    curlToFile ${repoUrl}"zsh/.zshrc" ${HOME}"/.zshrc";
+    curlToFile ${repoUrl}"zsh/.zsxhrc" ${HOME}"/.zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
@@ -587,7 +588,7 @@ installZsh() {
 ###############################################################
 sudo apt install -y dialog;
 
-cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/unselect options & <enter> start installation." \
+cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un-select options & <enter> start installation." \
 --ascii-lines \
 --clear \
 --nocancel \
