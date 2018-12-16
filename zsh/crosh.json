@@ -1,15 +1,15 @@
 {
-	"magic": "nassh-prefs",
-	"version": 1,
-	"nassh": {
-		"profile-ids": []
-	},
-	"hterm": {
-		"default": {
-			"background-color": "rgba(19, 21, 26, 1)",
-			"enable-blink": false,
-			"font-family": "Hack",
-			"user-css": "https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css"
-		}
-	}
+    "magic": "nassh-prefs",
+    "version": 1,
+    "nassh": {
+        "profile-ids": []
+    },
+    "hterm": {
+        "default": {
+            "background-color": "rgba(19, 21, 26, 1)",
+            "enable-blink": false,
+            "font-family": "Hack",
+            "user-css": "https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css"
+        }
+    }
 }
