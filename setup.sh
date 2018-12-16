@@ -394,6 +394,8 @@ installDocker() {
                     installGoLang;
                 fi
 
+                sudo sed -i -e 's/ExecStartPre=\/sbin\/modprobe overlay/#ExecStartPre=\/sbin\/modprobe overlay/g' /lib/systemd/system/containerd.service;
+
                 sudo apt install libseccomp-dev -y;
                 go get -v github.com/opencontainers/runc;
 
