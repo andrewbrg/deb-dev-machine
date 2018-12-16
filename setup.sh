@@ -359,7 +359,7 @@ installDocker() {
     sudo usermod -aG docker ${USER};
 
     notify "Install a separate runc environment? (recommended on chromebooks)?";
-    
+
     while true; do
         read -p "(Y/n)" yn
         case ${yn} in
