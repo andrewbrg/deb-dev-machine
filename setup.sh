@@ -358,8 +358,10 @@ installDocker() {
     sudo groupadd docker;
     sudo usermod -aG docker ${USER};
 
+    notify "Install a separate runc environment? (recommended on chromebooks)?";
+    
     while true; do
-        read -p "Install a separate runc environment? (recommended on chromebooks)" yn
+        read -p "(Y/n)" yn
         case ${yn} in
             [Yy]* )
                 if [[ ${gotGoLang} -ne 1 ]]; then
