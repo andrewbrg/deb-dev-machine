@@ -356,6 +356,33 @@ installDocker() {
     sudo apt install -y docker-ce;
     curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
     sudo chmod +x /usr/local/bin/docker-compose;
+
+    while true; do
+        read -p "Install a separate runc environment? (recommended for chromebook users)" yn
+        case $yn in
+            [Yy]* )
+                if [[ ${gotGoLang} -ne 1 ]]; then
+                    installGoLang
+                fi
+
+                sudo apt install libseccomp-dev -y;
+                go get -v github.com/opencontainers/runc;
+
+                cd $GOPATH/src/github.com/opencontainers/runc;
+                make BUILDTAGS='seccomp apparmor';
+
+                sudo ln -s $(realpath ./runc) /usr/local/bin/runc-master;
+
+                curlToFile ${repoUrl}"docker/daemon.json" /etc/docker/daemon.json;
+                sudo systemctl daemon-reload;
+                sudo systemctl restart containerd.service;
+                sudo systemctl restart docker;
+            break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
     breakLine;
 }
 
