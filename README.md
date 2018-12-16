@@ -14,11 +14,9 @@ sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/a
 
 This script can be run via the terminal and will get a fresh debian installation up and running with most (if not all) of the dev tools you would require.
 
-Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers.
+Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers. **Total installation size including the OS itself is ~7GB**
 
 You can expect the following to be automatically installed and readily accessable:
-
-**Total installation size including the OS itself is approx. 7GB**
 
 **Utilities**
 - ca-certificates
