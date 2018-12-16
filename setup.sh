@@ -588,7 +588,7 @@ installZsh() {
     fi
 
     cd ~/;
-    curlToFile ${repoUrl}"zsh/.zsxhrc" ".zshrc";
+    curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
