@@ -53,6 +53,7 @@ versionDapp="0.27.14";
 versionNode="9";
 versionPopcorn="0.3.10";
 versionPhpStorm="2018.3.1";
+versionDockerCompose="1.22.0";
 
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
@@ -377,13 +378,13 @@ installRedisDesktopManager() {
 installDocker() {
     title "Installing Docker CE with Docker Compose";
     sudo apt install -y docker-ce;
-    curlToFile "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
+    curlToFile "https://github.com/docker/compose/releases/download/${versionDockerCompose}/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
     sudo chmod +x /usr/local/bin/docker-compose;
 
     sudo groupadd docker;
     sudo usermod -aG docker ${USER};
 
-    notify "Install a separate runc environment? (recommended on chromebooks)?";
+    notify "Install a separate runc environment? (recommended on chromebooks)";
 
     while true; do
         read -p "(Y/n)" yn
