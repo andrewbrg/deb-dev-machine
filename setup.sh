@@ -365,7 +365,9 @@ installDocker() {
         case ${yn} in
             [Yy]* )
                 if [[ ${gotGoLang} -ne 1 ]]; then
-                    installGoLang
+                    breakLine;
+                    installGoLang;
+                    breakLine;
                 fi
 
                 sudo apt install libseccomp-dev -y;
@@ -705,33 +707,33 @@ do
         07) installYarn ;;
         08)
             if [[ ${gotPhp} -ne 1 ]]; then
-                installPhp
+                installPhp;
             fi
-            installComposer
+            installComposer;
         ;;
         09)
             if [[ ${gotNode} -ne 1 ]]; then
-                installNode
+                installNode;
             fi
-            installReactNative
+            installReactNative;
         ;;
         10)
             if [[ ${gotNode} -ne 1 ]]; then
-                installNode
+                installNode;
             fi
-            installCordova
+            installCordova;
         ;;
         11)
             if [[ ${gotNode} -ne 1 ]]; then
-                installNode
+                installNode;
             fi
-            installPhoneGap
+            installPhoneGap;
         ;;
         12)
             if [[ ${gotNode} -ne 1 ]]; then
-                installNode
+                installNode;
             fi
-            installWebpack
+            installWebpack;
         ;;
         13) installMemcached ;;
         14) installRedis ;;
@@ -740,16 +742,16 @@ do
         17) installHelm ;;
         18)
             if [[ ${gotGoLang} -ne 1 ]]; then
-                installGoLang
+                installGoLang;
             fi
-            installSops
+            installSops;
         ;;
         19) installPostman ;;
         20)
             if [[ ${gotPhp} -ne 1 ]]; then
-                installPhp
+                installPhp;
             fi
-            installLaravel
+            installLaravel;
         ;;
         21) installWine ;;
         22) installSqLite ;;
@@ -765,9 +767,9 @@ do
         32) installPopcorn ;;
         33)
             if [[ ${gotGoLang} -ne 1 ]]; then
-                installGoLang
+                installGoLang;
             fi
-            installZsh
+            installZsh;
         ;;
     esac
 done
