@@ -587,8 +587,9 @@ installZsh() {
         sudo rm ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
     fi
 
-    curlToFile ${repoUrl}"zsh/.zsxhrc" ${HOME}"/.zshrc";
-    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme";
+    cd ~/;
+    curlToFile ${repoUrl}"zsh/.zsxhrc" ".zshrc";
+    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
     source ~/.zshrc;
 
     gotZsh=1;
