@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+###############################################################
+## PACKAGE VERSIONS - CHANGE AS REQUIRED
+###############################################################
+versionPhp="7.3";
+versionGo="1.11.4";
+versionHelm="2.10.0";
+versionSops="3.1.1";
+versionDapp="0.27.14";
+versionNode="9";
+versionPopcorn="0.3.10";
+versionPhpStorm="2018.3.1";
+versionDockerCompose="1.22.0";
+
 # Disallow running with sudo or su
 ##########################################################
 if [[ "$EUID" -eq 0 ]]
@@ -44,17 +57,6 @@ installedZsh=0;
 installedPhp=0;
 installedNode=0;
 installedSublime=0;
-
-versionPhp="7.3";
-versionGo="1.11.4";
-versionHelm="2.10.0";
-versionSops="3.1.1";
-versionDapp="0.27.14";
-versionNode="9";
-versionPopcorn="0.3.10";
-versionPhpStorm="2018.3.1";
-versionDockerCompose="1.22.0";
-
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
 ###############################################################
@@ -827,7 +829,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     source ~/.zshrc;
 
     echo "";
-    echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):";
+    echo "If you are on a Chromebook, to complete the zsh setup you must manually change your terminal settings 'Ctrl+Shift+P':";
     echo "";
     echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
     echo "   2) Add $(tput bold)'Hack'$(tput sgr0) as a font-family entry.";
@@ -836,6 +838,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     echo "";
     echo "   1) Import this file directly: $(tput bold)${repoUrl}zsh/crosh.json$(tput sgr0)";
     echo "";
+    echo "If the zsh plugin does not take effect you can manually activate it by adding /bin/zsh to you .bashrc file. ";
     echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
 
 fi
