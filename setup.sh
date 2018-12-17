@@ -280,11 +280,11 @@ installGoLang() {
     sudo mv go /usr/local;
     echo "y" | rm go.tar.gz;
 
-    echo 'export GOROOT="/usr/local/go"' >> ~/.profile;
-    echo 'export GOPATH="$HOME/go"' >> ~/.profile;
-    echo 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"' >> ~/.profile;
+    echo 'export GOROOT="/usr/local/go"' >> ~/.bashrc;
+    echo 'export GOPATH="$HOME/go"' >> ~/.bashrc;
+    echo 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"' >> ~/.bashrc;
 
-    source ~/.profile;
+    source ~/.bashrc;
     mkdir ${GOPATH};
     sudo chown -R root:root ${GOPATH};
 
@@ -614,13 +614,9 @@ installZsh() {
         sudo mv ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme.bak";
     fi
 
-    cd ~/;
-    curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
-    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
-    source ~/.zshrc;
+    echo '/bin/zsh' >> ~/.bashrc;
 
     installedZsh=1;
-
     breakLine;
 }
 
@@ -817,16 +813,26 @@ breakLine;
 
 notify "Great, the installation is complete =)";
 
+###############################################################
+## POST INSTALLATION ACTIONS
+###############################################################
 if [[ ${installedZsh} -eq 1 ]]; then
+
     breakLine;
     notify "ZSH Plugin Detected..."
+
+    cd ~/;
+    curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
+    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
+    source ~/.zshrc;
+
     echo "";
     echo "To complete the ZSH setup you must manually change your terminal theme settings ('Ctrl+Shift+P' on chromebook):";
     echo "";
     echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
     echo "   2) Add $(tput bold)'Hack'$(tput sgr0) as a font-family entry.";
     echo "";
-    echo "Alternatively, for chromebook users:";
+    echo "Alternatively:";
     echo "";
     echo "   1) Import this file directly: $(tput bold)${repoUrl}zsh/crosh.json$(tput sgr0)";
     echo "";
