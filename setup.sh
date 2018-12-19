@@ -183,6 +183,8 @@ repoMySqlServer() {
         notify "Adding MySQL Community Server repository";
         curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.11-1_all.deb" "mysql.deb";
         sudo dpkg -i mysql.deb;
+
+        /etc/apparmor.d/local
         echo 'y' | rm mysql.deb;
     fi
 }
@@ -872,6 +874,14 @@ if [[ ${installedSublime} -eq 1 ]]; then
     notify "Sublime Text Detected..."
     echo "";
     echo "To complete the Sublime Text installation make sure to install the 'Package Control' plugin when first running Sublime."
+    echo "";
+fi
+
+if [[ ${installedMySqlServer} -eq 1 ]]; then
+    breakLine;
+    notify "MySql Community Server Detected..."
+    echo "";
+    echo "If you want to harder your MySql installation run: mysql-secure-install"
     echo "";
 fi
 
