@@ -16,7 +16,7 @@ This script can be run via the terminal and will get a fresh debian installation
 
 Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers. **Total installation size including the OS itself is ~7GB**
 
-You can expect the following to be automatically installed and readily accessable:
+You can expect the following to be automatically installed and readily accessible:
 
 **Utilities**
 - ca-certificates
@@ -34,7 +34,7 @@ You can expect the following to be automatically installed and readily accessabl
 - vim
 - gksu
 - preload
-- wine _(with Royale2007 Theme & Smooth fonts)_
+- wine _(with Royale2007 theme & Smooth fonts)_
 - mono
 - gnome-software
 - gnome-packagekit
@@ -44,16 +44,17 @@ You can expect the following to be automatically installed and readily accessabl
 
 **Services**
 - Git
-- PHP version 7.2
+- PHP
+- MySQL Community Server
 - Composer
 - Ruby
 - Python
 - GoLang
 - Pip
 - Dapp
-- Memcahed
+- Memcached
 - Redis
-- Node 8
+- Node & npm
 - Yarn
 - Docker
 - Docker Compose
@@ -75,13 +76,13 @@ You can expect the following to be automatically installed and readily accessabl
 - Redis Desktop Manager
 - Software center
 - Package updater
-- Sublime Text (with material theme and plugins)
-- PHPStorm 2018.2.2
+- Sublime Text IDE _(with material theme and dev plugins)_
+- PHPStorm IDE
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop Client
 
-## Issues with Docker in ChromeOS
+## Issues with Docker in ChromeOS?
 
 If docker gives the following error when starting (check `sudo journalctl -xe`):
 
