@@ -656,7 +656,7 @@ cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un
 --clear \
 --nocancel \
 --separate-output \
---checklist "Select installable packages:" 40 50 50);
+--checklist "Select installable packages:" 42 50 50);
 
 options=(
     01 "Git" on
