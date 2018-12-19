@@ -57,6 +57,7 @@ installedZsh=0;
 installedPhp=0;
 installedNode=0;
 installedSublime=0;
+installedMySqlServer=0;
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
 
 ###############################################################
@@ -172,6 +173,17 @@ repoVlc() {
     if [[ ! -f /etc/apt/sources.list.d/videolan-ubuntu-stable-daily-disco.list ]]; then
         notify "Adding VLC repository";
         sudo add-apt-repository ppa:videolan/stable-daily
+    fi
+}
+
+# MySQL Community Server
+##########################################################
+repoMySqlServer() {
+    if [[ ! -f /var/lib/dpkg/info/mysql-apt-config.list ]]; then
+        notify "Adding MySQL Community Server repository";
+        curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.11-1_all.deb" "mysql.deb";
+        sudo dpkg -i mysql.deb;
+        echo 'y' | rm mysql.deb;
     fi
 }
 
@@ -604,7 +616,6 @@ installPopcorn() {
 ##########################################################
 installZsh() {
     title "Installing ZSH Terminal Plugin";
-
     sudo apt install -y zsh fonts-powerline;
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
 
@@ -619,6 +630,17 @@ installZsh() {
     echo '/bin/zsh' >> ~/.bashrc;
 
     installedZsh=1;
+    breakLine;
+}
+
+# MySql Community Server
+##########################################################
+installMySqlServer() {
+    title "Installing MySql Community Server";
+    sudo apt install -y mysql-server;
+    sudo systemctl enable mysql;
+    sudo systemctl start mysql;
+    installedMySqlServer=1;
     breakLine;
 }
 
@@ -656,18 +678,19 @@ options=(
     19 "Postman" on
     20 "Laravel installer" on
     21 "Wine" off
-    22 "SQLite (database tool)" on
-    23 "DBeaver (database tool)" off
-    24 "Redis Desktop Manager" on
-    25 "Atom IDE" off
-    26 "VS Code IDE" off
-    27 "Sublime Text IDE" on
-    28 "PhpStorm IDE v${versionPhpStorm}" off
-    29 "Software Center" on
-    30 "Remmina (Remote Desktop Client)" off
-    31 "Google Cloud SDK" off
-    32 "Popcorn Time v${versionPopcorn}" off
-    33 "ZSH Terminal Plugin" on
+    22 "MySql Community Server" on
+    23 "SQLite (database tool)" on
+    24 "DBeaver (database tool)" off
+    25 "Redis Desktop Manager" on
+    26 "Atom IDE" off
+    27 "VS Code IDE" off
+    28 "Sublime Text IDE" on
+    29 "PhpStorm IDE v${versionPhpStorm}" off
+    30 "Software Center" on
+    31 "Remmina (Remote Desktop Client)" off
+    32 "Google Cloud SDK" off
+    33 "Popcorn Time v${versionPopcorn}" off
+    34 "ZSH Terminal Plugin" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -714,12 +737,13 @@ do
         15) repoDocker ;;
         16) repoKubernetes ;;
         21) repoWine ;;
-        25) repoAtom ;;
-        26) repoVsCode ;;
-        27) repoSublime ;;
-        30) repoRemmina ;;
-        31) repoGoogleSdk ;;
-        32) repoVlc ;;
+        22) repoMySqlServer ;;
+        26) repoAtom ;;
+        27) repoVsCode ;;
+        28) repoSublime ;;
+        31) repoRemmina ;;
+        32) repoGoogleSdk ;;
+        33) repoVlc ;;
     esac
 done
 notify "Required repositories have been added...";
@@ -789,18 +813,19 @@ do
             installLaravel;
         ;;
         21) installWine ;;
-        22) installSqLite ;;
-        23) installDbeaver ;;
-        24) installRedisDesktopManager ;;
-        25) installAtom ;;
-        26) installVsCode ;;
-        27) installSublime ;;
-        28) installPhpStorm ;;
-        29) installSoftwareCenter ;;
-        30) installRemmina ;;
-        31) installGoogleSdk ;;
-        32) installPopcorn ;;
-        33) installZsh ;;
+        22) installMySqlServer ;;
+        23) installSqLite ;;
+        24) installDbeaver ;;
+        25) installRedisDesktopManager ;;
+        26) installAtom ;;
+        27) installVsCode ;;
+        28) installSublime ;;
+        29) installPhpStorm ;;
+        30) installSoftwareCenter ;;
+        31) installRemmina ;;
+        32) installGoogleSdk ;;
+        33) installPopcorn ;;
+        34) installZsh ;;
     esac
 done
 
@@ -814,12 +839,12 @@ title "Finalising & Cleaning Up...";
 breakLine;
 
 notify "Great, the installation is complete =)";
+echo "If you want to install further tool in the future you can run this script again.";
 
 ###############################################################
 ## POST INSTALLATION ACTIONS
 ###############################################################
 if [[ ${installedZsh} -eq 1 ]]; then
-
     breakLine;
     notify "ZSH Plugin Detected..."
 
@@ -840,7 +865,6 @@ if [[ ${installedZsh} -eq 1 ]]; then
     echo "";
     echo "If the zsh plugin does not take effect you can manually activate it by adding /bin/zsh to you .bashrc file. ";
     echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
-
 fi
 
 if [[ ${installedSublime} -eq 1 ]]; then
