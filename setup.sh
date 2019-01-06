@@ -110,6 +110,8 @@ repoWine() {
     if [[ ! -f /var/lib/dpkg/info/wine-stable.list ]]; then
         notify "Adding Wine repository";
         sudo dpkg --add-architecture i386;
+        wget -nc "https://dl.winehq.org/wine-builds/winehq.key";
+        sudo apt-key add winehq.key;
         curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
         sudo apt-add-repository "https://dl.winehq.org/wine-builds/debian/";
     fi
