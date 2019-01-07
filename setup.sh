@@ -122,7 +122,7 @@ repoWine() {
 repoAtom() {
     if [[ ! -f /etc/apt/sources.list.d/atom.list ]]; then
         notify "Adding Atom IDE repository";
-        curl -fsSL https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -;
+        curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" | sudo apt-key add -;
         echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee /etc/apt/sources.list.d/atom.list;
     fi
 }
@@ -883,7 +883,7 @@ if [[ ${installedMySqlServer} -eq 1 ]]; then
     breakLine;
     notify "MySql Community Server Detected..."
     echo "";
-    echo "If you want to harder your MySql installation run: mysql-secure-install"
+    echo "If you want to harden your MySql installation run: mysql-secure-install"
     echo "";
 fi
 
