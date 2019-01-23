@@ -502,7 +502,7 @@ installWine() {
     echo "y" | rm ~/Royale_2007.zip;
 
     notify "Installing PlayOnLinux";
-    sudo apt install -y playonlinux;
+    sudo apt install -y playonlinux netcat;
     breakLine;
 }
 
