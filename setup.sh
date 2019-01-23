@@ -115,6 +115,12 @@ repoWine() {
         curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
         sudo apt-add-repository "https://dl.winehq.org/wine-builds/debian/";
     fi
+
+    if [[ ! -f /etc/apt/sources.list.d/playonlinux.list ]]; then
+        notify "Adding PlayOnLinux repository";
+        wget -q "http://deb.playonlinux.com/public.gpg" -O- | apt-key add -;
+        wget "http://deb.playonlinux.com/playonlinux_stretch.list" -O /etc/apt/sources.list.d/playonlinux.list;
+    fi
 }
 
 # Atom
@@ -473,26 +479,31 @@ installWine() {
     sudo apt install -y --install-recommends winehq-stable;
     sudo apt install -y mono-vbnc;
 
-    notify "Installing windows fonts for wine apps";
+    notify "Installing windows fonts for Wine";
     curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
     sudo chmod +x ~/winetricks;
     ./winetricks allfonts;
-    echo "y" | rm ~/winetricks;
 
-    notify "Applying font smoothing to wine apps";
+    notify "Applying font smoothing to Wine";
     curlToFile ${repoUrl}"wine_fontsmoothing.sh" "wine_fontsmoothing";
     sudo chmod +x ~/wine_fontsmoothing;
     sudo ./wine_fontsmoothing;
-    echo "y" | rm ~/wine_fontsmoothing;
     clear;
 
-    notify "Installing Royale 2007 theme for windows apps";
+    notify "Installing Royale 2007 Theme";
     curlToFile "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" "Royale_2007.zip";
 
     sudo chown -R $(whoami) ~/;
     mkdir -p ~/.wine/drive_c/Resources/Themes/;
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
+
+    notify "Cleaning up...";
+    echo "y" | rm ~/winetricks;
+    echo "y" | rm ~/wine_fontsmoothing;
     echo "y" | rm ~/Royale_2007.zip;
+
+    notify "Installing PlayOnLinux";
+    sudo apt install -y playonlinux;
     breakLine;
 }
 
