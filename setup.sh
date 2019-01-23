@@ -110,16 +110,15 @@ repoWine() {
     if [[ ! -f /var/lib/dpkg/info/wine-stable.list ]]; then
         notify "Adding Wine repository";
         sudo dpkg --add-architecture i386;
-        wget -nc "https://dl.winehq.org/wine-builds/winehq.key";
-        sudo apt-key add winehq.key;
+        curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" | sudo apt-key add -;
         curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
         sudo apt-add-repository "https://dl.winehq.org/wine-builds/debian/";
     fi
 
     if [[ ! -f /etc/apt/sources.list.d/playonlinux.list ]]; then
         notify "Adding PlayOnLinux repository";
-        wget -q "http://deb.playonlinux.com/public.gpg" -O- | apt-key add -;
-        wget "http://deb.playonlinux.com/playonlinux_stretch.list" -O /etc/apt/sources.list.d/playonlinux.list;
+        curl -fsSL "http://deb.playonlinux.com/public.gpg" | sudo apt-key add -;
+        curlToFile "http://deb.playonlinux.com/playonlinux_stretch.list" "/etc/apt/sources.list.d/playonlinux.list";
     fi
 }
 
@@ -137,7 +136,7 @@ repoAtom() {
 ##########################################################
 repoVsCode() {
     if [[ ! -f /etc/apt/sources.list.d/vscode.list ]]; then
-        notify "Adding VS Code repository";
+        notify "Adding VSCode repository";
         curl "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor > microsoft.gpg;
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/;
         echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list;
@@ -148,7 +147,7 @@ repoVsCode() {
 ##########################################################
 repoSublime() {
     if [[ ! -f /etc/apt/sources.list.d/sublime-text.list ]]; then
-        notify "Adding Sublime text repository";
+        notify "Adding Sublime Text repository";
         curl -fsSL "https://download.sublimetext.com/sublimehq-pub.gpg" | sudo apt-key add -;
         echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list;
     fi
