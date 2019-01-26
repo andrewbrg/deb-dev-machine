@@ -114,12 +114,6 @@ repoWine() {
         curl -fsSL "https://dl.winehq.org/wine-builds/Release.key" | sudo apt-key add -;
         sudo apt-add-repository "https://dl.winehq.org/wine-builds/debian/";
     fi
-
-    if [[ ! -f /etc/apt/sources.list.d/playonlinux.list ]]; then
-        notify "Adding PlayOnLinux repository";
-        curl -fsSL "http://deb.playonlinux.com/public.gpg" | sudo apt-key add -;
-        curlToFile "http://deb.playonlinux.com/playonlinux_stretch.list" "/etc/apt/sources.list.d/playonlinux.list";
-    fi
 }
 
 # Atom
@@ -476,7 +470,7 @@ installWine() {
     title "Installing Wine & Mono";
     sudo apt install -y cabextract;
     sudo apt install -y --install-recommends winehq-stable;
-    sudo apt install -y mono-vbnc;
+    sudo apt install -y mono-vbnc winbind;
 
     notify "Installing windows fonts for Wine";
     curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
@@ -500,10 +494,6 @@ installWine() {
     echo "y" | rm ~/winetricks;
     echo "y" | rm ~/wine_fontsmoothing;
     echo "y" | rm ~/Royale_2007.zip;
-
-    notify "Installing PlayOnLinux";
-    sudo apt install -y playonlinux netcat;
-    breakLine;
 }
 
 # Postman
