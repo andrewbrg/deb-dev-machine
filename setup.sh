@@ -472,12 +472,15 @@ installWine() {
     sudo apt install -y --install-recommends winehq-stable;
     sudo apt install -y mono-vbnc winbind;
 
-    notify "Installing windows fonts for Wine";
+    notify "Installing WineTricks";
     curlToFile "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" "winetricks";
     sudo chmod +x ~/winetricks;
-    ./winetricks allfonts;
+    sudo mv ~/winetricks /usr/local/bin;
 
-    notify "Applying font smoothing to Wine";
+    notify "Installing Windows Fonts";
+    winetricks allfonts;
+
+    notify "Installing Smooth Fonts for Wine";
     curlToFile ${repoUrl}"wine_fontsmoothing.sh" "wine_fontsmoothing";
     sudo chmod +x ~/wine_fontsmoothing;
     sudo ./wine_fontsmoothing;
@@ -491,7 +494,6 @@ installWine() {
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
 
     notify "Cleaning up...";
-    echo "y" | rm ~/winetricks;
     echo "y" | rm ~/wine_fontsmoothing;
     echo "y" | rm ~/Royale_2007.zip;
 }
