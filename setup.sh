@@ -730,6 +730,7 @@ title "Installing Pre-Requisite Packages";
     snapd;
 
     sudo updatedb;
+    sudo rm /usr/share/applications/gksu.desktop;
 breakLine;
 
 title "Adding Repositories";
