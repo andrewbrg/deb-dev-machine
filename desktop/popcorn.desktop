@@ -13,3 +13,5 @@ Exec=/opt/popcorn-time/Popcorn-Time
 Icon=/opt/popcorn-time/src/app/images/icon.png
 Categories=AudioVideo;Player;Video;
 Keywords=Player;Audio;Video;
+StartupNotify=false
+StartupWMClass=Chromium-browser
