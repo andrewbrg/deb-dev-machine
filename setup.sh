@@ -215,6 +215,7 @@ installNode() {
     curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
     sudo apt install -y nodejs;
     sudo chown -R $(whoami) /usr/lib/node_modules;
+    sudo chmod -R 777 /usr/lib/node_modules;
     installedNode=1;
     breakLine;
 }
