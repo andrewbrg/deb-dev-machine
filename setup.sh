@@ -409,7 +409,7 @@ installDocker() {
         read -p "(Y/n)" yn
         case ${yn} in
             [Yy]* )
-                if [[ ${installedGo} -ne 1 ]]; then
+                if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
                     breakLine;
                     installGoLang;
                 fi
