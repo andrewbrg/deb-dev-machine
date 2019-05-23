@@ -3,7 +3,7 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
-versionPhp="7.3";
+versionPhp="7.2.18";
 versionGo="1.11.4";
 versionHelm="2.10.0";
 versionSops="3.1.1";
