@@ -422,7 +422,7 @@ installDocker() {
                 cd ${GOPATH}/src/github.com/opencontainers/runc;
                 make BUILDTAGS='seccomp apparmor';
 
-                sudo ln -s $(realpath ./runc) /usr/local/bin/runc-master;
+                sudo cp ${GOPATH}/src/github.com/opencontainers/runc/runc /usr/local/bin/runc-master;
 
                 curlToFile ${repoUrl}"docker/daemon.json" /etc/docker/daemon.json;
                 sudo systemctl daemon-reload;
