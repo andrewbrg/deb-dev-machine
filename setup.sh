@@ -4,14 +4,14 @@
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
 versionPhp="7.2";
-versionGo="1.11.4";
-versionHelm="2.10.0";
+versionGo="1.12.9";
+versionHelm="2.14.1";
 versionSops="3.1.1";
 versionDapp="0.27.14";
-versionNode="9";
+versionNode="12";
 versionPopcorn="0.3.10";
-versionPhpStorm="2018.3.1";
-versionDockerCompose="1.22.0";
+versionPhpStorm="2019.2";
+versionDockerCompose="1.24.1";
 
 # Disallow running with sudo or su
 ##########################################################
