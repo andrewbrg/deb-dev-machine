@@ -3,14 +3,14 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
-versionPhp="7.2";
+versionPhp="7.3";
 versionGo="1.12.9";
 versionHelm="2.14.1";
 versionSops="3.1.1";
 versionDapp="0.27.14";
 versionNode="12";
 versionPopcorn="0.3.10";
-versionPhpStorm="2019.2";
+versionPhpStorm="2019.3.3";
 versionDockerCompose="1.24.1";
 
 # Disallow running with sudo or su
@@ -213,7 +213,7 @@ installGit() {
 installNode() {
     title "Installing Node ${versionNode}";
     curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
-    sudo apt install -y nodejs;
+    sudo apt install -y nodejs npm;
     sudo chown -R $(whoami) /usr/lib/node_modules;
     sudo chmod -R 777 /usr/lib/node_modules;
     installedNode=1;
