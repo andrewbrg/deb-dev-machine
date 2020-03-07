@@ -3,7 +3,6 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
-versionDeb="$(lsb_release -c -s)";
 versionPhp="7.3";
 versionGo="1.12.9";
 versionHelm="2.14.1";
@@ -18,6 +17,14 @@ versionDockerCompose="1.24.1";
 ##########################################################
 if [[ "$EUID" -eq 0 ]]
   then printf "\033[1;101mNein, Nein, Nein!! Please do not run this script as root (no su or sudo)! \033[0m \n";
+  exit;
+fi
+
+# Disallow unsupported versions
+##########################################################
+versionDeb="$(lsb_release -c -s)";
+if [[ ${versionDeb} != "stretch" ]] && [[ ${versionDeb} != "buster" ]]
+  then printf "\033[1;101mUnfortunatly your OS Version (%s) is not supported. \033[0m \n" "${versionDeb}";
   exit;
 fi
 
