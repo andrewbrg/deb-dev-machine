@@ -175,7 +175,7 @@ repoGoogleSdk() {
 repoVlc() {
     if [[ ! -f /etc/apt/sources.list.d/videolan-ubuntu-stable-daily-disco.list ]]; then
         notify "Adding VLC repository";
-        sudo add-apt-repository ppa:videolan/stable-daily
+        sudo add-apt-repository ppa:videolan/stable-daily -y
     fi
 }
 
@@ -186,8 +186,6 @@ repoMySqlServer() {
         notify "Adding MySQL Community Server repository";
         curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.11-1_all.deb" "mysql.deb";
         sudo dpkg -i mysql.deb;
-
-        /etc/apparmor.d/local
         rm mysql.deb -f;
     fi
 }
@@ -216,8 +214,17 @@ installNode() {
     title "Installing Node ${versionNode}";
     curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
     sudo apt install -y nodejs npm;
-    sudo chown -R "$(whoami)" /usr/lib/node_modules;
-    sudo chmod -R 777 /usr/lib/node_modules;
+
+    if [[ ${versionDeb} = "stretch" ]]; then
+      sudo chown -R "$(whoami)" /usr/lib/node_modules;
+      sudo chmod -R 777 /usr/lib/node_modules;
+    fi
+
+    if [[ ${versionDeb} = "buster" ]]; then
+      sudo chown -R "$(whoami)" /usr/share/npm/node_modules;
+      sudo chmod -R 777 /usr/share/npm/node_modules;
+    fi
+
     installedNode=1;
     breakLine;
 }
