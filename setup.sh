@@ -42,7 +42,7 @@ breakLine() {
 
 notify() {
     printf "\n";
-    printf "\033[1;46m $1 \033[0m \n";
+    printf "\033[1;46m %s \033[0m" "$1";
 }
 
 curlToFile() {
@@ -154,7 +154,7 @@ repoRemmina() {
     if [[ ! -f /etc/apt/sources.list.d/remmina.list ]]; then
         notify "Adding Remmina repository";
         sudo touch /etc/apt/sources.list.d/remmina.list;
-        echo "deb http://ftp.debian.org/debian ${versionDeb}-backports main" | sudo tee --append /etc/apt/sources.list.d/${versionDeb}-backports.list >> /dev/null
+        echo "deb http://ftp.debian.org/debian ${versionDeb}-backports main" | sudo tee --append "/etc/apt/sources.list.d/${versionDeb}-backports.list" >> /dev/null
     fi
 }
 
@@ -308,9 +308,11 @@ installGoLang() {
     sudo mv go /usr/local;
     rm go.tar.gz -f;
 
-    echo 'export GOROOT="/usr/local/go"' >> ~/.bashrc;
-    echo 'export GOPATH="$HOME/go"' >> ~/.bashrc;
-    echo 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"' >> ~/.bashrc;
+    {
+      echo -e "export GOROOT=\"/usr/local/go\"" \
+      "\nexport GOPATH=\"$HOME/go\"" \
+      "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
+    } >> ~/.bashrc;
 
     # shellcheck source=/dev/null
     source ~/.bashrc;
@@ -364,7 +366,7 @@ installComposer() {
 installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
-    echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.bashrc;
+    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
     breakLine;
 }
 
@@ -380,16 +382,8 @@ installSqLite() {
 ##########################################################
 installDbeaver() {
     title "Installing DBeaver SQL Client";
-    sudo apt install -y \
-    ca-certificates-java* \
-    java-common* \
-    libpcsclite1* \
-    libutempter0* \
-    openjdk-8-jre-headless* \
-    xbitmaps*;
-
     curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" "dbeaver.deb";
-    sudo dpkg -i ~/dbeaver.deb;
+    sudo apt install -y -f ~/dbeaver.deb;
     sudo rm ~/dbeaver.deb;
     breakLine;
 }
@@ -411,12 +405,12 @@ installDocker() {
     sudo chmod +x /usr/local/bin/docker-compose;
 
     sudo groupadd docker;
-    sudo usermod -aG docker ${USER};
+    sudo usermod -aG docker "${USER}";
 
     notify "Install a separate runc environment? (recommended on chromebooks)";
 
     while true; do
-        read -p "(Y/n)" yn
+        read -p -r "(Y/n)" yn
         case ${yn} in
             [Yy]* )
                 if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
@@ -432,9 +426,9 @@ installDocker() {
                 cd "${GOPATH}/src/github.com/opencontainers/runc" || exit;
                 make BUILDTAGS='seccomp apparmor';
 
-                sudo cp ${GOPATH}/src/github.com/opencontainers/runc/runc /usr/local/bin/runc-master;
+                sudo cp "${GOPATH}/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
 
-                curlToFile ${repoUrl}"docker/daemon.json" /etc/docker/daemon.json;
+                curlToFile "${repoUrl}docker/daemon.json" /etc/docker/daemon.json;
                 sudo systemctl daemon-reload;
                 sudo systemctl restart containerd.service;
                 sudo systemctl restart docker;
@@ -599,7 +593,7 @@ installPhpStorm() {
 ##########################################################
 installRemmina() {
     title "Installing Remmina Client";
-    sudo apt install -t ${versionDeb}-backports remmina remmina-plugin-rdp remmina-plugin-secret -y;
+    sudo apt install -t "${versionDeb}-backports" remmina remmina-plugin-rdp remmina-plugin-secret -y;
     breakLine;
 }
 
@@ -637,12 +631,12 @@ installZsh() {
     sudo apt install -y zsh fonts-powerline;
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
 
-    if [[ -f ${HOME}"/.zshrc" ]]; then
-        sudo mv ${HOME}"/.zshrc" ${HOME}"/.zshrc.bak";
+    if [[ -f "${HOME}/.zshrc" ]]; then
+        sudo mv "${HOME}/.zshrc" "${HOME}/.zshrc.bak";
     fi
 
-    if [[ -f ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ]]; then
-        sudo mv ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme" ${HOME}"/.oh-my-zsh/themes/agnoster.zsh-theme.bak";
+    if [[ -f "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme" ]]; then
+        sudo mv "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme" "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme.bak";
     fi
 
     echo '/bin/zsh' >> ~/.bashrc;
