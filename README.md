@@ -1,5 +1,5 @@
-# Debian 9 Developer Machine
-Quickly install common Developer tools, IDEs &amp; services on Debian 9. In order to use the installer run the following:
+# Debian Developer Machine
+Quickly install common Developer tools, IDEs &amp; services on Debian. In order to use the installer run the following:
 
 <p align="center">
   <img src="https://i.ibb.co/FsznYFn/Screenshot-2018-12-09-at-11-44-06.png" />
@@ -9,12 +9,12 @@ __Note__: Please do NOT run the script with sudo, run it as your own user!
 
 ```
 cd ~/
-sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/setup.sh);
+sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/setup.sh);
 ```
 
-This script can be run via the terminal and will get a fresh debian installation up and running with most (if not all) of the dev tools you would require.
+This script can be run via the terminal and will get a fresh Debian installation up and running with most (if not all) of the dev tools you would require.
 
-Tested on Debian 9 stretch installations as well as the ChromeOS linux Debian containers. **Total installation size including the OS itself is ~7GB**
+Tested on Debian installations as well as the ChromeOS linux Debian containers. **Total installation size including the OS itself is ~7GB**
 
 You can expect the following to be automatically installed and readily accessible:
 

@@ -3,6 +3,7 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
+versionDeb="$(lsb_release -c -s)";
 versionPhp="7.3";
 versionGo="1.12.9";
 versionHelm="2.14.1";
@@ -58,7 +59,7 @@ installedPhp=0;
 installedNode=0;
 installedSublime=0;
 installedMySqlServer=0;
-repoUrl="https://raw.githubusercontent.com/andrewbrg/deb9-dev-machine/master/";
+repoUrl="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
 
 ###############################################################
 ## REPOSITORIES
@@ -70,7 +71,7 @@ repoPhp() {
     if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
         notify "Adding PHP sury repository";
         curl -fsSL "https://packages.sury.org/php/apt.gpg" | sudo apt-key add -;
-        echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list;
+        echo "deb https://packages.sury.org/php/ ${versionDeb} main" | sudo tee /etc/apt/sources.list.d/php.list;
     fi
 }
 
@@ -153,7 +154,7 @@ repoRemmina() {
     if [[ ! -f /etc/apt/sources.list.d/remmina.list ]]; then
         notify "Adding Remmina repository";
         sudo touch /etc/apt/sources.list.d/remmina.list;
-        echo "deb http://ftp.debian.org/debian stretch-backports main" | sudo tee --append /etc/apt/sources.list.d/stretch-backports.list >> /dev/null
+        echo "deb http://ftp.debian.org/debian ${versionDeb}-backports main" | sudo tee --append /etc/apt/sources.list.d/${versionDeb}-backports.list >> /dev/null
     fi
 }
 
@@ -162,7 +163,8 @@ repoRemmina() {
 repoGoogleSdk() {
     if [[ ! -f /etc/apt/sources.list.d/google-cloud-sdk.list ]]; then
         notify "Adding GCE repository";
-        export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)";
+        CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)";
+        export CLOUD_SDK_REPO;
         echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list;
         curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
     fi
@@ -186,7 +188,7 @@ repoMySqlServer() {
         sudo dpkg -i mysql.deb;
 
         /etc/apparmor.d/local
-        echo 'y' | rm mysql.deb;
+        rm mysql.deb -f;
     fi
 }
 
@@ -214,7 +216,7 @@ installNode() {
     title "Installing Node ${versionNode}";
     curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
     sudo apt install -y nodejs npm;
-    sudo chown -R $(whoami) /usr/lib/node_modules;
+    sudo chown -R "$(whoami)" /usr/lib/node_modules;
     sudo chmod -R 777 /usr/lib/node_modules;
     installedNode=1;
     breakLine;
@@ -297,15 +299,16 @@ installGoLang() {
     fi
 
     sudo mv go /usr/local;
-    echo "y" | rm go.tar.gz;
+    rm go.tar.gz -f;
 
     echo 'export GOROOT="/usr/local/go"' >> ~/.bashrc;
     echo 'export GOPATH="$HOME/go"' >> ~/.bashrc;
     echo 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"' >> ~/.bashrc;
 
+    # shellcheck source=/dev/null
     source ~/.bashrc;
-    mkdir ${GOPATH};
-    sudo chown -R root:root ${GOPATH};
+    mkdir "${GOPATH}";
+    sudo chown -R root:root "${GOPATH}";
 
     installedGo=1;
     breakLine;
@@ -419,7 +422,7 @@ installDocker() {
                 sudo apt install libseccomp-dev -y;
                 go get -v github.com/opencontainers/runc;
 
-                cd ${GOPATH}/src/github.com/opencontainers/runc;
+                cd "${GOPATH}/src/github.com/opencontainers/runc" || exit;
                 make BUILDTAGS='seccomp apparmor';
 
                 sudo cp ${GOPATH}/src/github.com/opencontainers/runc/runc /usr/local/bin/runc-master;
@@ -491,13 +494,13 @@ installWine() {
     notify "Installing Royale 2007 Theme";
     curlToFile "http://www.gratos.be/wincustomize/compressed/Royale_2007_for_XP_by_Baal_wa_astarte.zip" "Royale_2007.zip";
 
-    sudo chown -R $(whoami) ~/;
+    sudo chown -R "$(whoami)" ~/;
     mkdir -p ~/.wine/drive_c/Resources/Themes/;
     unzip ~/Royale_2007.zip -d ~/.wine/drive_c/Resources/Themes/;
 
     notify "Cleaning up...";
-    echo "y" | rm ~/wine_fontsmoothing;
-    echo "y" | rm ~/Royale_2007.zip;
+    rm ~/wine_fontsmoothing -f;
+    rm ~/Royale_2007.zip -f;
 }
 
 # Postman
@@ -543,7 +546,7 @@ installSublime() {
     sudo apt install -y python-pip;
     sudo pip install -U CodeIntel;
 
-    sudo chown -R $(whoami) ~/;
+    sudo chown -R "$(whoami)" ~/;
 
     mkdir -p ~/.config/sublime-text-3/Packages/User/;
 
@@ -589,7 +592,7 @@ installPhpStorm() {
 ##########################################################
 installRemmina() {
     title "Installing Remmina Client";
-    sudo apt install -t stretch-backports remmina remmina-plugin-rdp remmina-plugin-secret -y;
+    sudo apt install -t ${versionDeb}-backports remmina remmina-plugin-rdp remmina-plugin-secret -y;
     breakLine;
 }
 
@@ -657,7 +660,7 @@ installMySqlServer() {
 ###############################################################
 sudo apt install -y dialog;
 
-cmd=(dialog --backtitle "Debian 9 Developer Container - USAGE: <space> select/un-select options & <enter> start installation." \
+cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> select/un-select options & <enter> start installation." \
 --ascii-lines \
 --clear \
 --nocancel \
@@ -708,8 +711,8 @@ clear;
 # Preparation
 ##########################################################
 title "Installing Pre-Requisite Packages";
-    cd ~/;
-    sudo chown -R $(whoami) ~/
+    cd ~/ || exit;
+    sudo chown -R "$(whoami)" ~/
     sudo apt update;
     sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
@@ -727,12 +730,15 @@ title "Installing Pre-Requisite Packages";
     libssl-dev \
     nano \
     vim \
-    preload \
-    gksu \
     snapd;
 
+    if [[ ${versionDeb} = "stretch" ]]; then
+      sudo apt install -y preload gksu;
+      sudo rm /usr/share/applications/gksu.desktop;
+    fi
+
     sudo updatedb;
-    sudo rm /usr/share/applications/gksu.desktop;
+
 breakLine;
 
 title "Adding Repositories";
@@ -841,7 +847,7 @@ done
 # Clean
 ##########################################################
 title "Finalising & Cleaning Up...";
-    sudo chown -R $(whoami) ~/;
+    sudo chown -R "$(whoami)" ~/;
     sudo apt --fix-broken install -y;
     sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
@@ -857,9 +863,10 @@ if [[ ${installedZsh} -eq 1 ]]; then
     breakLine;
     notify "ZSH Plugin Detected..."
 
-    cd ~/;
+    cd ~/ || exit;
     curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
+    # shellcheck source=/dev/null
     source ~/.zshrc;
 
     echo "";
