@@ -54,7 +54,7 @@ You can expect the following to be automatically installed and readily accessibl
 - Dapp
 - Memcached
 - Redis
-- Node & npm
+- Node & NPM
 - Yarn
 - Docker
 - Docker Compose
@@ -81,6 +81,7 @@ You can expect the following to be automatically installed and readily accessibl
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop Client
+- Locust
 
 ## Issues with Docker in ChromeOS?
 
