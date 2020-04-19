@@ -64,6 +64,7 @@ installedGo=0;
 installedZsh=0;
 installedPhp=0;
 installedNode=0;
+installedPython=0;
 installedSublime=0;
 installedMySqlServer=0;
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
@@ -294,10 +295,11 @@ installRuby() {
 # Python
 ##########################################################
 installPython() {
-    title "Installing Python & PIP";
-    sudo apt install -y python-pip;
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo python;
-    sudo pip install --upgrade setuptools;
+    title "Installing Python3 & PIP";
+    sudo apt install -y build-essential libssl-dev libffi-dev python-dev python3-pip;
+    sudo ln -s /usr/bin/pip3 /usr/bin/pip;
+    
+    installedPython=1;
     breakLine;
 }
 
@@ -417,7 +419,7 @@ installDocker() {
     notify "Install a separate runc environment? (recommended on chromebooks)";
 
     while true; do
-        read -p -r "(Y/n)" yn
+        read -p -r "(y/n)" yn
         case ${yn} in
             [Yy]* )
                 if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
@@ -551,12 +553,11 @@ installVsCode() {
 installSublime() {
     title "Installing Sublime Text";
     sudo apt install -y sublime-text;
-    sudo apt install -y python-pip;
     sudo pip install -U CodeIntel;
 
     sudo chown -R "$(whoami)" ~/;
 
-    mkdir -p ~/.config/sublime-text-3/Packages/User/;
+    mkdir -p ~/.config/sublime-text-3/Packages/User;
 
     notify "Adding package control for sublime";
     wget "https://packagecontrol.io/Package%20Control.sublime-package" -o ".config/sublime-text-3/Installed Packages/Package Control.sublime-package";
@@ -659,8 +660,17 @@ installMySqlServer() {
     sudo apt install -y mysql-server;
     sudo systemctl enable mysql;
     sudo systemctl start mysql;
+    
     installedMySqlServer=1;
     breakLine;
+}
+
+# Locust
+##########################################################
+installLocust() {
+  title "Installing Locust";
+  sudo pip3 install locust;
+  breakLine;
 }
 
 ###############################################################
@@ -668,7 +678,7 @@ installMySqlServer() {
 ###############################################################
 sudo apt install -y dialog;
 
-cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> select/un-select options & <enter> start installation." \
+cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> un/select options & <enter> start installation." \
 --ascii-lines \
 --clear \
 --nocancel \
@@ -677,39 +687,40 @@ cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> select/un-s
 
 options=(
     01 "Git" on
-    02 "Node v${versionNode}" on
+    02 "Node v${versionNode} with npm" on
     03 "PHP v${versionPhp} with PECL" on
     04 "Ruby with DAPP v${versionDapp}" on
-    05 "Python" off
+    05 "Python" on
     06 "GoLang v${versionGo}" off
-    07 "Yarn (package manager)" on
+    07 "Yarn (package manager)" off
     08 "Composer (package manager)" on
-    09 "React Native" on
-    10 "Apache Cordova" on
-    11 "Phonegap" on
+    09 "React Native" off
+    10 "Apache Cordova" off
+    11 "Phonegap" off
     12 "Webpack" on
-    13 "Memcached server" on
-    14 "Redis server" on
-    15 "Docker CE (with docker compose)" off
-    16 "Kubernetes (Kubectl)" off
+    13 "Memcached server" off
+    14 "Redis server" off
+    15 "Docker CE (with docker compose)" on
+    16 "Kubernetes (kubectl)" on
     17 "Helm v${versionHelm}" on
     18 "Sops v${versionSops}" on
-    19 "Postman" on
-    20 "Laravel installer" on
+    19 "Postman" off
+    20 "Laravel installer" off
     21 "Wine" off
-    22 "MySql Community Server" on
-    23 "SQLite (database tool)" on
+    22 "MySql Community Server" off
+    23 "SQLite (database tool)" off
     24 "DBeaver (database tool)" off
-    25 "Redis Desktop Manager" on
+    25 "Redis Desktop Manager" off
     26 "Atom IDE" off
     27 "VS Code IDE" off
-    28 "Sublime Text IDE" on
-    29 "PhpStorm IDE v${versionPhpStorm}" off
+    28 "Sublime Text IDE" off
+    29 "PhpStorm IDE v${versionPhpStorm}" on
     30 "Software Center" on
-    31 "Remmina (Remote Desktop Client)" off
-    32 "Google Cloud SDK" off
+    31 "Remmina (remote desktop client)" off
+    32 "Google Cloud SDK" on
     33 "Popcorn Time v${versionPopcorn}" off
     34 "ZSH Terminal Plugin" on
+    35 "Locust (http load tester)" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -723,7 +734,6 @@ title "Installing Pre-Requisite Packages";
     sudo chown -R "$(whoami)" ~/
     sudo apt update;
     sudo apt dist-upgrade -y;
-    sudo apt autoremove -y --purge;
 
     sudo apt install -y ca-certificates \
     apt-transport-https \
@@ -746,30 +756,29 @@ title "Installing Pre-Requisite Packages";
     fi
 
     sudo updatedb;
-
 breakLine;
 
 title "Adding Repositories";
-for choice in ${choices}
-do
-    case ${choice} in
-        03) repoPhp ;;
-        08) repoPhp ;;
-        20) repoPhp ;;
-        07) repoYarn ;;
-        15) repoDocker ;;
-        16) repoKubernetes ;;
-        21) repoWine ;;
-        22) repoMySqlServer ;;
-        26) repoAtom ;;
-        27) repoVsCode ;;
-        28) repoSublime ;;
-        31) repoRemmina ;;
-        32) repoGoogleSdk ;;
-        33) repoVlc ;;
-    esac
-done
-notify "Required repositories have been added...";
+    for choice in ${choices}
+    do
+        case ${choice} in
+            03) repoPhp ;;
+            08) repoPhp ;;
+            20) repoPhp ;;
+            07) repoYarn ;;
+            15) repoDocker ;;
+            16) repoKubernetes ;;
+            21) repoWine ;;
+            22) repoMySqlServer ;;
+            26) repoAtom ;;
+            27) repoVsCode ;;
+            28) repoSublime ;;
+            31) repoRemmina ;;
+            32) repoGoogleSdk ;;
+            33) repoVlc ;;
+        esac
+    done
+    notify "Required repositories have been added...";
 breakLine;
 
 title "Updating apt";
@@ -842,13 +851,24 @@ do
         25) installRedisDesktopManager ;;
         26) installAtom ;;
         27) installVsCode ;;
-        28) installSublime ;;
+        28)
+            if [[ ${installedPython} -ne 1 ]]; then
+                installPython;
+            fi
+            installSublime;
+        ;;
         29) installPhpStorm ;;
         30) installSoftwareCenter ;;
         31) installRemmina ;;
         32) installGoogleSdk ;;
         33) installPopcorn ;;
         34) installZsh ;;
+        35)
+            if [[ ${installedPython} -ne 1 ]]; then
+                installPython;
+            fi
+            installLocust;
+        ;;
     esac
 done
 
@@ -857,7 +877,6 @@ done
 title "Finalising & Cleaning Up...";
     sudo chown -R "$(whoami)" ~/;
     sudo apt --fix-broken install -y;
-    sudo apt dist-upgrade -y;
     sudo apt autoremove -y --purge;
 breakLine;
 
@@ -874,7 +893,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     cd ~/ || exit;
     curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
-    # shellcheck source=/dev/null
+    
     source ~/.zshrc;
 
     echo "";
