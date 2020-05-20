@@ -22,6 +22,7 @@ fi
 
 # Disallow unsupported versions
 ##########################################################
+sudo apt update && sudo apt install -y lsb-release && sudo apt clean all
 versionDeb="$(lsb_release -c -s)";
 if [[ ${versionDeb} != "stretch" ]] && [[ ${versionDeb} != "buster" ]]
   then printf "\033[1;101mUnfortunatly your OS Version (%s) is not supported. \033[0m \n" "${versionDeb}";
