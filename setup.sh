@@ -625,7 +625,7 @@ installPopcorn() {
     fi
 
     sudo mkdir /opt/popcorn-time;
-    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.tar.xz" | sudo tar Jx -C /opt/popcorn-time;
+    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.zip" | sudo unzip -d /opt/popcorn-time;
     sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
 
     notify "Adding desktop file for Popcorn Time";
