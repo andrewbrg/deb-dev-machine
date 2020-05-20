@@ -626,7 +626,9 @@ installPopcorn() {
     fi
 
     sudo mkdir /opt/popcorn-time;
-    sudo wget -qO- "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.zip" | sudo unzip -d /opt/popcorn-time;
+    curlToFile "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.zip" 'popcorn.zip'
+    sudo unzip 'popcorn.zip' -d /opt/popcorn-time;
+    rm 'popcorn.zip';
     sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
 
     notify "Adding desktop file for Popcorn Time";
@@ -662,7 +664,7 @@ installMySqlServer() {
     sudo apt install -y mysql-server;
     sudo systemctl enable mysql;
     sudo systemctl start mysql;
-    
+
     installedMySqlServer=1;
     breakLine;
 }
@@ -699,7 +701,7 @@ options=(
     09 "React Native" off
     10 "Apache Cordova" off
     11 "Phonegap" off
-    12 "Webpack" on
+    12 "Webpack" off
     13 "Memcached server" off
     14 "Redis server" off
     15 "Docker CE (with docker compose)" on
@@ -720,9 +722,9 @@ options=(
     30 "Software Center" on
     31 "Remmina (remote desktop client)" off
     32 "Google Cloud SDK" on
-    33 "Popcorn Time v${versionPopcorn}" off
+    33 "Popcorn Time v${versionPopcorn}" on
     34 "ZSH Terminal Plugin" on
-    35 "Locust (http load tester)" on
+    35 "Locust (http load tester)" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -895,7 +897,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
     cd ~/ || exit;
     curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
     curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
-    
+
     source ~/.zshrc;
 
     echo "";
