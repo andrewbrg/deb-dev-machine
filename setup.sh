@@ -625,14 +625,9 @@ installPopcorn() {
         sudo rm -rf /opt/popcorn-time;
     fi
 
-    sudo mkdir /opt/popcorn-time;
-    curlToFile "https://mirror01.popcorntime.app/build/Popcorn-Time-${versionPopcorn}-linux64.zip" 'popcorn.zip';
-    sudo unzip 'popcorn.zip' -d /opt/popcorn-time;
-    rm -f 'popcorn.zip';
-    sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
-
-    notify "Adding desktop file for Popcorn Time";
-    curlToFile ${repoUrl}"desktop/popcorn.desktop" "/usr/share/applications/popcorn.desktop";
+    curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${versionPopcorn}/Popcorn-Time-${versionPopcorn}-amd64.deb" 'popcorn.deb';
+    sudo apt install ./popcorn.deb;
+    rm -f popcorn.deb;
     breakLine;
 }
 
