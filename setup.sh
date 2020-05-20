@@ -22,7 +22,7 @@ fi
 
 # Disallow unsupported versions
 ##########################################################
-sudo apt update && sudo apt install -y lsb-release && sudo apt clean all
+sudo apt install -y lsb-release;
 versionDeb="$(lsb_release -c -s)";
 if [[ ${versionDeb} != "stretch" ]] && [[ ${versionDeb} != "buster" ]]
   then printf "\033[1;101mUnfortunatly your OS Version (%s) is not supported. \033[0m \n" "${versionDeb}";
@@ -626,9 +626,9 @@ installPopcorn() {
     fi
 
     sudo mkdir /opt/popcorn-time;
-    curlToFile "https://get.popcorntime.sh/build/Popcorn-Time-${versionPopcorn}-Linux-64.zip" 'popcorn.zip'
+    curlToFile "https://mirror01.popcorntime.app/build/Popcorn-Time-${versionPopcorn}-linux64.zip" 'popcorn.zip';
     sudo unzip 'popcorn.zip' -d /opt/popcorn-time;
-    rm 'popcorn.zip';
+    rm -f 'popcorn.zip';
     sudo ln -sf /opt/popcorn-time/Popcorn-Time /usr/bin/popcorn-time;
 
     notify "Adding desktop file for Popcorn Time";
