@@ -9,7 +9,7 @@ versionHelm="2.14.1";
 versionSops="3.1.1";
 versionDapp="0.27.14";
 versionNode="12";
-versionPopcorn="0.3.10";
+versionPopcorn="0.4.4";
 versionPhpStorm="2019.3.3";
 versionDockerCompose="1.24.1";
 
