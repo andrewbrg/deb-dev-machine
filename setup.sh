@@ -647,6 +647,7 @@ installZsh() {
     fi
 
     echo '/bin/zsh' >> ~/.bashrc;
+    sudo chsh -s $(which zsh) $(whoami);
 
     installedZsh=1;
     breakLine;
