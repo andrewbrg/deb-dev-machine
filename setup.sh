@@ -51,6 +51,7 @@ breakLine() {
 notify() {
     printf "\n";
     printf "\033[1;46m %s \033[0m" "$1";
+    printf "\n";
 }
 
 curlToFile() {
