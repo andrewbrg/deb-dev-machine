@@ -319,15 +319,25 @@ installGoLang() {
 
     sudo mv go /usr/local;
     rm go.tar.gz -f;
-
-    {
-      echo -e "export GOROOT=\"/usr/local/go\"" \
-      "\nexport GOPATH=\"$HOME/go\"" \
-      "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
-    } >> ~/.bashrc;
-
-    # shellcheck source=/dev/null
-    source ~/.bashrc;
+   
+    if [[ -f .bashrc ]]; then
+        {
+          echo -e "export GOROOT=\"/usr/local/go\"" \
+          "\nexport GOPATH=\"$HOME/go\"" \
+          "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
+        } >> ~/.bashrc;
+    fi
+    
+    if [[ -f .zshrc ]]; then
+        {
+          echo -e "export GOROOT=\"/usr/local/go\"" \
+          "\nexport GOPATH=\"$HOME/go\"" \
+          "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
+        } >> ~/.zshrc;
+    fi
+    
+    export PATH=$PATH:/usr/local/go/bin;
+    
     mkdir "${GOPATH}";
     sudo chown -R root:root "${GOPATH}";
 
