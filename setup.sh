@@ -421,7 +421,7 @@ installDocker() {
     notify "Install a separate runc environment? (recommended on chromebooks)";
 
     while true; do
-        read -p -r "(y/n)" yn
+        read -r -p "(y/n)" yn
         case ${yn} in
             [Yy]* )
                 if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
