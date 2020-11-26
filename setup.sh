@@ -418,10 +418,10 @@ installDocker() {
     sudo groupadd docker;
     sudo usermod -aG docker "${USER}";
 
-    notify "Install a separate runc environment? (recommended on chromebooks)";
+    notify "Install a separate runc environment?";
 
     while true; do
-        read -r -p "(y/n)" yn
+        read -p "Recommended on chromebooks (y/n)" yn
         case ${yn} in
             [Yy]* )
                 if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
