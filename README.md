@@ -51,7 +51,7 @@ You can expect the following to be automatically installed and readily accessibl
 - Python
 - GoLang
 - Pip
-- Dapp
+- Werf
 - Memcached
 - Redis
 - Node & NPM
