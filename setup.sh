@@ -5,12 +5,12 @@
 ###############################################################
 versionPhp="7.4";
 versionGo="1.12.9";
-versionHelm="2.14.1";
+versionHelm="3";
 versionSops="3.1.1";
-versionDapp="0.27.14";
-versionNode="12";
+versionWerf="1.1.21+fix22";
+versionNode="14";
 versionPopcorn="0.4.4";
-versionPhpStorm="2019.3.3";
+versionPhpStorm="2020.3";
 versionDockerCompose="1.24.1";
 
 # Disallow running with sudo or su
@@ -235,6 +235,9 @@ installNode() {
       sudo chmod -R 777 /usr/share/npm/node_modules;
     fi
 
+    sudo npm install -g n;
+    sudo n ${versionNode};
+    
     installedNode=1;
     breakLine;
 }
@@ -284,13 +287,14 @@ installPhp() {
     breakLine;
 }
 
-# Ruby
+# Werf
 ##########################################################
-installRuby() {
-    title "Installing Ruby with DAPP v${versionDapp}";
-    sudo apt install -y ruby-dev gcc pkg-config;
-    sudo gem install mixlib-cli -v 1.7.0;
-    sudo gem install dapp -v ${versionDapp};
+installWerf() {
+    title "Installing Werf v${versionWerf} with Helm v${versionHelm}";
+    curl -L "https://dl.bintray.com/flant/werf/v${versionWerf}/werf-linux-amd64-v${versionWerf}" -o /tmp/werf;
+	chmod +x /tmp/werf;
+	sudo mv /tmp/werf /usr/local/bin/werf;
+    curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${versionHelm}" | bash;
     breakLine;
 }
 
@@ -468,17 +472,6 @@ installDocker() {
 installKubernetes() {
     title "Installing Kubernetes";
     sudo apt install -y kubectl;
-    breakLine;
-}
-
-# Helm
-##########################################################
-installHelm() {
-    title "Installing Helm v${versionHelm}";
-    curl -fsSl "https://storage.googleapis.com/kubernetes-helm/helm-v${versionHelm}-linux-amd64.tar.gz" -o helm.tar.gz;
-    tar -zxvf helm.tar.gz;
-    sudo mv linux-amd64/helm /usr/local/bin/helm;
-    sudo rm -rf linux-amd64 && sudo rm helm.tar.gz;
     breakLine;
 }
 
@@ -700,7 +693,7 @@ options=(
     01 "Git" on
     02 "Node v${versionNode} with npm" on
     03 "PHP v${versionPhp} with PECL" on
-    04 "Ruby with DAPP v${versionDapp}" on
+    04 "Werf v${versionWerf} with Helm v${versionHelm}" on
     05 "Python" on
     06 "GoLang v${versionGo}" off
     07 "Yarn (package manager)" off
@@ -713,25 +706,24 @@ options=(
     14 "Redis server" off
     15 "Docker CE (with docker compose)" on
     16 "Kubernetes (kubectl)" on
-    17 "Helm v${versionHelm}" on
-    18 "Sops v${versionSops}" on
-    19 "Postman" off
-    20 "Laravel installer" off
-    21 "Wine" off
-    22 "MySql Community Server" off
-    23 "SQLite (database tool)" off
-    24 "DBeaver (database tool)" off
-    25 "Redis Desktop Manager" off
-    26 "Atom IDE" off
-    27 "VS Code IDE" off
-    28 "Sublime Text IDE" off
-    29 "PhpStorm IDE v${versionPhpStorm}" on
-    30 "Software Center" on
-    31 "Remmina (remote desktop client)" off
-    32 "Google Cloud SDK" on
-    33 "Popcorn Time v${versionPopcorn}" on
-    34 "ZSH Terminal Plugin" on
-    35 "Locust (http load tester)" off
+    17 "Sops v${versionSops}" on
+    18 "Postman" off
+    19 "Laravel installer" off
+    20 "Wine" off
+    21 "MySql Community Server" off
+    22 "SQLite (database tool)" off
+    23 "DBeaver (database tool)" off
+    24 "Redis Desktop Manager" off
+    25 "Atom IDE" off
+    26 "VS Code IDE" off
+    27 "Sublime Text IDE" off
+    28 "PhpStorm IDE v${versionPhpStorm}" on
+    29 "Software Center" on
+    30 "Remmina (remote desktop client)" off
+    31 "Google Cloud SDK" on
+    32 "Popcorn Time v${versionPopcorn}" on
+    33 "ZSH Terminal Plugin" on
+    34 "Locust (http load tester)" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -779,14 +771,14 @@ title "Adding Repositories";
             07) repoYarn ;;
             15) repoDocker ;;
             16) repoKubernetes ;;
-            21) repoWine ;;
-            22) repoMySqlServer ;;
-            26) repoAtom ;;
-            27) repoVsCode ;;
-            28) repoSublime ;;
-            31) repoRemmina ;;
-            32) repoGoogleSdk ;;
-            33) repoVlc ;;
+            20) repoWine ;;
+            21) repoMySqlServer ;;
+            25) repoAtom ;;
+            26) repoVsCode ;;
+            27) repoSublime ;;
+            30) repoRemmina ;;
+            31) repoGoogleSdk ;;
+            32) repoVlc ;;
         esac
     done
     notify "Required repositories have been added...";
@@ -803,7 +795,7 @@ do
         01) installGit ;;
         02) installNode ;;
         03) installPhp ;;
-        04) installRuby ;;
+        04) installWerf ;;
         05) installPython ;;
         06) installGoLang ;;
         07) installYarn ;;
@@ -841,40 +833,39 @@ do
         14) installRedis ;;
         15) installDocker ;;
         16) installKubernetes ;;
-        17) installHelm ;;
-        18)
+        17)
             if [[ ${installedGo} -ne 1 ]]; then
                 installGoLang;
             fi
             installSops;
         ;;
-        19) installPostman ;;
-        20)
+        18) installPostman ;;
+        19)
             if [[ ${installedPhp} -ne 1 ]]; then
                 installPhp;
             fi
             installLaravel;
         ;;
-        21) installWine ;;
-        22) installMySqlServer ;;
-        23) installSqLite ;;
-        24) installDbeaver ;;
-        25) installRedisDesktopManager ;;
-        26) installAtom ;;
-        27) installVsCode ;;
-        28)
+        20) installWine ;;
+        21) installMySqlServer ;;
+        22) installSqLite ;;
+        23) installDbeaver ;;
+        24) installRedisDesktopManager ;;
+        25) installAtom ;;
+        26) installVsCode ;;
+        27)
             if [[ ${installedPython} -ne 1 ]]; then
                 installPython;
             fi
             installSublime;
         ;;
-        29) installPhpStorm ;;
-        30) installSoftwareCenter ;;
-        31) installRemmina ;;
-        32) installGoogleSdk ;;
-        33) installPopcorn ;;
-        34) installZsh ;;
-        35)
+        28) installPhpStorm ;;
+        29) installSoftwareCenter ;;
+        30) installRemmina ;;
+        31) installGoogleSdk ;;
+        32) installPopcorn ;;
+        33) installZsh ;;
+        34)
             if [[ ${installedPython} -ne 1 ]]; then
                 installPython;
             fi
