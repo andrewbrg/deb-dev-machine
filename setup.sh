@@ -592,8 +592,8 @@ installPhpStorm() {
     curlToFile "https://download.jetbrains.com/webide/PhpStorm-${versionPhpStorm}.tar.gz" "phpstorm.tar.gz";
     sudo tar xfz ~/phpstorm.tar.gz;
 
-    sudo rm -rf /opt/phpstorm/;
-    sudo mkdir /opt/phpstorm/;
+    sudo rm -rf /opt/phpstorm;
+    sudo mkdir -p /opt/phpstorm;
     sudo mv ~/PhpStorm-*/* /opt/phpstorm/;
     sudo rm -rf ~/phpstorm.tar.gz;
     sudo rm -rf ~/PhpStorm-*;
