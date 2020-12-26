@@ -282,8 +282,8 @@ installPhp() {
 installWerf() {
     title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
     curl -L "https://dl.bintray.com/flant/werf/v${VERSION_WERF}/werf-linux-amd64-v${VERSION_WERF}" -o /tmp/werf;
-	chmod +x /tmp/werf;
-	sudo mv /tmp/werf /usr/local/bin/werf;
+    chmod +x /tmp/werf;
+    sudo mv /tmp/werf /usr/local/bin/werf;
     curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | bash;
     breakLine;
 }
@@ -294,7 +294,15 @@ installPython() {
     title "Installing Python3 with PIP";
     sudo apt install -y build-essential libssl-dev libffi-dev python-dev python3-pip;
     sudo ln -s /usr/bin/pip3 /usr/bin/pip;
-    export PATH=/usr/local/bin/python:$PATH;
+
+    if [[ -f .bashrc ]]; then
+        sed -i '/export PATH/d' ~/.bashrc;
+        echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
+    fi
+    if [[ -f .zshrc ]]; then
+        sed -i '/export PATH/d' ~/.zshrc;
+        echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.zshrc;
+    fi
 
     IS_INSTALLED_PYTHON=1;
     breakLine;
@@ -315,19 +323,17 @@ installGoLang() {
     rm go.tar.gz -f;
    
     if [[ -f .bashrc ]]; then
-        {
-          echo -e "export GOROOT=\"/usr/local/go\"" \
-          "\nexport GOPATH=\"$HOME/go\"" \
-          "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
-        } >> ~/.bashrc;
+        sed -i '/export PATH/d' ~/.bashrc;
+        echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.bashrc;
+        echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
+        echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
     fi
     
     if [[ -f .zshrc ]]; then
-        {
-          echo -e "export GOROOT=\"/usr/local/go\"" \
-          "\nexport GOPATH=\"$HOME/go\"" \
-          "\nexport PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\""
-        } >> ~/.zshrc;
+        sed -i '/export PATH/d' ~/.zshrc;
+        echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.zshrc;
+        echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
+        echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
     fi
     
     export PATH=$PATH:/usr/local/go/bin;
@@ -383,9 +389,11 @@ installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
     if [[ -f .bashrc ]]; then
+        sed -i '/export PATH/d' ~/.bashrc;
         echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
     fi
     if [[ -f .zshrc ]]; then
+        sed -i '/export PATH/d' ~/.zshrc;
         echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.zshrc;
     fi
     
