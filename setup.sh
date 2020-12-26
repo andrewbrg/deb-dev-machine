@@ -3,15 +3,15 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
-versionPhp="7.4";
-versionGo="1.15.6";
-versionHelm="3";
-versionSops="3.1.1";
-versionWerf="1.1.21+fix22";
-versionNode="14";
-versionPopcorn="0.4.4";
-versionPhpStorm="2020.3";
-versionDockerCompose="1.24.1";
+VERSION_PHP="7.4";
+VERSION_GO="1.15.6";
+VERSION_HELM="3";
+VERSION_SOPS="3.1.1";
+VERSION_WERF="1.1.21+fix22";
+VERSION_NODE="14";
+VERSION_POPCORNTIME="0.4.4";
+VERSION_PHPSTORM="2020.3";
+VERSION_DOCKERCOMPOSE="1.24.1";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -62,14 +62,14 @@ curlToFile() {
 ###############################################################
 ## REGISTERED VARIABLES
 ###############################################################
-installedGo=0;
-installedZsh=0;
-installedPhp=0;
-installedNode=0;
-installedPython=0;
-installedSublime=0;
-installedMySqlServer=0;
-repoUrl="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
+IS_INSTALLED_GO=0;
+IS_INSTALLED_ZSH=0;
+IS_INSTALLED_PHP=0;
+IS_INSTALLED_NODE=0;
+IS_INSTALLED_PYTHON=0;
+IS_INSTALLED_SUBLIME=0;
+IS_INSTALLED_MYSQLSERVER=0;
+REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
 
 ###############################################################
 ## REPOSITORIES
@@ -180,15 +180,6 @@ repoGoogleSdk() {
     fi
 }
 
-# VLC
-##########################################################
-repoVlc() {
-    if [[ ! -f /etc/apt/sources.list.d/videolan-ubuntu-stable-daily-disco.list ]]; then
-        notify "Adding VLC repository";
-        sudo add-apt-repository ppa:videolan/stable-daily -y
-    fi
-}
-
 # MySQL Community Server
 ##########################################################
 repoMySqlServer() {
@@ -199,7 +190,6 @@ repoMySqlServer() {
         rm mysql.deb -f;
     fi
 }
-
 
 ###############################################################
 ## INSTALLATION
@@ -221,8 +211,8 @@ installGit() {
 # Node
 ##########################################################
 installNode() {
-    title "Installing Node ${versionNode}";
-    curl -L "https://deb.nodesource.com/setup_${versionNode}.x" | sudo -E bash -;
+    title "Installing Node ${VERSION_NODE}";
+    curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
     sudo apt install -y nodejs npm;
 
     if [[ ${versionDeb} = "stretch" ]]; then
@@ -236,9 +226,9 @@ installNode() {
     fi
 
     sudo npm install -g n;
-    sudo n ${versionNode};
+    sudo n ${VERSION_NODE};
     
-    installedNode=1;
+    IS_INSTALLED_NODE=1;
     breakLine;
 }
 
@@ -277,24 +267,24 @@ installWebpack() {
 # PHP
 ##########################################################
 installPhp() {
-    title "Installing PHP ${versionPhp}";
-    sudo apt install -y php${versionPhp} php${versionPhp}-{bcmath,cli,common,curl,dev,gd,intl,mbstring,mysql,sqlite3,xml,zip} php-pear php-memcached php-redis;
+    title "Installing PHP ${VERSION_PHP}";
+    sudo apt install -y php${VERSION_PHP} php${VERSION_PHP}-{bcmath,cli,common,curl,dev,gd,intl,mbstring,mysql,sqlite3,xml,zip} php-pear php-memcached php-redis;
     sudo apt install -y libphp-predis php-xdebug php-ds;
     php --version;
 
     sudo pecl install igbinary ds;
-    installedPhp=1;
+    IS_INSTALLED_PHP=1;
     breakLine;
 }
 
 # Werf
 ##########################################################
 installWerf() {
-    title "Installing Werf v${versionWerf} with Helm v${versionHelm}";
-    curl -L "https://dl.bintray.com/flant/werf/v${versionWerf}/werf-linux-amd64-v${versionWerf}" -o /tmp/werf;
+    title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
+    curl -L "https://dl.bintray.com/flant/werf/v${VERSION_WERF}/werf-linux-amd64-v${VERSION_WERF}" -o /tmp/werf;
 	chmod +x /tmp/werf;
 	sudo mv /tmp/werf /usr/local/bin/werf;
-    curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${versionHelm}" | bash;
+    curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | bash;
     breakLine;
 }
 
@@ -306,15 +296,15 @@ installPython() {
     sudo ln -s /usr/bin/pip3 /usr/bin/pip;
     export PATH=/usr/local/bin/python:$PATH;
 
-    installedPython=1;
+    IS_INSTALLED_PYTHON=1;
     breakLine;
 }
 
 # GoLang
 ##########################################################
 installGoLang() {
-    title "Installing GoLang ${versionGo}";
-    curlToFile "https://dl.google.com/go/go${versionGo}.linux-amd64.tar.gz" "go.tar.gz";
+    title "Installing GoLang ${VERSION_GO}";
+    curlToFile "https://dl.google.com/go/go${VERSION_GO}.linux-amd64.tar.gz" "go.tar.gz";
     tar xvf go.tar.gz;
 
     if [[ -d /usr/local/go ]]; then
@@ -345,7 +335,7 @@ installGoLang() {
     mkdir "${GOPATH}";
     sudo chown -R root:root "${GOPATH}";
 
-    installedGo=1;
+    IS_INSTALLED_GO=1;
     breakLine;
 }
 
@@ -393,11 +383,10 @@ installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
     if [[ -f .bashrc ]]; then
-        echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.bashrc;
+        echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
     fi
-    
     if [[ -f .zshrc ]]; then
-        echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.zshrc;
+        echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.zshrc;
     fi
     
     breakLine;
@@ -434,7 +423,7 @@ installRedisDesktopManager() {
 installDocker() {
     title "Installing Docker CE with Docker Compose";
     sudo apt install -y docker-ce;
-    curlToFile "https://github.com/docker/compose/releases/download/${versionDockerCompose}/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
+    curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" "/usr/local/bin/docker-compose";
     sudo chmod +x /usr/local/bin/docker-compose;
 
     sudo groupadd docker;
@@ -446,7 +435,7 @@ installDocker() {
         read -p "Recommended on chromebooks (y/n)" yn
         case ${yn} in
             [Yy]* )
-                if [[ ${installedGo} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
+                if [[ ${IS_INSTALLED_GO} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
                     breakLine;
                     installGoLang;
                 fi
@@ -462,12 +451,12 @@ installDocker() {
 
                 sudo cp "${GOPATH}/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
 
-                curlToFile "${repoUrl}docker/daemon.json" /etc/docker/daemon.json;
+                curlToFile "${REPO_URL}docker/daemon.json" /etc/docker/daemon.json;
                 sudo systemctl daemon-reload;
                 sudo systemctl restart containerd.service;
                 sudo systemctl restart docker;
                 
-                cd ~;
+                cd ~ || exit;
                 rm -rf
             break;;
             [Nn]* ) break;;
@@ -489,10 +478,10 @@ installKubernetes() {
 # Sops
 ##########################################################
 installSops() {
-    title "Installing Sops v${versionSops}";
-    wget -O sops_${versionSops}_amd64.deb "https://github.com/mozilla/sops/releases/download/${versionSops}/sops_${versionSops}_amd64.deb";
-    sudo dpkg -i sops_${versionSops}_amd64.deb;
-    sudo rm sops_${versionSops}_amd64.deb;
+    title "Installing Sops v${VERSION_SOPS}";
+    wget -O sops_${VERSION_SOPS}_amd64.deb "https://github.com/mozilla/sops/releases/download/${VERSION_SOPS}/sops_${VERSION_SOPS}_amd64.deb";
+    sudo dpkg -i sops_${VERSION_SOPS}_amd64.deb;
+    sudo rm sops_${VERSION_SOPS}_amd64.deb;
     breakLine;
 }
 
@@ -513,7 +502,7 @@ installWine() {
     winetricks allfonts;
 
     notify "Installing Smooth Fonts for Wine";
-    curlToFile ${repoUrl}"wine_fontsmoothing.sh" "wine_fontsmoothing";
+    curlToFile ${REPO_URL}"wine_fontsmoothing.sh" "wine_fontsmoothing";
     sudo chmod +x ~/wine_fontsmoothing;
     sudo ./wine_fontsmoothing;
     clear;
@@ -545,7 +534,7 @@ installPostman() {
     sudo ln -s /opt/postman/Postman /usr/bin/postman;
 
     notify "Adding desktop file for Postman";
-    curlToFile ${repoUrl}"desktop/postman.desktop" "/usr/share/applications/postman.desktop";
+    curlToFile ${REPO_URL}"desktop/postman.desktop" "/usr/share/applications/postman.desktop";
     breakLine;
 }
 
@@ -580,10 +569,10 @@ installSublime() {
     wget "https://packagecontrol.io/Package%20Control.sublime-package" -o ".config/sublime-text-3/Installed Packages/Package Control.sublime-package";
 
     notify "Adding pre-installed packages for sublime";
-    curlToFile "${repoUrl}settings/PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
+    curlToFile "${REPO_URL}settings/PackageControl.sublime-settings" ".config/sublime-text-3/Packages/User/Package Control.sublime-settings";
 
     notify "Applying default preferences to sublime";
-    curlToFile "${repoUrl}settings/Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
+    curlToFile "${REPO_URL}settings/Preferences.sublime-settings" ".config/sublime-text-3/Packages/User/Preferences.sublime-settings";
 
     notify "Installing additional binaries for sublime auto-complete";
     curlToFile "https://github.com/emmetio/pyv8-binaries/raw/master/pyv8-linux64-p3.zip" "bin.zip";
@@ -592,15 +581,15 @@ installSublime() {
     sudo unzip ~/bin.zip -d ".config/sublime-text-3/Installed Packages/PyV8/";
     sudo rm ~/bin.zip;
 
-    installedSublime=1;
+    IS_INSTALLED_SUBLIME=1;
     breakLine;
 }
 
 # PHP Storm
 ##########################################################
 installPhpStorm() {
-    title "Installing PhpStorm IDE ${versionPhpStorm}";
-    curlToFile "https://download.jetbrains.com/webide/PhpStorm-${versionPhpStorm}.tar.gz" "phpstorm.tar.gz";
+    title "Installing PhpStorm IDE ${VERSION_PHPSTORM}";
+    curlToFile "https://download.jetbrains.com/webide/PhpStorm-${VERSION_PHPSTORM}.tar.gz" "phpstorm.tar.gz";
     sudo tar xfz ~/phpstorm.tar.gz;
 
     sudo rm -rf /opt/phpstorm;
@@ -610,7 +599,7 @@ installPhpStorm() {
     sudo rm -rf ~/PhpStorm-*;
 
     notify "Adding desktop file for PhpStorm";
-    curlToFile ${repoUrl}"desktop/jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
+    curlToFile ${REPO_URL}"desktop/jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
     breakLine;
 }
 
@@ -633,14 +622,14 @@ installGoogleSdk() {
 # Popcorn Time
 ##########################################################
 installPopcorn() {
-    title "Installing Popcorn Time v${versionPopcorn}";
+    title "Installing Popcorn Time v${VERSION_POPCORNTIME}";
     sudo apt install -y libnss3 vlc;
 
     if [[ -d /opt/popcorn-time ]]; then
         sudo rm -rf /opt/popcorn-time;
     fi
 
-    curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${versionPopcorn}/Popcorn-Time-${versionPopcorn}-amd64.deb" 'popcorn.deb';
+    curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORNTIME}/Popcorn-Time-${VERSION_POPCORNTIME}-amd64.deb" 'popcorn.deb';
     sudo apt install ./popcorn.deb;
     rm -f popcorn.deb;
     breakLine;
@@ -654,17 +643,13 @@ installZsh() {
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
 
     if [[ -f "${HOME}/.zshrc" ]]; then
-        sudo mv "${HOME}/.zshrc" "${HOME}/.zshrc.bak";
-    fi
-
-    if [[ -f "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme" ]]; then
-        sudo mv "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme" "${HOME}/.oh-my-zsh/themes/agnoster.zsh-theme.bak";
+        rm "${HOME}/.zshrc";
     fi
 
     echo '/bin/zsh' >> ~/.bashrc;
-    sudo chsh -s $(which zsh) $(whoami);
+    sudo chsh -s "$(which zsh)" "$(whoami)";
 
-    installedZsh=1;
+    IS_INSTALLED_ZSH=1;
     breakLine;
 }
 
@@ -676,7 +661,7 @@ installMySqlServer() {
     sudo systemctl enable mysql;
     sudo systemctl start mysql;
 
-    installedMySqlServer=1;
+    IS_INSTALLED_MYSQLSERVER=1;
     breakLine;
 }
 
@@ -702,11 +687,11 @@ cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> un/select o
 
 options=(
     01 "Git" on
-    02 "Node v${versionNode} with npm" on
-    03 "PHP v${versionPhp} with PECL" on
-    04 "Werf v${versionWerf} with Helm v${versionHelm}" on
+    02 "Node v${VERSION_NODE} with npm" on
+    03 "PHP v${VERSION_PHP} with PECL" on
+    04 "Werf v${VERSION_WERF} with Helm v${VERSION_HELM}" on
     05 "Python" on
-    06 "GoLang v${versionGo}" off
+    06 "GoLang v${VERSION_GO}" off
     07 "Yarn (package manager)" off
     08 "Composer (package manager)" on
     09 "React Native" off
@@ -717,7 +702,7 @@ options=(
     14 "Redis server" off
     15 "Docker CE (with docker compose)" on
     16 "Kubernetes (kubectl)" on
-    17 "Sops v${versionSops}" on
+    17 "Sops v${VERSION_SOPS}" on
     18 "Postman" off
     19 "Laravel installer" off
     20 "Wine" off
@@ -728,11 +713,11 @@ options=(
     25 "Atom IDE" off
     26 "VS Code IDE" off
     27 "Sublime Text IDE" off
-    28 "PhpStorm IDE v${versionPhpStorm}" on
+    28 "PhpStorm IDE v${VERSION_PHPSTORM}" on
     29 "Software Center" on
     30 "Remmina (remote desktop client)" off
     31 "Google Cloud SDK" on
-    32 "Popcorn Time v${versionPopcorn}" on
+    32 "Popcorn Time v${VERSION_POPCORNTIME}" on
     33 "ZSH Terminal Plugin" on
     34 "Locust (http load tester)" off
 );
@@ -778,18 +763,17 @@ title "Adding Repositories";
         case ${choice} in
             03) repoPhp ;;
             08) repoPhp ;;
-            20) repoPhp ;;
             07) repoYarn ;;
             15) repoDocker ;;
             16) repoKubernetes ;;
-            20) repoWine ;;
+            19) repoPhp ;;
+            20) repoWine;;
             21) repoMySqlServer ;;
             25) repoAtom ;;
             26) repoVsCode ;;
             27) repoSublime ;;
             30) repoRemmina ;;
             31) repoGoogleSdk ;;
-            32) repoVlc ;;
         esac
     done
     notify "Required repositories have been added...";
@@ -811,33 +795,23 @@ do
         06) installGoLang ;;
         07) installYarn ;;
         08)
-            if [[ ${installedPhp} -ne 1 ]]; then
-                installPhp;
-            fi
+            if [[ ${IS_INSTALLED_PHP} -ne 1 ]]; then installPhp; fi
             installComposer;
         ;;
         09)
-            if [[ ${installedNode} -ne 1 ]]; then
-                installNode;
-            fi
+            if [[ ${IS_INSTALLED_NODE} -ne 1 ]]; then installNode; fi
             installReactNative;
         ;;
         10)
-            if [[ ${installedNode} -ne 1 ]]; then
-                installNode;
-            fi
+            if [[ ${IS_INSTALLED_NODE} -ne 1 ]]; then installNode; fi
             installCordova;
         ;;
         11)
-            if [[ ${installedNode} -ne 1 ]]; then
-                installNode;
-            fi
+            if [[ ${IS_INSTALLED_NODE} -ne 1 ]]; then installNode; fi
             installPhoneGap;
         ;;
         12)
-            if [[ ${installedNode} -ne 1 ]]; then
-                installNode;
-            fi
+            if [[ ${IS_INSTALLED_NODE} -ne 1 ]]; then installNode; fi
             installWebpack;
         ;;
         13) installMemcached ;;
@@ -845,16 +819,12 @@ do
         15) installDocker ;;
         16) installKubernetes ;;
         17)
-            if [[ ${installedGo} -ne 1 ]]; then
-                installGoLang;
-            fi
+            if [[ ${IS_INSTALLED_GO} -ne 1 ]]; then installGoLang; fi
             installSops;
         ;;
         18) installPostman ;;
         19)
-            if [[ ${installedPhp} -ne 1 ]]; then
-                installPhp;
-            fi
+            if [[ ${IS_INSTALLED_PHP} -ne 1 ]]; then installPhp; fi
             installLaravel;
         ;;
         20) installWine ;;
@@ -865,9 +835,7 @@ do
         25) installAtom ;;
         26) installVsCode ;;
         27)
-            if [[ ${installedPython} -ne 1 ]]; then
-                installPython;
-            fi
+            if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then installPython; fi
             installSublime;
         ;;
         28) installPhpStorm ;;
@@ -877,9 +845,7 @@ do
         32) installPopcorn ;;
         33) installZsh ;;
         34)
-            if [[ ${installedPython} -ne 1 ]]; then
-                installPython;
-            fi
+            if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then installPython; fi
             installLocust;
         ;;
     esac
@@ -899,31 +865,21 @@ echo "If you want to install further tool in the future you can run this script 
 ###############################################################
 ## POST INSTALLATION ACTIONS
 ###############################################################
-if [[ ${installedZsh} -eq 1 ]]; then
+if [[ ${IS_INSTALLED_ZSH} -eq 1 ]]; then
     breakLine;
     notify "ZSH Plugin Detected..."
 
     cd ~/ || exit;
-    curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
-    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
+    curlToFile ${REPO_URL}"zsh/.zshrc" ".zshrc";
 
     source ~/.zshrc;
 
-    echo "";
-    echo "If you are on a Chromebook, to complete the zsh setup you must manually change your terminal settings 'Ctrl+Shift+P':";
-    echo "";
-    echo "   1) Set user-css path to: $(tput bold)https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.003/web/hack.css$(tput sgr0)";
-    echo "   2) Add $(tput bold)'Hack'$(tput sgr0) as a font-family entry.";
-    echo "";
-    echo "Alternatively:";
-    echo "";
-    echo "   1) Import this file directly: $(tput bold)${repoUrl}zsh/crosh.json$(tput sgr0)";
     echo "";
     echo "If the zsh plugin does not take effect you can manually activate it by adding /bin/zsh to you .bashrc file. ";
     echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
 fi
 
-if [[ ${installedSublime} -eq 1 ]]; then
+if [[ ${IS_INSTALLED_SUBLIME} -eq 1 ]]; then
     breakLine;
     notify "Sublime Text Detected..."
     echo "";
@@ -931,7 +887,7 @@ if [[ ${installedSublime} -eq 1 ]]; then
     echo "";
 fi
 
-if [[ ${installedMySqlServer} -eq 1 ]]; then
+if [[ ${IS_INSTALLED_MYSQLSERVER} -eq 1 ]]; then
     breakLine;
     notify "MySql Community Server Detected..."
     echo "";
