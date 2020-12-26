@@ -4,7 +4,7 @@
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
 versionPhp="7.4";
-versionGo="1.12.9";
+versionGo="1.15.6";
 versionHelm="3";
 versionSops="3.1.1";
 versionWerf="1.1.21+fix22";
@@ -392,7 +392,14 @@ installComposer() {
 installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
+    if [[ -f .bashrc ]]; then
+        echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.bashrc;
+    fi
+    
+    if [[ -f .zshrc ]]; then
+        echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' | tee -a ~/.zshrc;
+    fi
+    
     breakLine;
 }
 
@@ -447,9 +454,10 @@ installDocker() {
                 sudo sed -i -e 's/ExecStartPre=\/sbin\/modprobe overlay/#ExecStartPre=\/sbin\/modprobe overlay/g' /lib/systemd/system/containerd.service;
 
                 sudo apt install libseccomp-dev -y;
-                go get -v github.com/opencontainers/runc;
+                go get -v "github.com/opencontainers/runc";
 
                 cd "${GOPATH}/src/github.com/opencontainers/runc" || exit;
+                export GO111MODULE=on;
                 make BUILDTAGS='seccomp apparmor';
 
                 sudo cp "${GOPATH}/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
@@ -458,6 +466,9 @@ installDocker() {
                 sudo systemctl daemon-reload;
                 sudo systemctl restart containerd.service;
                 sudo systemctl restart docker;
+                
+                cd ~;
+                rm -rf
             break;;
             [Nn]* ) break;;
             * ) echo "Please answer yes or no.";;
