@@ -639,6 +639,7 @@ installPopcorn() {
 
     curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORNTIME}/Popcorn-Time-${VERSION_POPCORNTIME}-amd64.deb" 'popcorn.deb';
     sudo apt install ./popcorn.deb;
+    curlToFile ${REPO_URL}"desktop/popcorn.desktop" "/usr/share/applications/popcorn-time.desktop";
     rm -f popcorn.deb;
     breakLine;
 }
