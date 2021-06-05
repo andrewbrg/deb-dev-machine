@@ -453,11 +453,11 @@ installDocker() {
                 sudo apt install libseccomp-dev -y;
                 go get -v "github.com/opencontainers/runc";
 
-                cd "$HOME/go/src/github.com/opencontainers/runc" || exit;
+                cd "/usr/local/go/src/github.com/opencontainers/runc" || exit;
                 export GO111MODULE=on;
                 make BUILDTAGS='seccomp apparmor';
 
-                sudo cp "$HOME/go/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
+                sudo cp "/usr/local/go/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
 
                 curlToFile "${REPO_URL}docker/daemon.json" /etc/docker/daemon.json;
                 sudo systemctl daemon-reload;
