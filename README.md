@@ -2,7 +2,7 @@
 Quickly install common Developer tools, IDEs &amp; services on Debian. In order to use the installer run the following:
 
 <p align="center">
-  <img src="https://i.ibb.co/FsznYFn/Screenshot-2018-12-09-at-11-44-06.png" />
+  <img src="https://i.ibb.co/FmTqMVN/Screenshot-2021-06-17-21-12-09.png" />
 </p>
 
 __Note__: Please do NOT run the script with sudo, run it as your own user!
