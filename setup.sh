@@ -694,8 +694,10 @@ installLocust() {
 installStacer() {
     title "Installing Stacer";
     curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" 'stacer.deb'
-    sudo dpkg -i stacer.deb;
+    sudo apt install ./stacer.deb;
     sudo rm stacer.deb;
+    
+    breakLine;
 }
 
 # Tor Browser
@@ -703,13 +705,15 @@ installStacer() {
 installTorBrowser() {
     title "Installing Tor Browser";
     curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
-    sudo tar xfz ~/tor.tar.xz;
+    sudo tar -xvf ~/tor.tar.xz;
 
     sudo rm -rf /opt/tor-browser_en-US;
     sudo mkdir -p /opt/tor-browser_en-US;
     sudo mv ~/tor-browser_en-US-*/* /opt;
     sudo rm -rf ~/tor.tar.xz;
     sudo rm -rf ~/tor-*;
+    
+    breakLine;
 }
 
 ###############################################################
