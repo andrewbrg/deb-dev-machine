@@ -693,9 +693,9 @@ installLocust() {
 ##########################################################
 installStacer() {
     title "Installing Stacer v${VERSION_STACER}";
-    curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" 'stacer.deb'
-    sudo dpkg -i stacer.deb;
-    sudo rm stacer.deb;
+    curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" "stacer_${VERSION_STACER}_amd64.deb";
+    sudo dpkg -i "stacer_${VERSION_STACER}_amd64.deb";
+    sudo rm "stacer_${VERSION_STACER}_amd64.deb";
     breakLine;
 }
 
