@@ -105,6 +105,14 @@ repoDocker() {
     fi
 }
 
+# Stacer
+##########################################################
+repoStacer() {
+    if [[ ! -f /etc/apt/sources.list.d/oguzhaninan-ubuntu-stacer-impish.list ]]; then
+        sudo add-apt-repository ppa:oguzhaninan/stacer -y;
+    fi
+}
+
 # Kubernetes
 ##########################################################
 repoKubernetes() {
@@ -306,6 +314,12 @@ installPython() {
 
     IS_INSTALLED_PYTHON=1;
     breakLine;
+}
+
+# Stacer
+##########################################################
+installStacer() {
+    sudo apt install stacer -y;
 }
 
 # GoLang
@@ -788,6 +802,7 @@ title "Adding Repositories";
             27) repoSublime ;;
             30) repoRemmina ;;
             31) repoGoogleSdk ;;
+            35) repoStacer ;;
         esac
     done
     notify "Required repositories have been added...";
@@ -862,6 +877,7 @@ do
             if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then installPython; fi
             installLocust;
         ;;
+        35) installStacer ;;
     esac
 done
 
