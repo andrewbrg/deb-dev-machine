@@ -656,13 +656,14 @@ installPopcorn() {
 installZsh() {
     title "Installing ZSH Terminal Plugin";
     sudo apt install -y zsh fonts-powerline;
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
 
     if [[ -f "${HOME}/.zshrc" ]]; then
         rm "${HOME}/.zshrc";
     fi
 
     echo '/bin/zsh' >> ~/.bashrc;
+    chsh -s "$(which zsh)" "$(whoami)";
     sudo chsh -s "$(which zsh)" "$(whoami)";
 
     IS_INSTALLED_ZSH=1;
