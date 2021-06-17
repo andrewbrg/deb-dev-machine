@@ -703,13 +703,13 @@ installStacer() {
 ##########################################################
 installTorBrowser() {
     title "Installing Tor Browser";
+    cd /opt;
+    sudo rm -rf tor-browser_en-US;
+    
     curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
-    sudo tar -xf ~/tor.tar.xz;
-
-    sudo rm -rf /opt/tor;
-    sudo mkdir -p /opt/tor;
-    sudo mv ~/tor-browser_en-US /opt/tor;
     sudo rm -f ~/tor.tar.xz;
+    
+    cd ~;
     
     breakLine;
 }
