@@ -722,12 +722,16 @@ installTorBrowser() {
     breakLine;
 }
 
+installSymfony() {
+    wget https://get.symfony.com/cli/installer -O - | bash;
+}
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
 sudo apt install -y dialog;
 
-cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> un/select options & <enter> start installation." \
+cmd=(dialog --backtitle "Debian dev installer - USAGE: <space> un/select options & <enter> start installation." \
 --ascii-lines \
 --clear \
 --nocancel \
@@ -771,6 +775,7 @@ options=(
     34 "Locust (load testing)" off
     35 "Stacer v${VERSION_STACER} (performance optimisation)" on
     36 "Tor Browser v${VERSION_TOR}" off
+    37 "Symfony Installer" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -901,6 +906,7 @@ do
         ;;
         35) installStacer ;;
         36) installTorBrowser ;;
+        37) installSymfony ;;
     esac
 done
 
@@ -913,14 +919,14 @@ title "Finalising & Cleaning Up...";
 breakLine;
 
 notify "Great, the installation is complete =)";
-echo "If you want to install further tool in the future you can run this script again.";
+echo "To install further tools in the future you can run this script again.";
 
 ###############################################################
 ## POST INSTALLATION ACTIONS
 ###############################################################
 if [[ ${IS_INSTALLED_ZSH} -eq 1 ]]; then
     breakLine;
-    notify "ZSH Plugin Detected..."
+    notify "ZSH Shell Detected"
 
     cd ~/ || exit;
     curlToFile ${REPO_URL}"zsh/.zshrc" ".zshrc";
@@ -928,13 +934,13 @@ if [[ ${IS_INSTALLED_ZSH} -eq 1 ]]; then
     source ~/.zshrc;
 
     echo "";
-    echo "If the zsh plugin does not take effect you can manually activate it by adding /bin/zsh to you .bashrc file. ";
-    echo "Further information & documentation on the ZSH plugin: https://github.com/robbyrussell/oh-my-zsh";
+    echo "If the ZSH Shell does not take effect you can manually activate it by adding /bin/zsh to your '.bashrc' file.";
+    echo "Further documentation for ZSH Shell: https://github.com/ohmyzsh/ohmyzsh";
 fi
 
 if [[ ${IS_INSTALLED_SUBLIME} -eq 1 ]]; then
     breakLine;
-    notify "Sublime Text Detected..."
+    notify "Sublime Text Detected"
     echo "";
     echo "To complete the Sublime Text installation make sure to install the 'Package Control' plugin when first running Sublime."
     echo "";
@@ -942,9 +948,9 @@ fi
 
 if [[ ${IS_INSTALLED_MYSQLSERVER} -eq 1 ]]; then
     breakLine;
-    notify "MySql Community Server Detected..."
+    notify "MySQL Community Server Detected"
     echo "";
-    echo "If you want to harden your MySql installation run: mysql-secure-install"
+    echo "If you want to harden your MySQL installation run: mysql-secure-install"
     echo "";
 fi
 
