@@ -692,7 +692,7 @@ installLocust() {
 # Stacer
 ##########################################################
 installStacer() {
-    title "Installing Stacer";
+    title "Installing Stacer v${VERSION_STACER}";
     curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" 'stacer.deb'
     sudo dpkg -i stacer.deb;
     sudo rm stacer.deb;
@@ -702,7 +702,7 @@ installStacer() {
 # Tor Browser
 ##########################################################
 installTorBrowser() {
-    title "Installing Tor Browser";
+    title "Installing Tor Browser v${VERSION_TOR}";
     cd /opt;
     sudo rm -rf tor-browser_en-US;
     
