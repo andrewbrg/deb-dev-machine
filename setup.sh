@@ -705,20 +705,16 @@ installTorBrowser() {
     title "Installing Tor Browser v${VERSION_TOR}";
     
     sudo apt install zenity -y;
-    curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
+    curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor_en-US.tar.xz';
+    curlToFile ${REPO_URL}"desktop/tor-browser.desktop" "/usr/share/applications/tor-browser.desktop";
     
     sudo rm -rf /opt/tor-browser_en-US;
-    tar -xvf tor.tar.xz;
+    tar -xvf tor_en-US.tar.xz;
     sudo mkdir -p /opt/tor-browser_en-US;
     sudo mv tor-browser_en-US/* /opt/tor-browser_en-US;
     
-    sudo rm -f tor.tar.xz;
+    sudo rm -f tor_en-US.tar.xz;
     sudo rm -rf tor-browser_en-US;
-    
-    sudo chown -R $(whoami) /opt/tor-browser_en-US/;
-    sudo chmod 777 /opt/tor-browser_en-US/Browser/start-tor-browser.desktop;
-    cd /opt/tor-browser_en-US/Browser;
-    ./start-tor-browser --register-app;
     
     cd ~;
     
