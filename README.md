@@ -82,6 +82,8 @@ You can expect the following to be automatically installed and readily accessibl
 - VS Code IDE
 - Remmina Remote Desktop Client
 - Locust
+- Stacer
+- Tor Browser
 
 ## Issues with Docker in ChromeOS?
 
