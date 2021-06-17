@@ -714,6 +714,7 @@ installTorBrowser() {
     sudo mv tor-browser_en-US/* /opt/tor-browser_en-US;
     sudo rm -f tor.tar.xz;
     
+    sudo chown -R $(whoami) /opt/tor-browser_en-US/;
     sudo chmod 777 /opt/tor-browser_en-US/Browser/start-tor-browser.desktop;
     cd /opt/tor-browser_en-US/Browser;
     ./start-tor-browser --register-app;
