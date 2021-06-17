@@ -3,15 +3,16 @@
 ###############################################################
 ## PACKAGE VERSIONS - CHANGE AS REQUIRED
 ###############################################################
-VERSION_PHP="7.4";
+VERSION_PHP="8.0";
 VERSION_GO="1.15.6";
 VERSION_HELM="3";
 VERSION_SOPS="3.1.1";
 VERSION_WERF="1.1.21+fix22";
 VERSION_NODE="14";
 VERSION_POPCORNTIME="0.4.4";
-VERSION_PHPSTORM="2020.3";
+VERSION_PHPSTORM="2021.1.3";
 VERSION_DOCKERCOMPOSE="1.24.1";
+VERSION_TOR="10.0.17";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -314,12 +315,6 @@ installPython() {
 
     IS_INSTALLED_PYTHON=1;
     breakLine;
-}
-
-# Stacer
-##########################################################
-installStacer() {
-    sudo apt install stacer -y;
 }
 
 # GoLang
@@ -696,9 +691,30 @@ installMySqlServer() {
 # Locust
 ##########################################################
 installLocust() {
-  title "Installing Locust";
-  sudo pip3 install locust;
-  breakLine;
+    title "Installing Locust";
+    sudo pip3 install locust;
+    breakLine;
+}
+
+# Stacer
+##########################################################
+installStacer() {
+    title "Installing Stacer";
+    sudo apt install stacer -y;
+}
+
+# Tor Browser
+##########################################################
+installTorBrowser() {
+    title "Installing Tor Browser";
+    curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
+    sudo tar xfz ~/tor.tar.xz;
+
+    sudo rm -rf /opt/tor-browser_en-US;
+    sudo mkdir -p /opt/tor-browser_en-US;
+    sudo mv ~/tor-browser_en-US-*/* /opt;
+    sudo rm -rf ~/tor.tar.xz;
+    sudo rm -rf ~/tor-*;
 }
 
 ###############################################################
@@ -715,7 +731,7 @@ cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> un/select o
 
 options=(
     01 "Git" on
-    02 "Node v${VERSION_NODE} with npm" on
+    02 "Node v${VERSION_NODE} with NPM" on
     03 "PHP v${VERSION_PHP} with PECL" on
     04 "Werf v${VERSION_WERF} with Helm v${VERSION_HELM}" on
     05 "Python" on
@@ -726,13 +742,13 @@ options=(
     10 "Apache Cordova" off
     11 "Phonegap" off
     12 "Webpack" off
-    13 "Memcached server" off
-    14 "Redis server" off
+    13 "Memcached Server" off
+    14 "Redis Server" off
     15 "Docker CE (with docker compose)" on
     16 "Kubernetes (kubectl)" on
     17 "Sops v${VERSION_SOPS}" on
     18 "Postman" off
-    19 "Laravel installer" off
+    19 "Laravel Installer" off
     20 "Wine" off
     21 "MySql Community Server" off
     22 "SQLite (database tool)" off
@@ -746,8 +762,10 @@ options=(
     30 "Remmina (remote desktop client)" off
     31 "Google Cloud SDK" on
     32 "Popcorn Time v${VERSION_POPCORNTIME}" on
-    33 "ZSH Terminal Plugin" on
-    34 "Locust (http load tester)" off
+    33 "ZSH Terminal (ohMyZSH)" on
+    34 "Locust (http load testing)" off
+    35 "Stacer (performance optimisation)" on
+    36 "Tor Browser v${VERSION_TOR}" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
