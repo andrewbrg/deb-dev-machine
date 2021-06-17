@@ -703,15 +703,21 @@ installStacer() {
 ##########################################################
 installTorBrowser() {
     title "Installing Tor Browser v${VERSION_TOR}";
-    cd /opt;
-    sudo rm -rf tor-browser_en-US;
+    
+    sudo apt install zenity -y;
+    
+    sudo rm -rf /opt/tor-browser_en-US;
     
     curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
-    sudo tar -xf tor.tar.xz;
+    tar -xvf tor.tar.xz;
+    sudo mkdir -p /opt/tor-browser_en-US;
+    sudo mv tor-browser_en-US/* /opt/tor-browser_en-US;
     sudo rm -f tor.tar.xz;
     
-    cd tor-browser_en-US/Browser/;
+    sudo chmod 777 /opt/tor-browser_en-US/Browser/start-tor-browser.desktop;
+    cd /opt/tor-browser_en-US/Browser;
     ./start-tor-browser --register-app;
+    
     cd ~;
     
     breakLine;
