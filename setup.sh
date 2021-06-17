@@ -13,6 +13,7 @@ VERSION_POPCORNTIME="0.4.4";
 VERSION_PHPSTORM="2021.1.3";
 VERSION_DOCKERCOMPOSE="1.24.1";
 VERSION_TOR="10.0.17";
+VERSION_STACER="1.1.0";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -103,14 +104,6 @@ repoDocker() {
         notify "Adding Docker repository";
         curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo apt-key add -;
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable";
-    fi
-}
-
-# Stacer
-##########################################################
-repoStacer() {
-    if [[ ! -f /etc/apt/sources.list.d/oguzhaninan-ubuntu-stacer-impish.list ]]; then
-        sudo add-apt-repository ppa:oguzhaninan/stacer -y;
     fi
 }
 
@@ -700,7 +693,9 @@ installLocust() {
 ##########################################################
 installStacer() {
     title "Installing Stacer";
-    sudo apt install stacer -y;
+    curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" 'stacer.deb'
+    sudo dpkg -i stacer.deb;
+    sudo rm stacer.deb;
 }
 
 # Tor Browser
@@ -764,7 +759,7 @@ options=(
     32 "Popcorn Time v${VERSION_POPCORNTIME}" on
     33 "ZSH Terminal (ohMyZSH)" on
     34 "Locust (http load testing)" off
-    35 "Stacer (performance optimisation)" on
+    35 "Stacer v${VERSION_STACER} (performance optimisation)" on
     36 "Tor Browser v${VERSION_TOR}" off
 );
 
@@ -820,7 +815,6 @@ title "Adding Repositories";
             27) repoSublime ;;
             30) repoRemmina ;;
             31) repoGoogleSdk ;;
-            35) repoStacer ;;
         esac
     done
     notify "Required repositories have been added...";
@@ -896,6 +890,7 @@ do
             installLocust;
         ;;
         35) installStacer ;;
+        36) installTorBrowser ;;
     esac
 done
 
