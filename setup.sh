@@ -696,7 +696,6 @@ installStacer() {
     curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" 'stacer.deb'
     sudo apt install ./stacer.deb;
     sudo rm stacer.deb;
-    
     breakLine;
 }
 
@@ -762,7 +761,7 @@ options=(
     31 "Google Cloud SDK" on
     32 "Popcorn Time v${VERSION_POPCORNTIME}" on
     33 "ZSH Terminal (ohMyZSH)" on
-    34 "Locust (http load testing)" off
+    34 "Locust (load testing)" off
     35 "Stacer v${VERSION_STACER} (performance optimisation)" on
     36 "Tor Browser v${VERSION_TOR}" off
 );
