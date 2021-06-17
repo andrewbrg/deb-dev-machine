@@ -707,8 +707,11 @@ installTorBrowser() {
     sudo rm -rf tor-browser_en-US;
     
     curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" 'tor.tar.xz';
-    sudo rm -f ~/tor.tar.xz;
+    sudo tar -xf tor.tar.xz;
+    sudo rm -f tor.tar.xz;
     
+    cd tor-browser_en-US/Browser/;
+    ./start-tor-browser --register-app;
     cd ~;
     
     breakLine;
