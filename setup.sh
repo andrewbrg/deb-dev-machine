@@ -708,8 +708,7 @@ installTorBrowser() {
 
     sudo rm -rf /opt/tor-browser_en-US;
     sudo mv ~/tor-browser_en-US /opt;
-    sudo rm -rf ~/tor.tar.xz;
-    sudo rm -rf ~/tor-*;
+    sudo rm -f ~/tor.tar.xz;
     
     breakLine;
 }
