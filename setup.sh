@@ -424,7 +424,7 @@ installDbeaver() {
 ##########################################################
 installRedisDesktopManager() {
     title "Installing Redis Desktop Manager";
-    sudo snap install core;
+    sudo snap install core snapd;
     sudo snap install redis-desktop-manager;
     breakLine;
 }
