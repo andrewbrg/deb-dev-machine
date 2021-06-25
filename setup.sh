@@ -426,6 +426,7 @@ installRedisDesktopManager() {
     title "Installing Redis Desktop Manager";
     sudo snap install core snapd;
     sudo snap install redis-desktop-manager;
+    cp /var/lib/snapd/desktop/applications/*.desktop ~/.local/share/applications/.;
     breakLine;
 }
 
