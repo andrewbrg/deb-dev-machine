@@ -286,7 +286,10 @@ installWerf() {
     curl -L "https://dl.bintray.com/flant/werf/v${VERSION_WERF}/werf-linux-amd64-v${VERSION_WERF}" -o /tmp/werf;
     chmod +x /tmp/werf;
     sudo mv /tmp/werf /usr/local/bin/werf;
-    curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | bash;
+    curl -fsSL -o get_helm.sh "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}";
+    chmod 700 get_helm.sh;
+    ./get_helm.sh;
+    rm get_helm.sh;
     breakLine;
 }
 
