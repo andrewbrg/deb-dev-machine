@@ -283,7 +283,7 @@ installPhp() {
 ##########################################################
 installWerf() {
     title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
-    curl -L "https://storage.yandexcloud.net/werf/targets/releases/${VERSION_WERF}/werf-linux-amd64-${VERSION_WERF}" -o /tmp/werf;
+    curl -L "https://storage.yandexcloud.net/werf/targets/releases/v${VERSION_WERF}/werf-linux-amd64-v${VERSION_WERF}" -o /tmp/werf;
     chmod +x /tmp/werf;
     sudo mv /tmp/werf /usr/local/bin/werf;
     curl -fsSL -o get_helm.sh "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}";
