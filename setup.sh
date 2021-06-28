@@ -146,7 +146,7 @@ repoVsCode() {
         notify "Adding VSCode repository";
         curl "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor > microsoft.gpg;
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/;
-        echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list;
+        echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode sthttps://storage.yandexcloud.net/werf/targets/releases/v1.2.11+fix7/werf-linux-amd64-v1.2.11+fix7able main" | sudo tee /etc/apt/sources.list.d/vscode.list;
     fi
 }
 
@@ -283,7 +283,7 @@ installPhp() {
 ##########################################################
 installWerf() {
     title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
-    curl -L "https://dl.bintray.com/flant/werf/v${VERSION_WERF}/werf-linux-amd64-v${VERSION_WERF}" -o /tmp/werf;
+    curl -L "https://storage.yandexcloud.net/werf/targets/releases/${VERSION_WERF}/werf-linux-amd64-${VERSION_WERF}" -o /tmp/werf;
     chmod +x /tmp/werf;
     sudo mv /tmp/werf /usr/local/bin/werf;
     curl -fsSL -o get_helm.sh "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}";
