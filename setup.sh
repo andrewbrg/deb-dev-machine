@@ -285,9 +285,9 @@ installPhp() {
 installWerf() {
     title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
     
-    curlToFile "${REPO_URL}/werf/${VERSION_WERF}.gz" "/tmp/werf.gz";
-    tar -xvf /tmp/werf.gz;
-    rm /werf.gz;
+    curlToFile "${REPO_URL}werf/${VERSION_WERF}.gz" "/tmp/${VERSION_WERF}.gz";
+    tar -xvf "/tmp/${VERSION_WERF}.gz";
+    rm "/tmp/${VERSION_WERF}.gz";
     chmod +x /tmp/${VERSION_WERF};
     sudo mv /tmp/${VERSION_WERF} /usr/local/bin/werf;
 
