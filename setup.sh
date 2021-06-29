@@ -215,7 +215,8 @@ installGit() {
 installNode() {
     title "Installing Node ${VERSION_NODE}";
     curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
-    sudo apt install -y nodejs npm;
+    sudo apt install -y nodejs;
+    sudo apt install -y npm;
 
     if [[ ${versionDeb} = "stretch" ]]; then
       sudo chown -R "$(whoami)" /usr/lib/node_modules;
@@ -329,19 +330,33 @@ installGoLang() {
    
     if [[ -f .bashrc ]]; then
         sed -i '/export PATH/d' ~/.bashrc;
-        echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.bashrc;
-        echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
         echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
+        
+        if ! grep -q "export GOPATH=" ~/.bashrc; then
+            echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
+        fi
+        
+        if ! grep -q "export GOROOT=" ~/.bashrc; then
+            echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.bashrc;
+        fi
     fi
     
     if [[ -f .zshrc ]]; then
         sed -i '/export PATH/d' ~/.zshrc;
-        echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.zshrc;
-        echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
         echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
+        
+        if ! grep -q "export GOPATH=" ~/.zshrc; then
+            echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
+        fi
+        
+        if ! grep -q "export GOROOT=" ~/.zshrc; then
+            echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.zshrc;
+        fi
     fi
     
     export PATH=$PATH:/usr/local/go/bin;
+    export GOPATH=$HOME/go;
+    export GOROOT=$PATH:/usr/local/go;
     
     mkdir "${GOPATH}";
     sudo chown -R root:root "${GOPATH}";
@@ -631,6 +646,11 @@ installRemmina() {
 installGoogleSdk() {
     title "Installing Google Cloud SDK";
     sudo apt install -y google-cloud-sdk;
+    
+    if ! grep -q "export CLOUDSDK_PYTHON=python2" ~/.bashrc; then
+        echo 'export CLOUDSDK_PYTHON=python2' | tee -a ~/.bashrc;
+    fi
+
     breakLine;
 }
 
@@ -667,7 +687,10 @@ installZsh() {
         rm "${HOME}/.zshrc";
     fi
 
-    echo '/bin/zsh' >> ~/.bashrc;
+    if ! grep -q "/bin/zsh" ~/.bashrc; then
+        echo '/bin/zsh' | tee -a ~/.bashrc;
+    fi
+   
     chsh -s "$(which zsh)" "$(whoami)";
     sudo chsh -s "$(which zsh)" "$(whoami)";
 
@@ -776,11 +799,11 @@ options=(
     30 "Remmina (remote desktop client)" off
     31 "Google Cloud SDK" on
     32 "Popcorn Time v${VERSION_POPCORNTIME}" on
-    33 "ZSH Terminal (ohMyZSH)" on
-    34 "Locust (load testing)" off
-    35 "Stacer v${VERSION_STACER} (performance optimisation)" on
-    36 "Tor Browser v${VERSION_TOR}" off
-    37 "Symfony Installer" on
+    33 "Locust (load testing)" off
+    34 "Stacer v${VERSION_STACER} (performance optimisation)" on
+    35 "Tor Browser v${VERSION_TOR}" off
+    36 "Symfony Installer" on
+    37 "ZSH Terminal (ohMyZSH)" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -904,14 +927,14 @@ do
         30) installRemmina ;;
         31) installGoogleSdk ;;
         32) installPopcorn ;;
-        33) installZsh ;;
-        34)
+        33)
             if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then installPython; fi
             installLocust;
         ;;
-        35) installStacer ;;
-        36) installTorBrowser ;;
-        37) installSymfony ;;
+        34) installStacer ;;
+        35) installTorBrowser ;;
+        36) installSymfony ;;
+        37) installZsh ;;
     esac
 done
 
