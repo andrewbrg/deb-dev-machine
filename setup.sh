@@ -285,14 +285,17 @@ installPhp() {
 installWerf() {
     title "Installing Werf v${VERSION_WERF} with Helm v${VERSION_HELM}";
     
-    curlToFile "${REPO_URL}/werf/${VERSION_WERF}" "/tmp/werf";
-    chmod +x /tmp/werf;
-    sudo mv /tmp/werf /usr/local/bin/werf;
-    
+    curlToFile "${REPO_URL}/werf/${VERSION_WERF}.gz" "/tmp/werf.gz";
+    tar -xvf /tmp/werf.gz;
+    rm /werf.gz;
+    chmod +x /tmp/${VERSION_WERF};
+    sudo mv /tmp/${VERSION_WERF} /usr/local/bin/werf;
+
     curl -fsSL -o get_helm.sh "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}";
     chmod 700 get_helm.sh;
     ./get_helm.sh;
     rm get_helm.sh;
+
     breakLine;
 }
 
