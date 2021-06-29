@@ -292,7 +292,7 @@ installWerf() {
     sudo mv ${VERSION_WERF} /usr/local/bin/werf;
 
     curlToFile "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" "get_helm.sh";
-    chmod 700 get_helm.sh;
+    sudo chmod +x get_helm.sh;
     ./get_helm.sh;
     rm -f get_helm.sh;
 
