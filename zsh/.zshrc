@@ -1,6 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME"/.oh-my-zsh"
 export ZSH_THEME="robbyrussell"
+export CLOUDSDK_PYTHON=python2
 
 # Plugins
 plugins=(
