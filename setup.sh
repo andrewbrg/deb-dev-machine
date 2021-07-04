@@ -384,7 +384,7 @@ installYarn() {
 installSnap() {
     title "Installing Snap";
     sudo apt install libsquashfuse0 squashfuse fuse -y;
-    sudo apt install snapd -y;
+    sudo apt install -y snapd;
     sudo snap install core;
     sudo snap install snapd;
 
@@ -405,7 +405,7 @@ installBleachBit() {
       curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian9.deb" "bleachbit.deb";
     fi
 
-    sudo apt install ./bleachbit.deb -y;
+    sudo apt install -y ./bleachbit.deb;
     sudo rm -f bleachbit.deb;
 
     breakLine;
