@@ -379,6 +379,8 @@ installYarn() {
     breakLine;
 }
 
+# Snapd
+##########################################################
 installSnap() {
     title "Installing Snap";
     sudo apt install libsquashfuse0 squashfuse fuse -y;
@@ -387,6 +389,17 @@ installSnap() {
     sudo snap install snapd;
 
     IS_INSTALLED_SNAP=1;
+    breakLine;
+}
+
+# Bleachbit
+##########################################################
+installBleachbit() {
+    title "Installing Bleachbit";
+    curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian10.deb" "bleachbit.deb";
+    sudo apt install bleachbit.deb;
+    rm -r bleachbit.deb;
+
     breakLine;
 }
 
@@ -820,7 +833,8 @@ options=(
     35 "Tor Browser v${VERSION_TOR}" off
     36 "Symfony Installer" on
     37 "Snap" on
-    38 "ZSH Terminal - ohMyZSH" on
+    38 "Bleachbit" on
+    39 "ZSH Terminal - ohMyZSH" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -954,7 +968,8 @@ do
         35) installTorBrowser ;;
         36) installSymfony ;;
         37) installSnap ;;
-        38) installZsh ;;
+        38) installBleachbit ;;
+        39) installZsh ;;
     esac
 done
 
