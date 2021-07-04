@@ -18,7 +18,7 @@ VERSION_STACER="1.1.0";
 # Disallow running with sudo or su
 ##########################################################
 if [[ "$EUID" -eq 0 ]]
-  then printf "\033[1;101mNein, Nein, Nein!! Please do not run this script as root (no su or sudo)! \033[0m \n";
+  then printf "\033[1;101mPlease do not run this script as root (no su or sudo)! \033[0m \n";
   exit;
 fi
 
@@ -27,7 +27,7 @@ fi
 sudo apt install -y lsb-release;
 versionDeb="$(lsb_release -c -s)";
 if [[ ${versionDeb} != "stretch" ]] && [[ ${versionDeb} != "buster" ]]
-  then printf "\033[1;101mUnfortunatly your OS Version (%s) is not supported. \033[0m \n" "${versionDeb}";
+  then printf "\033[1;101mUnfortunately your OS Version (%s) is not supported. \033[0m \n" "${versionDeb}";
   exit;
 fi
 
@@ -145,9 +145,8 @@ repoAtom() {
 repoVsCode() {
     if [[ ! -f /etc/apt/sources.list.d/vscode.list ]]; then
         notify "Adding VSCode repository";
-        curl "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor > microsoft.gpg;
-        sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/;
-        echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode sthttps://storage.yandexcloud.net/werf/targets/releases/v1.2.11+fix7/werf-linux-amd64-v1.2.11+fix7able main" | sudo tee /etc/apt/sources.list.d/vscode.list;
+        curl -sSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
+        sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main";
     fi
 }
 
@@ -295,7 +294,7 @@ installWerf() {
     curlToFile "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" "get_helm.sh";
     sudo chmod +x get_helm.sh;
     ./get_helm.sh;
-    rm -f get_helm.sh;
+    sudo rm -f get_helm.sh;
 
     breakLine;
 }
@@ -307,11 +306,11 @@ installPython() {
     sudo apt install -y build-essential libssl-dev libffi-dev python-dev python3-pip;
     sudo ln -s /usr/bin/pip3 /usr/bin/pip;
 
-    if [[ -f .bashrc ]]; then
+    if [[ -f ".bashrc" ]]; then
         sed -i '/export PATH/d' ~/.bashrc;
         echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
     fi
-    if [[ -f .zshrc ]]; then
+    if [[ -f ".zshrc" ]]; then
         sed -i '/export PATH/d' ~/.zshrc;
         echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.zshrc;
     fi
@@ -327,14 +326,14 @@ installGoLang() {
     curlToFile "https://dl.google.com/go/go${VERSION_GO}.linux-amd64.tar.gz" "go.tar.gz";
     tar xvf go.tar.gz;
 
-    if [[ -d /usr/local/go ]]; then
+    if [[ -d "/usr/local/go" ]]; then
         sudo rm -rf /usr/local/go;
     fi
 
     sudo mv go /usr/local;
     rm go.tar.gz -f;
    
-    if [[ -f .bashrc ]]; then
+    if [[ -f ".bashrc" ]]; then
         sed -i '/export PATH/d' ~/.bashrc;
         echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
         
@@ -347,7 +346,7 @@ installGoLang() {
         fi
     fi
     
-    if [[ -f .zshrc ]]; then
+    if [[ -f ".zshrc" ]]; then
         sed -i '/export PATH/d' ~/.zshrc;
         echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
         
@@ -446,11 +445,11 @@ installComposer() {
 installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
-    if [[ -f .bashrc ]]; then
+    if [[ -f ".bashrc" ]]; then
         sed -i '/export PATH/d' ~/.bashrc;
         echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
     fi
-    if [[ -f .zshrc ]]; then
+    if [[ -f ".zshrc" ]]; then
         sed -i '/export PATH/d' ~/.zshrc;
         echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.zshrc;
     fi
@@ -697,7 +696,7 @@ installPopcorn() {
     title "Installing Popcorn Time v${VERSION_POPCORNTIME}";
     sudo apt install -y libnss3 vlc;
 
-    if [[ -d /opt/popcorn-time ]]; then
+    if [[ -d "/opt/popcorn-time" ]]; then
         sudo rm -rf /opt/popcorn-time;
     fi
 
@@ -788,7 +787,7 @@ installTorBrowser() {
 }
 
 installSymfony() {
-    wget https://get.symfony.com/cli/installer -O - | bash;
+    wget "https://get.symfony.com/cli/installer" -O - | bash;
 }
 
 ###############################################################
