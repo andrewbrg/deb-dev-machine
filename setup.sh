@@ -392,12 +392,20 @@ installSnap() {
     breakLine;
 }
 
-# Bleachbit
+# BleachBit
 ##########################################################
-installBleachbit() {
-    title "Installing Bleachbit";
-    curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian10.deb" "bleachbit.deb";
-    sudo apt install bleachbit.deb;
+installBleachBit() {
+    title "Installing BleachBit";
+
+    if [[ ${versionDeb} == "buster" ]]; then
+      curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian10.deb" "bleachbit.deb";
+    fi
+
+    if [[ ${versionDeb} == "stretch" ]]; then
+      curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian9.deb" "bleachbit.deb";
+    fi
+
+    sudo apt install bleachbit.deb -y;
     rm -r bleachbit.deb;
 
     breakLine;
@@ -833,7 +841,7 @@ options=(
     35 "Tor Browser v${VERSION_TOR}" off
     36 "Symfony Installer" on
     37 "Snap" on
-    38 "Bleachbit" on
+    38 "BleachBit" on
     39 "ZSH Terminal - ohMyZSH" on
 );
 
@@ -968,7 +976,7 @@ do
         35) installTorBrowser ;;
         36) installSymfony ;;
         37) installSnap ;;
-        38) installBleachbit ;;
+        38) installBleachBit ;;
         39) installZsh ;;
     esac
 done
