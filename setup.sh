@@ -67,6 +67,7 @@ curlToFile() {
 IS_INSTALLED_GO=0;
 IS_INSTALLED_ZSH=0;
 IS_INSTALLED_PHP=0;
+IS_INSTALLED_SNAP=0;
 IS_INSTALLED_NODE=0;
 IS_INSTALLED_PYTHON=0;
 IS_INSTALLED_SUBLIME=0;
@@ -378,6 +379,17 @@ installYarn() {
     breakLine;
 }
 
+installSnap() {
+    title "Installing Snap";
+    sudo apt install libsquashfuse0 squashfuse fuse -y;
+    sudo apt install snapd -y;
+    sudo snap install core;
+    sudo snap install snapd;
+
+    IS_INSTALLED_SNAP=1;
+    breakLine;
+}
+
 # Memcached
 ##########################################################
 installMemcached() {
@@ -447,7 +459,6 @@ installDbeaver() {
 ##########################################################
 installRedisDesktopManager() {
     title "Installing Redis Desktop Manager";
-    sudo snap install core snapd;
     sudo snap install redis-desktop-manager;
     cp /var/lib/snapd/desktop/applications/*.desktop ~/.local/share/applications/.;
     breakLine;
@@ -793,22 +804,23 @@ options=(
     19 "Laravel Installer" off
     20 "Wine" off
     21 "MySql Community Server" off
-    22 "SQLite (database tool)" off
-    23 "DBeaver (database tool)" off
+    22 "SQLite" off
+    23 "DBeaver" off
     24 "Redis Desktop Manager" off
     25 "Atom IDE" off
     26 "VS Code IDE" off
     27 "Sublime Text IDE" off
     28 "PhpStorm IDE v${VERSION_PHPSTORM}" on
     29 "Software Center" on
-    30 "Remmina (remote desktop client)" off
+    30 "Remmina - Remote Desktop" off
     31 "Google Cloud SDK" on
     32 "Popcorn Time v${VERSION_POPCORNTIME}" on
-    33 "Locust (load testing)" off
-    34 "Stacer v${VERSION_STACER} (performance optimisation)" on
+    33 "Locust - Load Tester" off
+    34 "Stacer v${VERSION_STACER}" on
     35 "Tor Browser v${VERSION_TOR}" off
     36 "Symfony Installer" on
-    37 "ZSH Terminal (ohMyZSH)" on
+    37 "Snap" on
+    38 "ZSH Terminal - ohMyZSH" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -835,8 +847,7 @@ title "Installing Pre-Requisite Packages";
     libssh2-1-dev \
     libssl-dev \
     nano \
-    vim \
-    snapd;
+    vim;
 
     if [[ ${versionDeb} = "stretch" ]]; then
       sudo apt install -y preload gksu;
@@ -920,7 +931,10 @@ do
         21) installMySqlServer ;;
         22) installSqLite ;;
         23) installDbeaver ;;
-        24) installRedisDesktopManager ;;
+        24)
+            if [[ ${IS_INSTALLED_SNAP} -ne 1 ]]; then installSnap; fi
+            installRedisDesktopManager;
+        ;;
         25) installAtom ;;
         26) installVsCode ;;
         27)
@@ -939,7 +953,8 @@ do
         34) installStacer ;;
         35) installTorBrowser ;;
         36) installSymfony ;;
-        37) installZsh ;;
+        37) installSnap ;;
+        38) installZsh ;;
     esac
 done
 
