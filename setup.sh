@@ -405,8 +405,8 @@ installBleachBit() {
       curlToFile "https://download.bleachbit.org/bleachbit_4.4.0-0_all_debian9.deb" "bleachbit.deb";
     fi
 
-    sudo apt install bleachbit.deb -y;
-    rm -r bleachbit.deb;
+    sudo apt install ./bleachbit.deb -y;
+    sudo rm -f bleachbit.deb;
 
     breakLine;
 }
