@@ -62,7 +62,7 @@ curlToFile() {
 }
 
 setPaths() {
-    if [[ ${IS_INSTALLED_PYTHON} == 1 ]]; then 
+    if [[ ${IS_INSTALLED_PYTHON} -eq 1 ]]; then 
         if [[ -f ".bashrc" ]]; then
             sed -i '/export PATH/d' ~/.bashrc;
             echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
@@ -74,7 +74,7 @@ setPaths() {
     fi
     
     
-    if [[ ${IS_INSTALLED_GO} == 1 ]]; then 
+    if [[ ${IS_INSTALLED_GO} -eq 1 ]]; then 
         export PATH=$PATH:/usr/local/go/bin;
         export GOPATH=$HOME/go;
         export GOROOT=$PATH:/usr/local/go;
@@ -106,7 +106,7 @@ setPaths() {
         fi
     fi
     
-    if [[ ${IS_INSTALLED_LARAVEL} == 1 ]]; then   
+    if [[ ${IS_INSTALLED_LARAVEL} -eq 1 ]]; then   
         if [[ -f ".bashrc" ]]; then
             sed -i '/export PATH/d' ~/.bashrc;
             echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
