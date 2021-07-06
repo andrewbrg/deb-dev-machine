@@ -746,6 +746,7 @@ installZsh() {
     chsh -s "$(which zsh)" "$(whoami)";
     sudo chsh -s "$(which zsh)" "$(whoami)";
 
+    setPaths;
     IS_INSTALLED_ZSH=1;
     breakLine;
 }
