@@ -383,13 +383,9 @@ installGoLang() {
 
     sudo mv go /usr/local;
     rm go.tar.gz -f;
-   
-    export PATH=$PATH:/usr/local/go/bin;
-    export GOPATH=$HOME/go;
-    export GOROOT=$PATH:/usr/local/go;
     
-    mkdir "${GOPATH}";
-    sudo chown -R root:root "${GOPATH}";
+    mkdir "${HOME}/go";
+    sudo chown -R root:root "${HOME}/go";
 
     IS_INSTALLED_GO=1;
     setPaths;
@@ -532,11 +528,11 @@ installDocker() {
                 sudo apt install libseccomp-dev -y;
                 go get -v "github.com/opencontainers/runc";
 
-                cd "/usr/local/go/src/github.com/opencontainers/runc" || exit;
+                cd "go/src/github.com/opencontainers/runc" || exit;
                 export GO111MODULE=on;
                 make BUILDTAGS='seccomp apparmor';
 
-                sudo cp "/usr/local/go/src/github.com/opencontainers/runc/runc" /usr/local/bin/runc-master;
+                sudo cp "runc" /usr/local/bin/runc-master;
 
                 curlToFile "${REPO_URL}docker/daemon.json" /etc/docker/daemon.json;
                 sudo systemctl daemon-reload;
@@ -544,7 +540,7 @@ installDocker() {
                 sudo systemctl restart docker;
                 
                 cd ~ || exit;
-                rm -rf
+                rm -rf ~/go;
             break;;
             [Nn]* ) break;;
             * ) echo "Please answer yes or no.";;
