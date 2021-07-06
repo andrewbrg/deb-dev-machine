@@ -62,7 +62,7 @@ curlToFile() {
 }
 
 setPaths() {
-    if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then 
+    if [[ ${IS_INSTALLED_PYTHON} == 1 ]]; then 
         if [[ -f ".bashrc" ]]; then
             sed -i '/export PATH/d' ~/.bashrc;
             echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
@@ -74,10 +74,14 @@ setPaths() {
     fi
     
     
-    if [[ ${IS_INSTALLED_GO} -ne 1 ]]; then 
+    if [[ ${IS_INSTALLED_GO} == 1 ]]; then 
+        export PATH=$PATH:/usr/local/go/bin;
+        export GOPATH=$HOME/go;
+        export GOROOT=$PATH:/usr/local/go;
+    
         if [[ -f ".bashrc" ]]; then
             sed -i '/export PATH/d' ~/.bashrc;
-            echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
+            echo "export PATH=\"$PATH:/usr/local/go/bin:$HOME/go/bin\"" | tee -a ~/.bashrc;
             
             if ! grep -q "export GOPATH=" ~/.bashrc; then
                 echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
@@ -90,7 +94,7 @@ setPaths() {
         
         if [[ -f ".zshrc" ]]; then
             sed -i '/export PATH/d' ~/.zshrc;
-            echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
+            echo "export PATH=\"$PATH:/usr/local/go/bin:$HOME/go/bin\"" | tee -a ~/.zshrc;
             
             if ! grep -q "export GOPATH=" ~/.zshrc; then
                 echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
@@ -102,7 +106,7 @@ setPaths() {
         fi
     fi
     
-    if [[ ${IS_INSTALLED_LARAVEL} -ne 1 ]]; then   
+    if [[ ${IS_INSTALLED_LARAVEL} == 1 ]]; then   
         if [[ -f ".bashrc" ]]; then
             sed -i '/export PATH/d' ~/.bashrc;
             echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
@@ -522,6 +526,7 @@ installDocker() {
                     installGoLang;
                 fi
 
+                setPaths;
                 sudo sed -i -e 's/ExecStartPre=\/sbin\/modprobe overlay/#ExecStartPre=\/sbin\/modprobe overlay/g' /lib/systemd/system/containerd.service;
 
                 sudo apt install libseccomp-dev -y;
