@@ -61,6 +61,59 @@ curlToFile() {
     sudo curl -fSL "$1" -o "$2";
 }
 
+setPaths() {
+    if [[ ${IS_INSTALLED_PYTHON} -ne 1 ]]; then 
+        if [[ -f ".bashrc" ]]; then
+            sed -i '/export PATH/d' ~/.bashrc;
+            echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
+        fi
+        if [[ -f ".zshrc" ]]; then
+            sed -i '/export PATH/d' ~/.zshrc;
+            echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.zshrc;
+        fi
+    fi
+    
+    
+    if [[ ${IS_INSTALLED_GO} -ne 1 ]]; then 
+        if [[ -f ".bashrc" ]]; then
+            sed -i '/export PATH/d' ~/.bashrc;
+            echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
+            
+            if ! grep -q "export GOPATH=" ~/.bashrc; then
+                echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
+            fi
+            
+            if ! grep -q "export GOROOT=" ~/.bashrc; then
+                echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.bashrc;
+            fi
+        fi
+        
+        if [[ -f ".zshrc" ]]; then
+            sed -i '/export PATH/d' ~/.zshrc;
+            echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
+            
+            if ! grep -q "export GOPATH=" ~/.zshrc; then
+                echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
+            fi
+            
+            if ! grep -q "export GOROOT=" ~/.zshrc; then
+                echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.zshrc;
+            fi
+        fi
+    fi
+    
+    if [[ ${IS_INSTALLED_LARAVEL} -ne 1 ]]; then   
+        if [[ -f ".bashrc" ]]; then
+            sed -i '/export PATH/d' ~/.bashrc;
+            echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
+        fi
+        if [[ -f ".zshrc" ]]; then
+            sed -i '/export PATH/d' ~/.zshrc;
+            echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.zshrc;
+        fi
+    fi
+}
+
 ###############################################################
 ## REGISTERED VARIABLES
 ###############################################################
@@ -70,8 +123,10 @@ IS_INSTALLED_PHP=0;
 IS_INSTALLED_SNAP=0;
 IS_INSTALLED_NODE=0;
 IS_INSTALLED_PYTHON=0;
+IS_INSTALLED_LARAVEL=0;
 IS_INSTALLED_SUBLIME=0;
 IS_INSTALLED_MYSQLSERVER=0;
+
 REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
 
 ###############################################################
@@ -306,16 +361,8 @@ installPython() {
     sudo apt install -y build-essential libssl-dev libffi-dev python-dev python3-pip;
     sudo ln -s /usr/bin/pip3 /usr/bin/pip;
 
-    if [[ -f ".bashrc" ]]; then
-        sed -i '/export PATH/d' ~/.bashrc;
-        echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.bashrc;
-    fi
-    if [[ -f ".zshrc" ]]; then
-        sed -i '/export PATH/d' ~/.zshrc;
-        echo "export PATH=\"$PATH:/usr/local/bin/python\"" | tee -a ~/.zshrc;
-    fi
-
     IS_INSTALLED_PYTHON=1;
+    setPaths;
     breakLine;
 }
 
@@ -333,32 +380,6 @@ installGoLang() {
     sudo mv go /usr/local;
     rm go.tar.gz -f;
    
-    if [[ -f ".bashrc" ]]; then
-        sed -i '/export PATH/d' ~/.bashrc;
-        echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.bashrc;
-        
-        if ! grep -q "export GOPATH=" ~/.bashrc; then
-            echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.bashrc;
-        fi
-        
-        if ! grep -q "export GOROOT=" ~/.bashrc; then
-            echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.bashrc;
-        fi
-    fi
-    
-    if [[ -f ".zshrc" ]]; then
-        sed -i '/export PATH/d' ~/.zshrc;
-        echo "export PATH=\"$PATH:/usr/local/go/bin:$GOPATH/bin\"" | tee -a ~/.zshrc;
-        
-        if ! grep -q "export GOPATH=" ~/.zshrc; then
-            echo "export GOPATH=\"$HOME/go\"" | tee -a ~/.zshrc;
-        fi
-        
-        if ! grep -q "export GOROOT=" ~/.zshrc; then
-            echo "export GOROOT=\"/usr/local/go\"" | tee -a ~/.zshrc;
-        fi
-    fi
-    
     export PATH=$PATH:/usr/local/go/bin;
     export GOPATH=$HOME/go;
     export GOROOT=$PATH:/usr/local/go;
@@ -367,6 +388,7 @@ installGoLang() {
     sudo chown -R root:root "${GOPATH}";
 
     IS_INSTALLED_GO=1;
+    setPaths;
     breakLine;
 }
 
@@ -445,15 +467,9 @@ installComposer() {
 installLaravel() {
     title "Installing Laravel Installer";
     composer global require "laravel/installer";
-    if [[ -f ".bashrc" ]]; then
-        sed -i '/export PATH/d' ~/.bashrc;
-        echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.bashrc;
-    fi
-    if [[ -f ".zshrc" ]]; then
-        sed -i '/export PATH/d' ~/.zshrc;
-        echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a ~/.zshrc;
-    fi
-    
+
+    IS_INSTALLED_LARAVEL=1;
+    setPaths;
     breakLine;
 }
 
@@ -1000,8 +1016,7 @@ if [[ ${IS_INSTALLED_ZSH} -eq 1 ]]; then
 
     cd ~/ || exit;
     curlToFile ${REPO_URL}"zsh/.zshrc" ".zshrc";
-
-    source ~/.zshrc;
+    setPaths;
 
     echo "";
     echo "If the ZSH Shell does not take effect you can manually activate it by adding /bin/zsh to your '.bashrc' file.";
