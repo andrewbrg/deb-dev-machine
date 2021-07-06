@@ -510,42 +510,7 @@ installDocker() {
 
     sudo groupadd docker;
     sudo usermod -aG docker "${USER}";
-
-    notify "Install a separate runc environment?";
-
-    while true; do
-        read -p "Recommended on chromebooks (y/n)" yn
-        case ${yn} in
-            [Yy]* )
-                if [[ ${IS_INSTALLED_GO} -ne 1 ]] && [[ "$(command -v go)" == '' ]]; then
-                    breakLine;
-                    installGoLang;
-                fi
-
-                setPaths;
-                sudo sed -i -e 's/ExecStartPre=\/sbin\/modprobe overlay/#ExecStartPre=\/sbin\/modprobe overlay/g' /lib/systemd/system/containerd.service;
-
-                sudo apt install libseccomp-dev -y;
-                go get -v "github.com/opencontainers/runc";
-
-                cd "go/src/github.com/opencontainers/runc" || exit;
-                export GO111MODULE=on;
-                make BUILDTAGS='seccomp apparmor';
-
-                sudo cp "runc" /usr/local/bin/runc-master;
-
-                curlToFile "${REPO_URL}docker/daemon.json" /etc/docker/daemon.json;
-                sudo systemctl daemon-reload;
-                sudo systemctl restart containerd.service;
-                sudo systemctl restart docker;
-                
-                cd ~ || exit;
-                rm -rf ~/go;
-            break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
+    sudo chmod 666 /var/run/docker.sock;
 
     breakLine;
 }
