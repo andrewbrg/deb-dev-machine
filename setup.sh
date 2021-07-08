@@ -687,9 +687,9 @@ installPopcorn() {
     curlToFile ${REPO_URL}"desktop/popcorn.desktop" "/usr/share/applications/popcorn-time.desktop";
     rm -f popcorn.deb;
     
-    sudo sed 's/movies-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js -n;
-    sudo sed 's/tv-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js -n;
-    sudo sed 's/anime-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js -n;
+    sudo sed -n 's/movies-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js;
+    sudo sed -n 's/tv-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js;
+    sudo sed -n 's/anime-v2.api-fetch.sh/popcorn-ru.tk/g' /opt/Popcorn-Time/node_modules/butter-settings-popcorntime.io/index.js;
     
     breakLine;
 }
