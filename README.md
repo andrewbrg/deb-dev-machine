@@ -24,49 +24,34 @@ You can expect the following to be automatically installed and readily accessibl
 - software-properties-common
 - wget
 - htop
-- mlocate
 - gnupg2
-- cmake
-- libssh2-1-dev
-- libssl-dev
 - curl
 - nano
 - vim
-- gksu
-- preload
-- wine _(with Royale2007 theme & Smooth fonts)_
-- mono
-- gnome-software
-- gnome-packagekit
-- snapd _(may not work on chromebook devices)_
-- Zsh
-- Oh my Zsh
+- wine
+- snap
 
 **Services**
 - Git
 - PHP
 - MySQL Community Server
 - Composer
-- Ruby
-- Python
 - GoLang
-- Pip
 - Werf
-- Memcached
 - Redis
 - Node & NPM
 - Yarn
 - Docker
 - Docker Compose
-- Kubernetes
+- Kubectl
 - Helm
 - Sops
 
 **Libraries**
 - Apache Cordova
-- Phone Gap
 - React Native
 - Laravel Installer
+- Symfony Installer
 - Google Cloud SDK
 
 **Software**
@@ -74,74 +59,9 @@ You can expect the following to be automatically installed and readily accessibl
 - DBeaver
 - SQLite Browser
 - Redis Desktop Manager
-- Software center
-- Package updater
-- Sublime Text IDE _(with material theme and dev plugins)_
-- PHPStorm IDE
+- Jetbrains Toolbox App
 - Atom IDE
 - VS Code IDE
-- Remmina Remote Desktop Client
+- Remmina Remote Desktop
 - Locust
 - Stacer
-- Tor Browser
-
-## Issues with Docker in ChromeOS?
-
-If docker gives the following error when starting (check `sudo journalctl -xe`):
-
-```
-modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open moddep file '/lib/modules/4.14.74-0777
-```
-
-**Then do the following:**
-
-1. Hash out _(comment out)_ the `ExecSartPre` line from: `/lib/systemd/system/containerd.service`
-
-```
-sudo vim /lib/systemd/system/containerd.service;
-```
-
-2. Install separate runc environment
-
-```
-sudo apt install libseccomp-dev -y;
-go get -v github.com/opencontainers/runc;
-
-cd $GOPATH/src/github.com/opencontainers/runc;
-make BUILDTAGS='seccomp apparmor';
-
-sudo ln -s $(realpath ./runc) /usr/local/bin/runc-master;
-```
-
-3. Point docker runc to the new environment
-
-```
-sudo mkdir /etc/docker;
-sudo touch /etc/docker/daemon.json;
-sudo vim /etc/docker/daemon.json;
-```
-
-```json
-{
-  "runtimes": {
-    "runc-master": {
-      "path": "/usr/local/bin/runc-master"
-    }
-  },
-  "default-runtime": "runc-master"
-}
-```
-
-4. Restart the docker services
-
-```
-sudo systemctl daemon-reload;
-sudo systemctl restart containerd.service;
-sudo systemctl restart docker;
-```
-
-5. Test the installation
-
-```
-docker run hello-world;
-```
