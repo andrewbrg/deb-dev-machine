@@ -206,47 +206,6 @@ installGit() {
   sudo apt install -y git;
 }
 
-installPhp() {
-  title "Installing PHP v${VERSION_PHP}";
-  sudo apt install -y php${VERSION_PHP}-{bcmath,cli,curl,common,gd,ds,igbinary,dom,fpm,gettext,intl,mbstring,mysql,zip};
-  
-  sudo update-alternatives --set php "/usr/bin/php${VERSION_PHP}";
-  sudo update-alternatives --set phar "/usr/bin/phar${VERSION_PHP}";
-  sudo update-alternatives --set phar.phar "/usr/bin/phar.phar${VERSION_PHP}";
-  sudo update-alternatives --set phpize "/usr/bin/phpize${VERSION_PHP}";
-  sudo update-alternatives --set php-config "/usr/bin/php-config${VERSION_PHP}";
-}
-
-installComposer() {
-  title "Installing Composer";
-  local DL_PATH="composer-setup.php";
-  
-  curlToFile "https://getcomposer.org/installer" ${DL_PATH};
-  sudo php ${DL_PATH} --install-dir=/usr/local/bin --filename=composer;
-  rm -f ${DL_PATH};
-}
-
-installDocker() {
-  title "Installing Docker";
-  sudo apt install -y \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io;
-}
-
-installDockerCompose() {
-  title "Installing Docker Compose";
-  local DL_FILE="/usr/local/bin/docker-compose";
-  
-  curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
-  sudo chmod +x ${DL_FILE};
-}
-
-installKubectl() {
-  title "Installing Kubectl";
-  sudo apt install -y kubectl;
-}
-
 installNode() {
   title "Installing Node v${VERSION_NODE} & npm";
   curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
@@ -263,6 +222,43 @@ installNode() {
 
   sudo npm install -g n;
   sudo n ${VERSION_NODE};
+}
+
+installPhp() {
+  title "Installing PHP v${VERSION_PHP}";
+  sudo apt install -y php${VERSION_PHP}-{bcmath,cli,curl,common,gd,ds,igbinary,dom,fpm,gettext,intl,mbstring,mysql,zip};
+  
+  sudo update-alternatives --set php "/usr/bin/php${VERSION_PHP}";
+  sudo update-alternatives --set phar "/usr/bin/phar${VERSION_PHP}";
+  sudo update-alternatives --set phar.phar "/usr/bin/phar.phar${VERSION_PHP}";
+  sudo update-alternatives --set phpize "/usr/bin/phpize${VERSION_PHP}";
+  sudo update-alternatives --set php-config "/usr/bin/php-config${VERSION_PHP}";
+}
+
+installGoLang() {
+  title "Installing GoLang";
+  sudo apt install golang;
+  
+  if [[ -f "${HOME}/.bashrc" ]]; then
+    echo 'export GOPATH=~/go' >> "${HOME}/.bashrc";
+    source "${HOME}/.bashrc";
+  fi
+  
+  if [[ -f "${HOME}/.zshrc" ]]; then
+    echo 'export GOPATH=~/go' >> "${HOME}/.zshrc";
+    source "${HOME}/.zshrc";
+  fi
+
+  mkdir $GOPATH;
+}
+
+installComposer() {
+  title "Installing Composer";
+  local DL_PATH="composer-setup.php";
+  
+  curlToFile "https://getcomposer.org/installer" ${DL_PATH};
+  sudo php ${DL_PATH} --install-dir=/usr/local/bin --filename=composer;
+  rm -f ${DL_PATH};
 }
 
 installSops() {
@@ -299,11 +295,6 @@ installYarn() {
 installWebpack() {
   title "Installing Webpack";
   sudo npm install -g webpack;
-}
-
-installPostman() {
-  title "Installing Postman";
-  snap install postman;
 }
 
 installReactNative() {
@@ -365,9 +356,25 @@ installSqLiteBrowser() {
   sudo apt install -y sqlitebrowser;
 }
 
-installSymfony() {
-  title "Installing Symfony Installer";
-  curl -L "https://get.symfony.com/cli/installer" | sudo -E bash -;
+installDocker() {
+  title "Installing Docker";
+  sudo apt install -y \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io;
+}
+
+installDockerCompose() {
+  title "Installing Docker Compose";
+  local DL_FILE="/usr/local/bin/docker-compose";
+  
+  curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
+  sudo chmod +x ${DL_FILE};
+}
+
+installKubectl() {
+  title "Installing Kubectl";
+  sudo apt install -y kubectl;
 }
 
 installLaravel() {
@@ -385,6 +392,11 @@ installLaravel() {
   fi
 }
 
+installSymfony() {
+  title "Installing Symfony Installer";
+  curl -L "https://get.symfony.com/cli/installer" | sudo -E bash -;
+}
+
 installGoogleSdk() {
   title "Installing Google Cloud SDK";
   sudo apt install -y google-cloud-sdk;
@@ -393,6 +405,11 @@ installGoogleSdk() {
 installLocust() {
   title "Installing Locust";
   sudo pip3 install locust;
+}
+
+installPostman() {
+  title "Installing Postman";
+  snap install postman;
 }
 
 installBleachBit() {
@@ -466,23 +483,25 @@ cmd=(dialog --backtitle "Debian dev installer - USAGE: <space> un/select options
   --clear \
   --nocancel \
   --separate-output \
-  --checklist "Select installable packages:" 37 50 50);
+  --checklist "Select installable packages:" 34 80 34)
 
 options=(
-    git "Git" on
+    git "Git" on    
+ 
     node "Node v${VERSION_NODE} with NPM" on
     php "PHP v${VERSION_PHP}" on
+    golang "GoLang" off
+    
     composer "Composer" on
     sops "Sops v${VERSION_SOPS}" on
     werf "Werf v${VERSION_WERF}" on
     helm "Helm v${VERSION_HELM}" on
+    
     webpack "Webpack" off
     yarn "Yarn" off
-    postman "Postman" off
-    
     react "React Native" off
     cordova "Apache Cordova" off
-    
+
     snap "Snap" on
     wine "Wine HQ" off
     
@@ -501,6 +520,7 @@ options=(
 
     gce "Google Cloud SDK" on
     locust "Locust (Load Tester)" off
+    postman "Postman" off
     
     bleach "BleachBit" on
     remmina "Remmina Remote Desktop" off
@@ -535,48 +555,56 @@ title "Adding Repositories";
       case ${choice} in
         composer) 
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices+=("php"); CROSS_CHECKED=0;
-          fi
-        ;;
-        webpack) 
-          if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices+=("node"); CROSS_CHECKED=0;
-          fi
-        ;;
-        postman) 
-          if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices+=("snap"); CROSS_CHECKED=0;
-          fi
-        ;;
-        react)
-          if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices+=("node"); CROSS_CHECKED=0;
-          fi
-        ;;
-        cordova) 
-          if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices+=("node"); CROSS_CHECKED=0;
-          fi
-        ;;
-        rdm) 
-          if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices+=("snap"); CROSS_CHECKED=0;
-          fi
-        ;;
-        laravel)
-          if [[ $(arrContains choices "composer") -eq 0 ]]; then
-            choices+=("composer"); CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}");
+            CROSS_CHECKED=0;
           fi
         ;;
         symfony)
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices+=("php"); CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        webpack) 
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices=("node" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        react)
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices=("node" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        cordova) 
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices=("node" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        rdm) 
+          if [[ $(arrContains choices "snap") -eq 0 ]]; then
+            choices=("snap" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        postman) 
+          if [[ $(arrContains choices "snap") -eq 0 ]]; then
+            choices=("snap" "${choices[@]}");
+            CROSS_CHECKED=0;
+          fi
+        ;;
+        laravel)
+          if [[ $(arrContains choices "composer") -eq 0 ]]; then
+            choices=("composer" "${choices[@]}");
+            CROSS_CHECKED=0;
           fi
         ;;
       esac
     done
-  
-    choices=($(echo "${choices[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '));
+
+    choices=($(echo "${choices[@]}" | tr ' ' '\n' | awk '!a[$0]++' | tr '\n' ' '));
   done
   
   for choice in ${choices[@]}
@@ -606,16 +634,18 @@ for choice in ${choices[@]}
 do
   case ${choice} in
     git) installGit ;;
+    
     node) installNode ;;
     php) installPhp ;;
+    golang) installGoLang ;;
+    
     composer) installComposer;;
     sops) installSops ;;
     werf) installWerf ;;
     helm) installHelm ;;
+    
     webpack) installWebpack ;;
     yarn) installYarn ;;
-    postman) installPostman ;;
-    
     react) installReactNative;;
     cordova) installCordova;;
     
@@ -637,6 +667,7 @@ do
     
     gce) installGoogleSdk ;;
     locust) installLocust ;;
+    postman) installPostman ;;
     
     bleach) installBleachBit ;;
     remmina) installRemmina ;;
