@@ -9,6 +9,7 @@ VERSION_HELM="3";
 VERSION_SOPS="3.1.1";
 VERSION_WERF="1.1.21+fix22";
 VERSION_DOCKERCOMPOSE="1.29.2";
+VERSION_STACER="1.1.0";
 
 ###############################################################
 
@@ -102,6 +103,28 @@ repoYarn() {
   fi
 }
 
+repoWine() {
+  local REPO="/etc/apt/sources.list.d/wine.list";
+  
+  sudo dpkg --add-architecture i386;
+  sudo apt install -y gnupg2;
+    
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Wine HQ Repository";
+    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" | sudo apt-key add -;
+    echo "deb https://dl.winehq.org/wine-builds/debian/ buster main" | sudo tee ${REPO};
+    REPOS_ADDED=1;
+  fi
+  
+  REPO="/etc/apt/sources.list.d//wine-obs.list";
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Wine Repository";
+    curl -fsSL "https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key" | sudo apt-key add -;   
+    echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" | sudo tee ${REPO};
+    REPOS_ADDED=1;
+  fi
+}
+
 repoMySqlServer() {
   local REPO="/var/lib/dpkg/info/mysql-apt-config.list";
   local DL_FILE="mysql.deb";
@@ -137,6 +160,28 @@ repoGoogleSdk() {
       fi
     fi
     
+    REPOS_ADDED=1;
+  fi
+}
+
+repoAtom() {
+  local REPO="/etc/apt/sources.list.d/atom.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Atom IDE Repository";
+    curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" | sudo apt-key add -;
+    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee ${REPO};
+    REPOS_ADDED=1;
+  fi
+}
+
+repoVsCode() {
+  local REPO="/etc/apt/sources.list.d/vscode.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding VSCode Repository";
+    curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
     REPOS_ADDED=1;
   fi
 }
@@ -193,7 +238,7 @@ installDockerCompose() {
   title "Installing Docker Compose";
   local DL_FILE="/usr/local/bin/docker-compose";
   
-  sudo curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
+  curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
   sudo chmod +x ${DL_FILE};
 }
 
@@ -256,6 +301,11 @@ installWebpack() {
   sudo npm install -g webpack;
 }
 
+installPostman() {
+  title "Installing Postman";
+  snap install postman;
+}
+
 installReactNative() {
   title "Installing React Native";
   sudo npm install -g create-react-native-app;
@@ -275,6 +325,11 @@ installSnap() {
   sudo apt install -y snapd;
   sudo snap install core;
   sudo snap install snapd;
+}
+
+installWine() {
+  title "Installing Wine";
+  sudo apt install -y --install-recommends winehq-stable;
 }
 
 installRedis() {
@@ -303,6 +358,11 @@ installDbeaver() {
   curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
+}
+
+installSqLiteBrowser() {
+  title "Installing SQLite Browser";
+  sudo apt install -y sqlitebrowser;
 }
 
 installSymfony() {
@@ -344,6 +404,20 @@ installBleachBit() {
   rm -f ${DL_FILE};
 }
 
+installRemmina() {
+  title "Installing Remmina Client";
+  sudo apt install -y -t "buster-backports" remmina remmina-plugin-rdp remmina-plugin-secret;
+}
+
+installStacer() {
+  title "Installing Stacer v${VERSION_STACER}";
+  local DL_FILE="stacer_${VERSION_STACER}_amd64.deb";
+  
+  curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" ${DL_FILE};
+  sudo apt install -y -f ./${DL_FILE};
+  rm -f ${DL_FILE};
+}
+
 installToolboxApp() {
   title "Installing JetBrains Toolbox App";
   local DL_FILE="toolbox.gz";
@@ -357,6 +431,16 @@ installToolboxApp() {
   sudo mv ${DL_VERSION} "/opt/";
 }
 
+installAtom() {
+  title "Installing Atom IDE";
+  sudo apt install -y atom;
+}
+
+installVsCode() {
+  title "Installing Visual Studio Code IDE";
+  sudo apt install -y code;
+}
+
 ## CHECKS
 ###############################################################
 if [[ "$EUID" -eq 0 ]]; then 
@@ -364,11 +448,11 @@ if [[ "$EUID" -eq 0 ]]; then
   exit;
 fi
 
-if [[ ${which lsb_release} == '' ]]; then
+if [[ $(which lsb_release) == '' ]]; then
   sudo apt install -y lsb-release;
 fi
 
-if [[ ${lsb_release -c -s} != "buster" ]]; then 
+if [[ $(lsb_release -c -s) != "buster" ]]; then 
   notify "Unfortunately your OS is not supported."
   exit;
 fi
@@ -382,42 +466,49 @@ cmd=(dialog --backtitle "Debian dev installer - USAGE: <space> un/select options
   --clear \
   --nocancel \
   --separate-output \
-  --checklist "Select installable packages:" 32 50 50);
+  --checklist "Select installable packages:" 37 50 50);
 
 options=(
-    01 "Git" on
-    02 "Node v${VERSION_NODE} with NPM" on
-    03 "PHP v${VERSION_PHP}" on
-    04 "Composer" on
-    05 "Sops v${VERSION_SOPS}" on
-    06 "Werf v${VERSION_WERF}" on
-    07 "Helm v${VERSION_HELM}" on
+    git "Git" on
+    node "Node v${VERSION_NODE} with NPM" on
+    php "PHP v${VERSION_PHP}" on
+    composer "Composer" on
+    sops "Sops v${VERSION_SOPS}" on
+    werf "Werf v${VERSION_WERF}" on
+    helm "Helm v${VERSION_HELM}" on
+    webpack "Webpack" off
+    yarn "Yarn" off
+    postman "Postman" off
     
-    08 "Webpack" off
-    09 "Yarn" off
+    react "React Native" off
+    cordova "Apache Cordova" off
     
-    10 "React Native" off
-    11 "Apache Cordova" off
+    snap "Snap" on
+    wine "Wine HQ" off
     
-    12 "Snap" on
+    redis "Redis Server" off
+    mysql "MySql Community Server" off    
+    rdm "Redis Desktop Manager" on
+    dbeaver "DBeaver" on
+    sqliteb "SQLite Browser" off
     
-    13 "Redis Server" off
-    14 "MySql Community Server" off    
-    15 "Redis Desktop Manager" off
-    16 "DBeaver" off
-    
-    17 "Docker CE" on
-    18 "Docker Compose v${VERSION_DOCKERCOMPOSE}" on
-    19 "Kubectl" on
+    docker "Docker CE" on
+    dcompose "Docker Compose v${VERSION_DOCKERCOMPOSE}" on
+    k8 "Kubectl" on
 
-    20 "Laravel Installer" off
-    21 "Symfony Installer" on
+    laravel "Laravel Installer" off
+    symfony "Symfony Installer" on
 
-    22 "Google Cloud SDK" on
-    23 "Locust (Load Tester)" off
+    gce "Google Cloud SDK" on
+    locust "Locust (Load Tester)" off
     
-    24 "BleachBit" on
-    25 "JetBrains Toolbox App" on
+    bleach "BleachBit" on
+    remmina "Remmina Remote Desktop" off
+    stacer "Stacer" off
+    
+    jb "JetBrains Toolbox App" on
+    atom "Atom IDE" on
+    vscode "Visual Studio Code" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -426,12 +517,12 @@ clear;
 
 ## MAIN PROGRAM
 ###############################################################
-title "Running Dist Upgrade";
+title "Upgrading your OS Installation";
   sudo apt update;
   sudo apt dist-upgrade -y;
 breakLine;
 
-title "Installing PreRequisites"
+title "Installing Pre-Requisites"
   installPreRequisites;
 breakLine;
 
@@ -442,34 +533,44 @@ title "Adding Repositories";
     for choice in ${choices}
     do
       case ${choice} in
-        04) 
-          if [[ $(arrContains choices "03") -eq 0 ]]; then
-            choices+=("03"); CROSS_CHECKED=0;
+        composer) 
+          if [[ $(arrContains choices "php") -eq 0 ]]; then
+            choices+=("php"); CROSS_CHECKED=0;
           fi
         ;;
-        08) 
-          if [[ $(arrContains choices "02") -eq 0 ]]; then
-            choices+=("02"); CROSS_CHECKED=0;
+        webpack) 
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices+=("node"); CROSS_CHECKED=0;
           fi
         ;;
-        10)
-          if [[ $(arrContains choices "02") -eq 0 ]]; then
-            choices+=("02"); CROSS_CHECKED=0;
+        postman) 
+          if [[ $(arrContains choices "snap") -eq 0 ]]; then
+            choices+=("snap"); CROSS_CHECKED=0;
           fi
         ;;
-        11) 
-          if [[ $(arrContains choices "02") -eq 0 ]]; then
-            choices+=("02"); CROSS_CHECKED=0;
+        react)
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices+=("node"); CROSS_CHECKED=0;
           fi
         ;;
-        20)
-          if [[ $(arrContains choices "04") -eq 0 ]]; then
-            choices+=("04"); CROSS_CHECKED=0;
+        cordova) 
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices+=("node"); CROSS_CHECKED=0;
           fi
         ;;
-        21)
-          if [[ $(arrContains choices "03") -eq 0 ]]; then
-            choices+=("03"); CROSS_CHECKED=0;
+        rdm) 
+          if [[ $(arrContains choices "snap") -eq 0 ]]; then
+            choices+=("snap"); CROSS_CHECKED=0;
+          fi
+        ;;
+        laravel)
+          if [[ $(arrContains choices "composer") -eq 0 ]]; then
+            choices+=("composer"); CROSS_CHECKED=0;
+          fi
+        ;;
+        symfony)
+          if [[ $(arrContains choices "php") -eq 0 ]]; then
+            choices+=("php"); CROSS_CHECKED=0;
           fi
         ;;
       esac
@@ -481,12 +582,15 @@ title "Adding Repositories";
   for choice in ${choices[@]}
   do
     case ${choice} in
-      03) repoPhp ;;
-      09) repoYarn ;;
-      14) repoMySqlServer ;;
-      17) repoDocker ;;
-      19) repoKubectl ;;
-      22) repoGoogleSdk ;;
+      php) repoPhp ;;
+      yarn) repoYarn ;;
+      wine) repoWine ;;
+      mysql) repoMySqlServer ;;
+      docker) repoDocker ;;
+      k8) repoKubectl ;;
+      gce) repoGoogleSdk ;;
+      atom) repoAtom ;;
+      vscode) repoVsCode ;;
     esac
   done
   
@@ -501,36 +605,51 @@ breakLine;
 for choice in ${choices[@]}
 do
   case ${choice} in
-    01) installGit ;;
-    02) installNode ;;
-    03) installPhp ;;
-    04) installComposer;;
-    05) installSops ;;
-    06) installWerf ;;
-    07) installHelm ;;
-    08) installWebpack ;;
-    09) installYarn ;;
-    10) installReactNative;;
-    11) installCordova;;
-    12) installSnap ;;
-    13) installRedis ;;
-    14) installMySqlServer ;;
-    15) installRedisDesktopManager ;;
-    16) installDbeaver ;;
-    17) installDocker ;;
-    18) installDockerCompose ;;
-    19) installKubectl;;
-    20) installLaravel ;;
-    21) installSymfony ;;
-    22) installGoogleSdk ;;
-    23) installLocust ;;
-    24) installBleachBit ;;
-    25) installToolboxApp ;;
+    git) installGit ;;
+    node) installNode ;;
+    php) installPhp ;;
+    composer) installComposer;;
+    sops) installSops ;;
+    werf) installWerf ;;
+    helm) installHelm ;;
+    webpack) installWebpack ;;
+    yarn) installYarn ;;
+    postman) installPostman ;;
+    
+    react) installReactNative;;
+    cordova) installCordova;;
+    
+    snap) installSnap ;;
+    wine) installWine ;;
+    
+    redis) installRedis ;;
+    mysql) installMySqlServer ;;
+    rdm) installRedisDesktopManager ;;
+    dbeaver) installDbeaver ;;
+    sqliteb) installSqLiteBrowser ;;
+    
+    docker) installDocker ;;
+    dcompose) installDockerCompose ;;
+    k8) installKubectl ;;
+    
+    laravel) installLaravel ;;
+    symfony) installSymfony ;;
+    
+    gce) installGoogleSdk ;;
+    locust) installLocust ;;
+    
+    bleach) installBleachBit ;;
+    remmina) installRemmina ;;
+    stacer) installStacer ;;
+    
+    jb) installToolboxApp ;;
+    atom) installAtom ;;
+    vscode) installVsCode ;;
   esac
   breakLine;
 done
 
-title "Cleaning Up...";
+title "Cleaning Up";
   sudo apt --fix-broken install -y;
   sudo apt autoremove -y --purge;
 breakLine;
@@ -538,11 +657,11 @@ breakLine;
 for choice in ${choices[@]}
 do
   case ${choice} in
-    14)  mysql-secure-install ;;
-    25)  notify "JetBrains Toolbox App installed in /opt" ;;
+    mysql) mysql-secure-install ;;
+    jb) notify "JetBrains Toolbox App installed in /opt" ;;
   esac
-  breakLine;
 done
   
+breakLine;
 notify "Great, the installation is complete =)";
 notify "To install further tools in the future you can run this script again.";
