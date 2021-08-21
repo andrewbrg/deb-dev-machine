@@ -506,7 +506,7 @@ if [[ $(which lsb_release) == '' ]]; then
 fi
 
 if [[ $(lsb_release -c -s) != "buster" ]]; then 
-  notify "Unfortunately your OS is not supported."
+  notify "Unfortunately only Debian 10 Buster OS is supported."
   exit;
 fi
 
