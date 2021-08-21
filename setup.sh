@@ -131,7 +131,7 @@ repoMySqlServer() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding MySQL Apt Repository";
-    curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.11-1_all.deb" ${DL_FILE};
+    curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb" ${DL_FILE};
     sudo apt install -y -f ./${DL_FILE};
     rm -f ${DL_FILE};
     REPOS_ADDED=1;
@@ -207,7 +207,7 @@ installGit() {
 }
 
 installNode() {
-  title "Installing Node v${VERSION_NODE} & npm";
+  title "Installing Node v${VERSION_NODE} with Npm";
   curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
   
   sudo apt install -y nodejs;
@@ -237,7 +237,7 @@ installPhp() {
 
 installGoLang() {
   title "Installing GoLang";
-  sudo apt install golang;
+  sudo apt install -y golang;
   
   if [[ -f "${HOME}/.bashrc" ]]; then
     echo 'export GOPATH=~/go' >> "${HOME}/.bashrc";
@@ -335,6 +335,7 @@ installMySqlServer() {
   sudo apt install -y mysql-server;
   sudo systemctl enable mysql;
   sudo systemctl start mysql;
+  clear;
 }
 
 installRedisDesktopManager() {
@@ -404,12 +405,13 @@ installGoogleSdk() {
 
 installLocust() {
   title "Installing Locust";
+  sudo apt install -y python3-pip;
   sudo pip3 install locust;
 }
 
 installPostman() {
   title "Installing Postman";
-  snap install postman;
+  sudo snap install postman;
 }
 
 installBleachBit() {
@@ -423,7 +425,7 @@ installBleachBit() {
 
 installRemmina() {
   title "Installing Remmina Client";
-  sudo apt install -y -t "buster-backports" remmina remmina-plugin-rdp remmina-plugin-secret;
+  sudo apt install -y remmina remmina-plugin-vnc;
 }
 
 installStacer() {
@@ -555,50 +557,48 @@ title "Adding Repositories";
       case ${choice} in
         composer) 
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices=("php" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         symfony)
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices=("php" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         webpack) 
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         react)
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         cordova) 
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         rdm) 
           if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices=("snap" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("snap" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         postman) 
           if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices=("snap" "${choices[@]}");
-            CROSS_CHECKED=0;
+            choices=("snap" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
         laravel)
           if [[ $(arrContains choices "composer") -eq 0 ]]; then
             choices=("composer" "${choices[@]}");
             CROSS_CHECKED=0;
+          fi
+        ;;
+        dcompose)
+          if [[ $(arrContains choices "docker") -eq 0 ]]; then
+            choices=("docker" "${choices[@]}"); CROSS_CHECKED=0;
           fi
         ;;
       esac
@@ -677,6 +677,7 @@ do
     atom) installAtom ;;
     vscode) installVsCode ;;
   esac
+  
   breakLine;
 done
 
@@ -688,7 +689,6 @@ breakLine;
 for choice in ${choices[@]}
 do
   case ${choice} in
-    mysql) mysql-secure-install ;;
     jb) notify "JetBrains Toolbox App installed in /opt" ;;
   esac
 done
