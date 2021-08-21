@@ -61,7 +61,7 @@ You can expect the following to be automatically installed and readily accessibl
 - DBeaver
 - SQLite Browser
 - Redis Desktop Manager
-- Jetbrains Toolbox App
+- Jetbrains Toolbox App -> Installs to /opt/
 - Atom IDE
 - VS Code IDE
 - Remmina Remote Desktop
