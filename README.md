@@ -56,6 +56,8 @@ You can expect the following to be automatically installed and readily accessibl
 
 **Software**
 - Postman
+- Nginx
+- Apache2
 - DBeaver
 - SQLite Browser
 - Redis Desktop Manager
