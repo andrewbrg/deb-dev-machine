@@ -1,5 +1,5 @@
-# Debian Developer Machine
-Quickly install common Developer tools, IDEs &amp; services on Debian. In order to use the installer run the following:
+# Debian 10 Developer Machine
+Quickly install common Developer tools, IDEs &amp; services on Debian 10. In order to use the installer run the following:
 
 <p align="center">
   <img src="https://i.ibb.co/FmTqMVN/Screenshot-2021-06-17-21-12-09.png" />
@@ -12,9 +12,9 @@ cd ~/
 sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/setup.sh);
 ```
 
-This script can be run via the terminal and will get a fresh Debian (Stretch or Buster) installation up and running with most (if not all) of the dev tools you would require.
+This script can be run via the terminal and will get a fresh Debian 10 (Buster) installation up and running with most (if not all) of the dev tools you would require.
 
-Tested on Debian installations as well as the ChromeOS Crostini Debian containers. **Total installation size including the OS itself is ~6.5GB**
+Tested on Debian 10 installations as well as the ChromeOS Crostini Debian 10 containers. **Total installation size including the OS itself is ~6.5GB**
 
 You can expect the following to be automatically installed and readily accessible:
 
