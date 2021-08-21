@@ -109,10 +109,21 @@ repoMySqlServer() {
   local DL_FILE="mysql.deb";
   
   if [[ ! -f ${REPO} ]]; then
-    notify "Adding MySQL Apt Repository";
+    notify "Adding MySQL Repository";
     curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb" ${DL_FILE};
     sudo apt install -y -f ./${DL_FILE};
     rm -f ${DL_FILE};
+    REPOS_ADDED=1;
+  fi
+}
+
+repoMongoDb() {
+  local REPO="/etc/apt/sources.list.d/mongodb-org-5.0.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding MongoDB Repository";
+    curl -fsSL "https://www.mongodb.org/static/pgp/server-5.0.asc" | sudo apt-key add -;
+    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | sudo tee ${REPO}
     REPOS_ADDED=1;
   fi
 }
@@ -353,6 +364,11 @@ installMySqlServer() {
   clear;
 }
 
+installMongoDb() {
+  title "Installing MongoDB";
+  sudo apt install -y mongodb-org;
+}
+
 installRedisDesktopManager() {
   title "Installing Redis Desktop Manager";
   sudo snap install redis-desktop-manager;
@@ -545,7 +561,8 @@ options=(
     wine "Wine HQ" off
     
     redis "Redis Server" off
-    mysql "MySql Community Server" off    
+    mysql "MySql Community Server" off   
+    mongo "MongoDB" off
     rdm "Redis Desktop Manager" on
     dbeaver "DBeaver" on
     sqliteb "SQLite Browser" off
@@ -652,6 +669,7 @@ title "Adding Repositories";
       yarn) repoYarn ;;
       wine) repoWine ;;
       mysql) repoMySqlServer ;;
+      mongo) repoMongoDb ;;
       docker) repoDocker ;;
       k8) repoKubectl ;;
       gce) repoGoogleSdk ;;
@@ -695,6 +713,7 @@ do
     
     redis) installRedis ;;
     mysql) installMySqlServer ;;
+    mongo) installMongoDb ;;
     rdm) installRedisDesktopManager ;;
     dbeaver) installDbeaver ;;
     sqliteb) installSqLiteBrowser ;;
