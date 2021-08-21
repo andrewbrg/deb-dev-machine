@@ -10,6 +10,7 @@ VERSION_SOPS="3.1.1";
 VERSION_WERF="1.1.21+fix22";
 VERSION_DOCKERCOMPOSE="1.29.2";
 VERSION_STACER="1.1.0";
+VERSION_TOR="10.5.5";
 
 ###############################################################
 
@@ -451,6 +452,25 @@ installStacer() {
   rm -f ${DL_FILE};
 }
 
+installTor() {
+  title "Installing Tor Browser v${VERSION_TOR}";
+  local DL_FILE="tor-browser_en-US.tar.xz";
+  local DL_VERSION="tor-browser_en-US";
+  
+  curlToFile "https://www.torproject.org/dist/torbrowser/${VERSION_TOR}/tor-browser-linux64-${VERSION_TOR}_en-US.tar.xz" ${DL_FILE};
+  tar -xvf ${DL_FILE};
+  rm -f ${DL_FILE};
+  
+  sudo mv ${DL_VERSION} "/opt/";
+  
+  local CURR_DIR=$(pwd);
+  sudo apt install -y kdialog zenity;
+  
+  cd "/opt/${DL_VERSION}/Browser";
+  ./start-tor-browser --register-app;
+  cd ${CURR_DIR};
+}
+
 installToolboxApp() {
   title "Installing JetBrains Toolbox App";
   local DL_FILE="toolbox.gz";
@@ -544,6 +564,7 @@ options=(
     bleach "BleachBit" on
     remmina "Remmina Remote Desktop" off
     stacer "Stacer" off
+    tor "Tor Browser v${VERSION_TOR}" off
     
     jb "JetBrains Toolbox App" on
     atom "Atom IDE" on
@@ -692,6 +713,7 @@ do
     bleach) installBleachBit ;;
     remmina) installRemmina ;;
     stacer) installStacer ;;
+    tor) installTor ;;
     
     jb) installToolboxApp ;;
     atom) installAtom ;;
