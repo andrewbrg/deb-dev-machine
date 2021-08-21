@@ -70,28 +70,6 @@ repoPhp() {
   fi
 }
 
-repoDocker() {
-  local REPO="/etc/apt/sources.list.d/docker.list";
-  
-  if [[ ! -f ${REPO} ]]; then
-    notify "Adding Docker Repository";
-    curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
-    REPOS_ADDED=1;
-  fi
-}
-
-repoKubectl() {
-  local REPO="/etc/apt/sources.list.d/kubernetes.list";
-  
-  if [[ ! -f ${REPO} ]]; then
-    notify "Adding Kubernetes Repository";
-    sudo curl -fsSLo "/usr/share/keyrings/kubernetes-archive-keyring.gpg" "https://packages.cloud.google.com/apt/doc/apt-key.gpg";
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
-  fi
-}
-
 repoYarn() {
   local REPO="/etc/apt/sources.list.d/yarn.list";
   
@@ -134,6 +112,28 @@ repoMySqlServer() {
     curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb" ${DL_FILE};
     sudo apt install -y -f ./${DL_FILE};
     rm -f ${DL_FILE};
+    REPOS_ADDED=1;
+  fi
+}
+
+repoDocker() {
+  local REPO="/etc/apt/sources.list.d/docker.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Docker Repository";
+    curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
+    REPOS_ADDED=1;
+  fi
+}
+
+repoKubectl() {
+  local REPO="/etc/apt/sources.list.d/kubernetes.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Kubernetes Repository";
+    sudo curl -fsSLo "/usr/share/keyrings/kubernetes-archive-keyring.gpg" "https://packages.cloud.google.com/apt/doc/apt-key.gpg";
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee ${REPO};
     REPOS_ADDED=1;
   fi
 }
@@ -287,14 +287,28 @@ installHelm() {
   curl -fsSL "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | sudo -E bash -;
 }
 
-installYarn() {
-  title "Installing Yarn";
-  sudo apt install -y yarn;
+installNginx() {
+  title "Installing Nginx";
+  sudo apt install -y nginx;
+  sudo systemctl enable nginx;
+  sudo systemctl start nginx;
+}
+
+installApache() {
+  title "Installing Apache";
+  sudo apt install -y apache2;
+  sudo systemctl enable apache2;
+  sudo systemctl start apache2;
 }
 
 installWebpack() {
   title "Installing Webpack";
   sudo npm install -g webpack;
+}
+
+installYarn() {
+  title "Installing Yarn";
+  sudo apt install -y yarn;
 }
 
 installReactNative() {
@@ -499,6 +513,9 @@ options=(
     werf "Werf v${VERSION_WERF}" on
     helm "Helm v${VERSION_HELM}" on
     
+    nginx "Nginx" off
+    apache "Apache" off
+    
     webpack "Webpack" off
     yarn "Yarn" off
     react "React Native" off
@@ -643,6 +660,9 @@ do
     sops) installSops ;;
     werf) installWerf ;;
     helm) installHelm ;;
+    
+    nginx) installNginx ;;
+    apache) installApache ;;
     
     webpack) installWebpack ;;
     yarn) installYarn ;;
