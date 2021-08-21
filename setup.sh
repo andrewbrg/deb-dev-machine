@@ -751,7 +751,12 @@ breakLine;
 for choice in ${choices[@]}
 do
   case ${choice} in
-    jb) notify "JetBrains Toolbox App installed in /opt" ;;
+    nginx) notify "Nginx set to auto-start on startup" ;;
+    apache) notify "Apache set to auto-start on startup" ;;
+    redis) notify "Redis set to auto-start on startup" ;;
+    mysql) notify "MySQL Server set to auto-start on startup" ;;
+    jb) notify "JetBrains Toolbox installed in /opt" ;;
+    tor) notify "Tor Browser installed in /opt" ;;
   esac
 done
   
