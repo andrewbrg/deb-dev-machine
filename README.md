@@ -22,12 +22,13 @@ You can expect the following to be automatically installed and readily accessibl
 - ca-certificates
 - apt-transport-https
 - software-properties-common
-- wget
-- htop
+- gnupg
 - gnupg2
+- wget
 - curl
 - nano
 - vim
+- htop
 
 **Languages**
 - PHP
