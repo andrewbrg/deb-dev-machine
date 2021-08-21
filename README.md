@@ -8,9 +8,7 @@ cd ~/
 sudo apt install -y wget && bash <(wget -qO- https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/setup.sh);
 ```
 
-<p align="center">
-  <img src="https://i.ibb.co/FmTqMVN/Screenshot-2021-06-17-21-12-09.png" />
-</p>
+![Screenshot 2021-08-22 01 35 45](https://user-images.githubusercontent.com/5937311/130337388-1f37033b-065b-4375-96c1-b4778c5a17e4.png)
 
 This script can be run via the terminal and will get a fresh Debian 10 (Buster) installation up and running with most (if not all) of the dev tools you would require.
 
