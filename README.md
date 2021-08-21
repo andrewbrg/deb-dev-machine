@@ -54,6 +54,7 @@ You can expect the following to be automatically installed and readily accessibl
 **Databases**
 - Redis
 - MySQL Community Server
+- MongoDb
 - SQLite Browser
 - Redis Desktop Manager
 - DBeaver
@@ -62,8 +63,8 @@ You can expect the following to be automatically installed and readily accessibl
 - Jetbrains Toolbox App -> Installs to /opt/
 - Atom IDE
 - VS Code IDE
-- wine
-- snap
+- Wine
+- Snap
 - Postman
 - Remmina Remote Desktop
 - Locust
