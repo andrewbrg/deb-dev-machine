@@ -61,7 +61,7 @@ You can expect the following to be automatically installed and readily accessibl
 - DBeaver
 
 **Software**
-- Jetbrains Toolbox App -> Installs to /opt/
+- Jetbrains Toolbox App [installs to /opt/]
 - Atom IDE
 - VS Code IDE
 - Wine
@@ -70,5 +70,5 @@ You can expect the following to be automatically installed and readily accessibl
 - Remmina Remote Desktop
 - Locust
 - Stacer
-- Tor Browser
+- Tor Browser [installs to /opt/]
 - Google Cloud SDK
