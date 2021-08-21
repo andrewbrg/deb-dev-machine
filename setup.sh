@@ -15,25 +15,25 @@ VERSION_TOR="10.5.5";
 ###############################################################
 
 ## NO EDIT BELOW
+IS_REPO_ADDED=0;
+IS_OPTS_SANITISED=0;
+MAIN_REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
 
-REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
-CROSS_CHECKED=0;
-REPOS_ADDED=0;
 
 ## HELPERS
 ###############################################################
 title() {
   printf "\033[1;42m";
-  printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
-  printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" | tr ' ' ' ';
-  printf '%*s'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
+  printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' || tr ' ' ' ';
+  printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" || tr ' ' ' ';
+  printf '%*s'  "${COLUMNS:-$(tput cols)}" '' || tr ' ' ' ';
   printf "\033[0m";
   printf "\n\n";
 }
 
 breakLine() {
   printf "\n";
-  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -;
+  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' || tr ' ' -;
   printf "\n\n";
   sleep .5;
 }
@@ -65,9 +65,9 @@ repoPhp() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding PHP Repository";
-    curl -fsSL "https://packages.sury.org/php/apt.gpg" | sudo apt-key add -;
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://packages.sury.org/php/apt.gpg" || sudo apt-key add -;
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -76,9 +76,9 @@ repoYarn() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Yarn Repository";
-    curl -fsSL "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -;
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://dl.yarnpkg.com/debian/pubkey.gpg" || sudo apt-key add -;
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -90,17 +90,17 @@ repoWine() {
     
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Wine HQ Repository";
-    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" | sudo apt-key add -;
-    echo "deb https://dl.winehq.org/wine-builds/debian/ buster main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" || sudo apt-key add -;
+    echo "deb https://dl.winehq.org/wine-builds/debian/ buster main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
   
   REPO="/etc/apt/sources.list.d//wine-obs.list";
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Wine Repository";
-    curl -fsSL "https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key" | sudo apt-key add -;   
-    echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key" || sudo apt-key add -;   
+    echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -113,7 +113,7 @@ repoMySqlServer() {
     curlToFile "https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb" ${DL_FILE};
     sudo apt install -y -f ./${DL_FILE};
     rm -f ${DL_FILE};
-    REPOS_ADDED=1;
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -122,9 +122,9 @@ repoMongoDb() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding MongoDB Repository";
-    curl -fsSL "https://www.mongodb.org/static/pgp/server-5.0.asc" | sudo apt-key add -;
-    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | sudo tee ${REPO}
-    REPOS_ADDED=1;
+    curl -fsSL "https://www.mongodb.org/static/pgp/server-5.0.asc" || sudo apt-key add -;
+    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" || sudo tee ${REPO}
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -133,9 +133,9 @@ repoDocker() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Docker Repository";
-    curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://download.docker.com/linux/debian/gpg" || sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -145,8 +145,8 @@ repoKubectl() {
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Kubernetes Repository";
     sudo curl -fsSLo "/usr/share/keyrings/kubernetes-archive-keyring.gpg" "https://packages.cloud.google.com/apt/doc/apt-key.gpg";
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -155,24 +155,24 @@ repoGoogleSdk() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Google Cloud Repository";
-    curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
-    echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee ${REPO};
+    curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" || sudo apt-key add -;
+    echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" || sudo tee ${REPO};
     
     local ENTRY="export CLOUDSDK_PYTHON=python2";
     
     if [[ -f "${HOME}/.bashrc" ]]; then
       if ! grep -q ${ENTRY} "${HOME}/.bashrc"; then
-        echo ${ENTRY} | tee -a "${HOME}/.bashrc";
+        echo ${ENTRY} || tee -a "${HOME}/.bashrc";
       fi
     fi
 
     if [[ -f "${HOME}/.zshrc" ]]; then
       if ! grep -q ${ENTRY} "${HOME}/.zshrc"; then
-        echo ${ENTRY} | tee -a "${HOME}/.zshrc";
+        echo ${ENTRY} || tee -a "${HOME}/.zshrc";
       fi
     fi
     
-    REPOS_ADDED=1;
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -181,9 +181,9 @@ repoAtom() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Atom IDE Repository";
-    curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" | sudo apt-key add -;
-    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" || sudo apt-key add -;
+    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -192,9 +192,9 @@ repoVsCode() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding VSCode Repository";
-    curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
-    REPOS_ADDED=1;
+    curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" || sudo apt-key add -;
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" || sudo tee ${REPO};
+    IS_REPO_ADDED=1;
   fi
 }
 
@@ -218,18 +218,23 @@ installGit() {
   sudo apt install -y git;
 }
 
+installGitCola() {
+  title "Installing Git Cola";
+  sudo apt install -y git-cola;
+}
+
 installNode() {
   title "Installing Node v${VERSION_NODE} with Npm";
-  curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
+  curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" || sudo -E bash -;
   
   sudo apt install -y nodejs;
   sudo apt install -y npm;
 
-  local DIR_PATH="/usr/share/npm/node_modules";
+  local NODE_MODULES_PATH="/usr/share/npm/node_modules";
   
-  if [[ -f ${DIR_PATH} ]]; then
-    sudo chown -R "$(whoami)" ${DIR_PATH};
-    sudo chmod -R 777 ${DIR_PATH};
+  if [[ -f ${NODE_MODULES_PATH} ]]; then
+    sudo chown -R "$(whoami)" ${NODE_MODULES_PATH};
+    sudo chmod -R 777 ${NODE_MODULES_PATH};
   fi
 
   sudo npm install -g n;
@@ -286,7 +291,7 @@ installWerf() {
   title "Installing Werf v${VERSION_WERF}";
   local DL_FILE="werf_${VERSION_WERF}.gz";
   
-  curlToFile "${REPO_URL}werf/${VERSION_WERF}.gz" ${DL_FILE};
+  curlToFile "${MAIN_REPO_URL}werf/${VERSION_WERF}.gz" ${DL_FILE};
   tar -xvf ${DL_FILE};
   rm -f ${DL_FILE};
   
@@ -296,7 +301,7 @@ installWerf() {
 
 installHelm() {
   title "Installing Helm v${VERSION_HELM}";
-  curl -fsSL "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | sudo -E bash -;
+  curl -fsSL "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" || sudo -E bash -;
 }
 
 installNginx() {
@@ -345,7 +350,7 @@ installSnap() {
 }
 
 installWine() {
-  title "Installing Wine";
+  title "Installing Wine HQ";
   sudo apt install -y --install-recommends winehq-stable;
 }
 
@@ -354,6 +359,13 @@ installRedis() {
   sudo apt install -y redis-server;
   sudo systemctl start redis;
   sudo systemctl enable redis;
+}
+
+installMemcached() {
+  title "Installing Memcached Server";
+  sudo apt install -y memcached libmemcached-tools;
+  sudo systemctl start memcached;
+  sudo systemctl enable memcached;
 }
 
 installMySqlServer() {
@@ -415,18 +427,18 @@ installLaravel() {
 
   if [[ -f "${HOME}/.bashrc" ]]; then
     sed -i '/export PATH/d' "${HOME}/.bashrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.bashrc";
+    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" || tee -a "${HOME}/.bashrc";
   fi
   
   if [[ -f "${HOME}/.zshrc" ]]; then
     sed -i '/export PATH/d' "${HOME}/.zshrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.zshrc";
+    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" || tee -a "${HOME}/.zshrc";
   fi
 }
 
 installSymfony() {
   title "Installing Symfony Installer";
-  curl -L "https://get.symfony.com/cli/installer" | sudo -E bash -;
+  curl -L "https://get.symfony.com/cli/installer" || sudo -E bash -;
 }
 
 installGoogleSdk() {
@@ -530,66 +542,71 @@ fi
 ###############################################################
 sudo apt install -y dialog;
 
-cmd=(dialog --backtitle "Debian dev installer - USAGE: <space> un/select options & <enter> start installation." \
-  --ascii-lines \
+cmd=(dialog \
+  --backtitle "USAGE: <space> un/select <enter> start installation." \
   --clear \
   --nocancel \
   --separate-output \
-  --checklist "Select installable packages:" 34 80 34)
+  --keep-tite \
+  --no-shadow \
+  --sleep 1 \
+  --visit-items \
+  --checklist "Debian 10 Dev Machine" 34 120 100)
 
 options=(
-    git "Git" on    
+    git "Git || Awesome version control tool" on    
+    gitcola "Git Cola || A powerful graphical Git client" off
  
-    node "Node v${VERSION_NODE} with NPM" on
-    php "PHP v${VERSION_PHP}" on
-    golang "GoLang" off
+    node "Node v${VERSION_NODE} with NPM || Programming language and node package manager" on
+    php "PHP v${VERSION_PHP} || Programming language" on
+    golang "GoLang || Programming language" off
     
-    composer "Composer" on
-    sops "Sops v${VERSION_SOPS}" on
-    werf "Werf v${VERSION_WERF}" on
-    helm "Helm v${VERSION_HELM}" on
+    composer "Composer || Package manager for PHP" on
+    sops "Sops v${VERSION_SOPS} || Tool for managing secrets" on
+    werf "Werf v${VERSION_WERF} || CLI tool for full deployment cycle implementation" on
+    helm "Helm v${VERSION_HELM} || Manage Kubernetes applications" on
     
-    nginx "Nginx" off
-    apache "Apache" off
+    nginx "Nginx || Web Server, reverse proxy, load balancer, mail proxy and HTTP cache" off
+    apache "Apache || Web Server" off
     
-    webpack "Webpack" off
-    yarn "Yarn" off
-    react "React Native" off
-    cordova "Apache Cordova" off
+    webpack "Webpack || Bundle JS files for usage in a browser" off
+    yarn "Yarn || Package manager that doubles down as project manager" off
+    react "React Native ||  Build desktop apps using React" off
+    cordova "Apache Cordova || Wraps your HTML/JS app into a native container" off
 
-    snap "Snap" on
-    wine "Wine HQ" off
+    snap "Snap || Manage and install containerised software packages" on
+    wine "Wine HQ || Compatibility layer capable of running Windows applications" off
     
-    redis "Redis Server" off
-    mysql "MySql Community Server" off   
-    mongo "MongoDB" off
-    rdm "Redis Desktop Manager" on
-    dbeaver "DBeaver" on
-    sqliteb "SQLite Browser" off
+    redis "Redis Server || Open source in-memory data structure store" off
+    memcached "Memcached Server || In-memory key-value store for small chunks of arbitrary data" off
+    mysql "MySql Community Server || World's most popular open source database" off   
+    mongo "MongoDB || NoSQL database solution" off
+    rdm "Redis Desktop Manager || Redis database interface" on
+    sqlitebrowser "SqLite Browser || MySQL Lite database interface" off
+    dbeaver "DBeaver || Multi-platform database tool interface" on
     
-    docker "Docker CE" on
-    dcompose "Docker Compose v${VERSION_DOCKERCOMPOSE}" on
-    k8 "Kubectl" on
+    docker "Docker CE || Open source containerization platform" on
+    dockercompose "Docker Compose v${VERSION_DOCKERCOMPOSE} || Defining and run multi-container Docker apps" on
+    kubectl "Kubectl || The Kubernetes command|line tool" on
 
-    laravel "Laravel Installer" off
-    symfony "Symfony Installer" on
+    laravel "Laravel Installer || PHP Framework For Web Artisans" off
+    symfony "Symfony Installer || Create Symfony Applications" on
 
-    gce "Google Cloud SDK" on
-    locust "Locust (Load Tester)" off
-    postman "Postman" off
+    gce "Google Cloud SDK || CLI client for Google Cloud Hosting" on
+    locust "Locust || Load testing tool" off
+    postman "Postman || API/REST tester" off
     
-    bleach "BleachBit" on
-    remmina "Remmina Remote Desktop" off
-    stacer "Stacer" off
-    tor "Tor Browser v${VERSION_TOR}" off
+    bleachbit "BleachBit || System maintenance and cleanup utility" on
+    remmina "Remmina Remote Desktop || Full-featured remote desktop client" off
+    stacer "Stacer || Performance tweaker utility" off
+    tor "Tor Browser v${VERSION_TOR} || Browser for the Tor network" off
     
-    jb "JetBrains Toolbox App" on
-    atom "Atom IDE" on
-    vscode "Visual Studio Code" off
+    jbtoolbox "JetBrains Toolbox || Installs and manages all JetBrains software" on
+    atom "Atom || A hackable text editor" on
+    vscode "Visual Studio Code || Editor for building web and cloud applications" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
-sleep .5;
 clear;
 
 ## MAIN PROGRAM
@@ -604,62 +621,67 @@ title "Installing Pre-Requisites"
 breakLine;
 
 title "Adding Repositories";
-  while [ ${CROSS_CHECKED} -eq 0 ]
+  while [ ${IS_OPTS_SANITISED} -eq 0 ]
   do
-    CROSS_CHECKED=1;
+    IS_OPTS_SANITISED=1;
     for choice in ${choices}
     do
       case ${choice} in
+        gitcola) 
+          if [[ $(arrContains choices "git") -eq 0 ]]; then
+            choices=("git" "${choices[@]}"); IS_OPTS_SANITISED=0;
+          fi
+        ;;
         composer) 
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices=("php" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         symfony)
           if [[ $(arrContains choices "php") -eq 0 ]]; then
-            choices=("php" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("php" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         webpack) 
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         react)
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         cordova) 
           if [[ $(arrContains choices "node") -eq 0 ]]; then
-            choices=("node" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         rdm) 
           if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices=("snap" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("snap" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         postman) 
           if [[ $(arrContains choices "snap") -eq 0 ]]; then
-            choices=("snap" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("snap" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
         laravel)
           if [[ $(arrContains choices "composer") -eq 0 ]]; then
             choices=("composer" "${choices[@]}");
-            CROSS_CHECKED=0;
+            IS_OPTS_SANITISED=0;
           fi
         ;;
-        dcompose)
+        dockercompose)
           if [[ $(arrContains choices "docker") -eq 0 ]]; then
-            choices=("docker" "${choices[@]}"); CROSS_CHECKED=0;
+            choices=("docker" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
       esac
     done
 
-    choices=($(echo "${choices[@]}" | tr ' ' '\n' | awk '!a[$0]++' | tr '\n' ' '));
+    choices=($(echo "${choices[@]}" || tr ' ' '\n' || awk '!a[$0]++' || tr '\n' ' '));
   done
   
   for choice in ${choices[@]}
@@ -671,14 +693,14 @@ title "Adding Repositories";
       mysql) repoMySqlServer ;;
       mongo) repoMongoDb ;;
       docker) repoDocker ;;
-      k8) repoKubectl ;;
+      kubectl) repoKubectl ;;
       gce) repoGoogleSdk ;;
       atom) repoAtom ;;
       vscode) repoVsCode ;;
     esac
   done
   
-  if [[ ${REPOS_ADDED} -eq 1 ]]; then
+  if [[ ${IS_REPO_ADDED} -eq 1 ]]; then
     breakLine;
     sudo apt update;
   fi
@@ -690,6 +712,7 @@ for choice in ${choices[@]}
 do
   case ${choice} in
     git) installGit ;;
+    gitcola) installGitCola ;;
     
     node) installNode ;;
     php) installPhp ;;
@@ -712,15 +735,16 @@ do
     wine) installWine ;;
     
     redis) installRedis ;;
+    memcached) installMemcached ;;
     mysql) installMySqlServer ;;
     mongo) installMongoDb ;;
     rdm) installRedisDesktopManager ;;
     dbeaver) installDbeaver ;;
-    sqliteb) installSqLiteBrowser ;;
+    sqlitebrowser) installSqLiteBrowser ;;
     
     docker) installDocker ;;
-    dcompose) installDockerCompose ;;
-    k8) installKubectl ;;
+    dockercompose) installDockerCompose ;;
+    kubectl) installKubectl ;;
     
     laravel) installLaravel ;;
     symfony) installSymfony ;;
@@ -729,12 +753,12 @@ do
     locust) installLocust ;;
     postman) installPostman ;;
     
-    bleach) installBleachBit ;;
+    bleachbit) installBleachBit ;;
     remmina) installRemmina ;;
     stacer) installStacer ;;
     tor) installTor ;;
     
-    jb) installToolboxApp ;;
+    jbtoolbox) installToolboxApp ;;
     atom) installAtom ;;
     vscode) installVsCode ;;
   esac
@@ -754,8 +778,9 @@ do
     nginx) notify "Nginx set to auto-start on startup" ;;
     apache) notify "Apache set to auto-start on startup" ;;
     redis) notify "Redis set to auto-start on startup" ;;
+    memcached) notify "Memcached set to auto-start on startup" ;;
     mysql) notify "MySQL Server set to auto-start on startup" ;;
-    jb) notify "JetBrains Toolbox installed in /opt" ;;
+    jbtoolbox) notify "JetBrains Toolbox installed in /opt" ;;
     tor) notify "Tor Browser installed in /opt" ;;
   esac
 done
