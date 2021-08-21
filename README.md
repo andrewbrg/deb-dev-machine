@@ -28,42 +28,45 @@ You can expect the following to be automatically installed and readily accessibl
 - curl
 - nano
 - vim
-- wine
-- snap
 
-**Services**
-- Git
+**Languages**
 - PHP
-- MySQL Community Server
-- Composer
 - GoLang
-- Werf
-- Redis
 - Node & NPM
+
+**Dev Tools**
+- Git
+- Nginx
+- Apache2
+- Composer
+- Werf
 - Yarn
 - Docker
 - Docker Compose
 - Kubectl
 - Helm
 - Sops
-
-**Libraries**
 - Apache Cordova
 - React Native
 - Laravel Installer
 - Symfony Installer
-- Google Cloud SDK
 
-**Software**
-- Postman
-- Nginx
-- Apache2
-- DBeaver
+**Databases**
+- Redis
+- MySQL Community Server
 - SQLite Browser
 - Redis Desktop Manager
+- DBeaver
+
+**Software**
 - Jetbrains Toolbox App -> Installs to /opt/
 - Atom IDE
 - VS Code IDE
+- wine
+- snap
+- Postman
 - Remmina Remote Desktop
 - Locust
 - Stacer
+- Tor Browser
+- Google Cloud SDK
