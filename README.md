@@ -33,16 +33,17 @@ You can expect the following to be automatically installed and readily accessibl
 **Languages**
 - PHP
 - GoLang
-- Node & NPM
+- NodeJS with NPM
 
 **Dev Tools**
 - Git
+- Git Cola
 - Nginx
 - Apache2
 - Composer
 - Werf
 - Yarn
-- Docker
+- Docker CE
 - Docker Compose
 - Kubectl
 - Helm
@@ -54,6 +55,7 @@ You can expect the following to be automatically installed and readily accessibl
 
 **Databases**
 - Redis
+- Memcached
 - MySQL Community Server
 - MongoDb
 - SQLite Browser
@@ -61,14 +63,15 @@ You can expect the following to be automatically installed and readily accessibl
 - DBeaver
 
 **Software**
-- Jetbrains Toolbox App [installs to /opt/]
-- Atom IDE
-- VS Code IDE
+- Tor Browser [installs to /opt/]
+- Jetbrains Toolbox [installs to /opt/]
+- Atom
+- Visual Studio Code
 - Wine
 - Snap
-- Postman
-- Remmina Remote Desktop
-- Locust
-- Stacer
-- Tor Browser [installs to /opt/]
 - Google Cloud SDK
+- Locust
+- Postman
+- Bleachbit
+- Remmina Remote Desktop
+- Stacer
