@@ -685,6 +685,7 @@ title "Cleaning Up";
   sudo apt --fix-broken install -y;
   sudo apt autoremove -y --purge;
 breakLine;
+breakLine;
 
 for choice in ${choices[@]}
 do
@@ -693,6 +694,5 @@ do
   esac
 done
   
-breakLine;
 notify "Great, the installation is complete =)";
 notify "To install further tools in the future you can run this script again.";
