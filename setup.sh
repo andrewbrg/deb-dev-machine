@@ -24,16 +24,16 @@ MAIN_REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/maste
 ###############################################################
 title() {
   printf "\033[1;42m";
-  printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' || tr ' ' ' ';
-  printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" || tr ' ' ' ';
-  printf '%*s'  "${COLUMNS:-$(tput cols)}" '' || tr ' ' ' ';
+  printf '%*s\n'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
+  printf '%-*s\n' "${COLUMNS:-$(tput cols)}" "  # $1" | tr ' ' ' ';
+  printf '%*s'  "${COLUMNS:-$(tput cols)}" '' | tr ' ' ' ';
   printf "\033[0m";
   printf "\n\n";
 }
 
 breakLine() {
   printf "\n";
-  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' || tr ' ' -;
+  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -;
   printf "\n\n";
   sleep .5;
 }
@@ -65,8 +65,8 @@ repoPhp() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding PHP Repository";
-    curl -fsSL "https://packages.sury.org/php/apt.gpg" || sudo apt-key add -;
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" || sudo tee ${REPO};
+    curl -fsSL "https://packages.sury.org/php/apt.gpg" | sudo apt-key add -;
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -76,8 +76,8 @@ repoYarn() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Yarn Repository";
-    curl -fsSL "https://dl.yarnpkg.com/debian/pubkey.gpg" || sudo apt-key add -;
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" || sudo tee ${REPO};
+    curl -fsSL "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -;
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -90,16 +90,16 @@ repoWine() {
     
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Wine HQ Repository";
-    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" || sudo apt-key add -;
-    echo "deb https://dl.winehq.org/wine-builds/debian/ buster main" || sudo tee ${REPO};
+    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" | sudo apt-key add -;
+    echo "deb https://dl.winehq.org/wine-builds/debian/ buster main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
   
   REPO="/etc/apt/sources.list.d//wine-obs.list";
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Wine Repository";
-    curl -fsSL "https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key" || sudo apt-key add -;   
-    echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" || sudo tee ${REPO};
+    curl -fsSL "https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/Release.key" | sudo apt-key add -;   
+    echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10 ./" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -122,8 +122,8 @@ repoMongoDb() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding MongoDB Repository";
-    curl -fsSL "https://www.mongodb.org/static/pgp/server-5.0.asc" || sudo apt-key add -;
-    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" || sudo tee ${REPO}
+    curl -fsSL "https://www.mongodb.org/static/pgp/server-5.0.asc" | sudo apt-key add -;
+    echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" | sudo tee ${REPO}
     IS_REPO_ADDED=1;
   fi
 }
@@ -133,8 +133,8 @@ repoDocker() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Docker Repository";
-    curl -fsSL "https://download.docker.com/linux/debian/gpg" || sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" || sudo tee ${REPO};
+    curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -145,7 +145,7 @@ repoKubectl() {
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Kubernetes Repository";
     sudo curl -fsSLo "/usr/share/keyrings/kubernetes-archive-keyring.gpg" "https://packages.cloud.google.com/apt/doc/apt-key.gpg";
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" || sudo tee ${REPO};
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -155,20 +155,20 @@ repoGoogleSdk() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Google Cloud Repository";
-    curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" || sudo apt-key add -;
-    echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" || sudo tee ${REPO};
+    curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
+    echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee ${REPO};
     
     local ENTRY="export CLOUDSDK_PYTHON=python2";
     
     if [[ -f "${HOME}/.bashrc" ]]; then
       if ! grep -q ${ENTRY} "${HOME}/.bashrc"; then
-        echo ${ENTRY} || tee -a "${HOME}/.bashrc";
+        echo ${ENTRY} | tee -a "${HOME}/.bashrc";
       fi
     fi
 
     if [[ -f "${HOME}/.zshrc" ]]; then
       if ! grep -q ${ENTRY} "${HOME}/.zshrc"; then
-        echo ${ENTRY} || tee -a "${HOME}/.zshrc";
+        echo ${ENTRY} | tee -a "${HOME}/.zshrc";
       fi
     fi
     
@@ -181,8 +181,8 @@ repoAtom() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Atom IDE Repository";
-    curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" || sudo apt-key add -;
-    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" || sudo tee ${REPO};
+    curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" | sudo apt-key add -;
+    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -192,8 +192,8 @@ repoVsCode() {
   
   if [[ ! -f ${REPO} ]]; then
     notify "Adding VSCode Repository";
-    curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" || sudo apt-key add -;
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" || sudo tee ${REPO};
+    curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -225,7 +225,7 @@ installGitCola() {
 
 installNode() {
   title "Installing Node v${VERSION_NODE} with Npm";
-  curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" || sudo -E bash -;
+  curl -L "https://deb.nodesource.com/setup_${VERSION_NODE}.x" | sudo -E bash -;
   
   sudo apt install -y nodejs;
   sudo apt install -y npm;
@@ -301,7 +301,7 @@ installWerf() {
 
 installHelm() {
   title "Installing Helm v${VERSION_HELM}";
-  curl -fsSL "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" || sudo -E bash -;
+  curl -fsSL "https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-${VERSION_HELM}" | sudo -E bash -;
 }
 
 installNginx() {
@@ -427,18 +427,18 @@ installLaravel() {
 
   if [[ -f "${HOME}/.bashrc" ]]; then
     sed -i '/export PATH/d' "${HOME}/.bashrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" || tee -a "${HOME}/.bashrc";
+    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.bashrc";
   fi
   
   if [[ -f "${HOME}/.zshrc" ]]; then
     sed -i '/export PATH/d' "${HOME}/.zshrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" || tee -a "${HOME}/.zshrc";
+    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.zshrc";
   fi
 }
 
 installSymfony() {
   title "Installing Symfony Installer";
-  curl -L "https://get.symfony.com/cli/installer" || sudo -E bash -;
+  curl -L "https://get.symfony.com/cli/installer" | sudo -E bash -;
 }
 
 installGoogleSdk() {
@@ -681,7 +681,7 @@ title "Adding Repositories";
       esac
     done
 
-    choices=($(echo "${choices[@]}" || tr ' ' '\n' || awk '!a[$0]++' || tr '\n' ' '));
+    choices=($(echo "${choices[@]}" | tr ' ' '\n' | awk '!a[$0]++' | tr '\n' ' '));
   done
   
   for choice in ${choices[@]}
