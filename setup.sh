@@ -199,6 +199,17 @@ repoVsCode() {
   fi
 }
 
+repoTheme() {
+  local REPO="/etc/apt/sources.list.d/papirus-ubuntu-papirus-impish.list";
+  
+  if [[ ! -f ${REPO} ]]; then
+    notify "Adding Papirus Repository";
+    sudo add-apt-repository "ppa:papirus/papirus" -y;
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E58A9D36647CAE7F;
+    IS_REPO_ADDED=1;
+  fi
+}
+
 ## INSTALLERS
 ###############################################################
 installPreRequisites() {
@@ -537,6 +548,12 @@ installVsCode() {
   sudo apt install -y code;
 }
 
+installTheme() {
+  sudo apt install -y \
+    gnome-tweak-tool \
+    papirus-icon-theme;
+}
+
 ## CHECKS
 ###############################################################
 if [[ "$EUID" -eq 0 ]]; then 
@@ -620,6 +637,8 @@ options=(
     jbtoolbox "JetBrains Toolbox || Installs and manages all JetBrains software" on
     atom "Atom || A hackable text editor" on
     vscode "Visual Studio Code || Editor for building web and cloud applications" off
+    
+    theme "Gnome Tweak Tool & Papirus icons" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -713,6 +732,7 @@ title "Adding Repositories";
       gce) repoGoogleSdk ;;
       atom) repoAtom ;;
       vscode) repoVsCode ;;
+      theme) repoTheme ;;
     esac
   done
   
@@ -778,6 +798,8 @@ do
     jbtoolbox) installToolboxApp ;;
     atom) installAtom ;;
     vscode) installVsCode ;;
+    
+    theme) installTheme ;;
   esac
   
   breakLine;
