@@ -11,6 +11,7 @@ VERSION_WERF="1.1.21+fix22";
 VERSION_DOCKERCOMPOSE="1.29.2";
 VERSION_STACER="1.1.0";
 VERSION_TOR="10.5.5";
+VERSION_POPCORN="0.4.5";
 
 ###############################################################
 
@@ -499,6 +500,20 @@ installTor() {
   cd ${CURR_DIR};
 }
 
+installPopcornTime() {
+  title "Installing Popcorn Time v${VERSION_POPCORN}";
+  local DL_FILE="popcorn.deb";
+  
+  sudo apt install \
+    libcanberra-gtk-module \
+    libgconf-2-4 \
+    libatomic1;
+    
+  curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORN}/Popcorn-Time-${VERSION_POPCORN}-amd64.deb" ${DL_FILE};
+  sudo apt install -y -f ./${DL_FILE};
+  rm -f ${DL_FILE};
+}
+
 installToolboxApp() {
   title "Installing JetBrains Toolbox App";
   local DL_FILE="toolbox.gz";
@@ -599,7 +614,8 @@ options=(
     bleachbit "BleachBit || System maintenance and cleanup utility" on
     remmina "Remmina Remote Desktop || Full-featured remote desktop client" off
     stacer "Stacer || Performance tweaker utility" off
-    tor "Tor Browser v${VERSION_TOR} || Browser for the Tor network" off
+    tor "Tor Browser v${VERSION_TOR} || All in one browser for the Tor network" off
+    popcorn "Popcorn Time v${VERSION_POPCORN} || Stream free movies & TV series" off
     
     jbtoolbox "JetBrains Toolbox || Installs and manages all JetBrains software" on
     atom "Atom || A hackable text editor" on
@@ -757,6 +773,7 @@ do
     remmina) installRemmina ;;
     stacer) installStacer ;;
     tor) installTor ;;
+    popcorn) installPopcornTime ;;
     
     jbtoolbox) installToolboxApp ;;
     atom) installAtom ;;
@@ -769,7 +786,6 @@ done
 title "Cleaning Up";
   sudo apt --fix-broken install -y;
   sudo apt autoremove -y --purge;
-breakLine;
 breakLine;
 
 for choice in ${choices[@]}
