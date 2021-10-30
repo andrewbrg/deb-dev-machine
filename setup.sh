@@ -515,7 +515,7 @@ installPopcornTime() {
   title "Installing Popcorn Time v${VERSION_POPCORN}";
   local DL_FILE="popcorn.deb";
   
-  sudo apt install \
+  sudo apt install -y \
     libcanberra-gtk-module \
     libgconf-2-4 \
     libatomic1;
