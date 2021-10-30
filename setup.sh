@@ -518,7 +518,8 @@ installPopcornTime() {
   sudo apt install -y \
     libcanberra-gtk-module \
     libgconf-2-4 \
-    libatomic1;
+    libatomic1 \
+    libnss3;
     
   curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORN}/Popcorn-Time-${VERSION_POPCORN}-amd64.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
