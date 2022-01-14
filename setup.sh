@@ -460,7 +460,7 @@ installGoogleSdk() {
 
 installLocust() {
   title "Installing Locust";
-  sudo apt install -y python3-pip;
+  sudo apt install -y python3-pip libffi-dev;
   sudo pip3 install locust;
 }
 
