@@ -566,11 +566,6 @@ if [[ $(which lsb_release) == '' ]]; then
   sudo apt install -y lsb-release;
 fi
 
-if [[ $(lsb_release -c -s) != "buster" ]]; then 
-  notify "Unfortunately only Debian 10 Buster OS is supported."
-  exit;
-fi
-
 ## SELECTOR
 ###############################################################
 sudo apt install -y dialog;
