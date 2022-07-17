@@ -47,7 +47,9 @@ You can expect the following to be automatically installed and readily accessibl
 - Helm
 - Sops
 - Apache Cordova
-- React Native
+- Create React App
+- Create React Native
+- Gatsby CLI
 - Laravel Installer
 - Symfony Installer
 
