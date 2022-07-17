@@ -286,7 +286,7 @@ installWerf() {
   local DL_FILE="werf";
   
   curlToFile "https://tuf.werf.io/targets/releases/${VERSION_WERF}/linux-${ARCHITECTURE}/bin/werf" ${DL_FILE};
-  chmod +x ${DL_FILE};
+  sudo chmod +x ${DL_FILE};
   sudo mv ${DL_FILE} "/usr/local/bin/werf";
 }
 
