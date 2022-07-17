@@ -1,6 +1,8 @@
 # Debian 10 Developer Machine
 
-Quickly install common developer tools, runtimes, bootstrappers, IDEs & other related goodies on Debian 10. In order to use the installer run the following:
+Quickly install common developer tools, runtimes, bootstrappers, IDEs & other related goodies on Debian 10. If you work in PHP, NodeJS or GoLang you should be pretty much catered for.
+
+In order to use the installer run the following:
 
 ```shell
 cd ~/
@@ -13,7 +15,9 @@ __Please Note__: Do NOT run this script with sudo as it will install things unde
 
 This script should also work on other Linux flavors (at least most packages) which use `apt` as their main package manager (for example Ubuntu). Doing so is however untested at this point.
 
-This script was tested on Linux Debian 10 as well as the ChromeOS Crouton/Crostini Debian 10 containers. __Total installation size (including the OS) is ~6.5GB__
+This script was tested on Linux Debian 10 as well as the ChromeOS Crouton/Crostini Debian 10 containers.
+
+__Total installation size (including the OS) is ~6.5GB__
 
 Select the tools you want to install via the menu, hit enter and go grab a coffee:
 
@@ -69,7 +73,7 @@ __Software Managers__
 - Wine
 - Snap
 
-__Databases__
+__Databases & Database Tools__
 
 - Redis
 - Memcached
@@ -79,7 +83,7 @@ __Databases__
 - DBeaver
 - SQLite Browser
 
-__Containerisation, Deployment, CI__
+__Containerisation, Deployment, CI & Security__
 
 - Docker CE
 - Docker Compose
