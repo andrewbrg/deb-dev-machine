@@ -4,14 +4,15 @@
 ###############################################################
 
 VERSION_PHP="8.0";
-VERSION_NODE="14";
+VERSION_NODE="16";
 VERSION_HELM="3";
-VERSION_SOPS="3.1.1";
+VERSION_SOPS="3.7.3";
 VERSION_WERF="1.1.21+fix22";
-VERSION_DOCKERCOMPOSE="1.29.2";
+VERSION_DOCKERCOMPOSE="2.6.1";
 VERSION_STACER="1.1.0";
-VERSION_TOR="10.5.5";
-VERSION_POPCORN="0.4.5";
+VERSION_TOR="11.5";
+VERSION_POPCORN="0.4.8";
+VERSION_JETBRAINS_TOOLBOX="1.25.12424";
 
 ###############################################################
 
@@ -59,6 +60,20 @@ arrContains() {
   return 1
 }
 
+addEnvVars() {
+  local -a ENVS=("bashrc" "zshrc");
+  for i in "${ENVS[@]}"
+  do
+    : 
+    if [[ -f "${HOME}/.$i" ]]; then
+      if ! grep -q $1 "${HOME}/.$i"; then
+        echo $1 | tee -a "${HOME}/.$i";
+        source "${HOME}/.$i";
+      fi
+    fi
+  done
+}
+
 ## REPOSITORIES
 ###############################################################
 repoPhp() {
@@ -84,11 +99,10 @@ repoYarn() {
 }
 
 repoWine() {
-  local REPO="/etc/apt/sources.list.d/wine.list";
-  
   sudo dpkg --add-architecture i386;
   sudo apt install -y gnupg2;
-    
+
+  local REPO="/etc/apt/sources.list.d/wine.list";  
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Wine HQ Repository";
     curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" | sudo apt-key add -;
@@ -159,20 +173,7 @@ repoGoogleSdk() {
     curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -;
     echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee ${REPO};
     
-    local ENTRY="export CLOUDSDK_PYTHON=python2";
-    
-    if [[ -f "${HOME}/.bashrc" ]]; then
-      if ! grep -q ${ENTRY} "${HOME}/.bashrc"; then
-        echo ${ENTRY} | tee -a "${HOME}/.bashrc";
-      fi
-    fi
-
-    if [[ -f "${HOME}/.zshrc" ]]; then
-      if ! grep -q ${ENTRY} "${HOME}/.zshrc"; then
-        echo ${ENTRY} | tee -a "${HOME}/.zshrc";
-      fi
-    fi
-    
+    addEnvVars "export CLOUDSDK_PYTHON=python2";    
     IS_REPO_ADDED=1;
   fi
 }
@@ -195,17 +196,6 @@ repoVsCode() {
     notify "Adding VSCode Repository";
     curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
-    IS_REPO_ADDED=1;
-  fi
-}
-
-repoTheme() {
-  local REPO="/etc/apt/sources.list.d/papirus-ubuntu-papirus-impish.list";
-  
-  if [[ ! -f ${REPO} ]]; then
-    notify "Adding Papirus Repository";
-    sudo add-apt-repository "ppa:papirus/papirus" -y;
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E58A9D36647CAE7F;
     IS_REPO_ADDED=1;
   fi
 }
@@ -249,7 +239,7 @@ installNode() {
     sudo chmod -R 777 ${NODE_MODULES_PATH};
   fi
 
-  sudo npm install -g n;
+  sudo npm install --location=global n;
   sudo n ${VERSION_NODE};
 }
 
@@ -268,16 +258,7 @@ installGoLang() {
   title "Installing GoLang";
   sudo apt install -y golang;
   
-  if [[ -f "${HOME}/.bashrc" ]]; then
-    echo 'export GOPATH=~/go' >> "${HOME}/.bashrc";
-    source "${HOME}/.bashrc";
-  fi
-  
-  if [[ -f "${HOME}/.zshrc" ]]; then
-    echo 'export GOPATH=~/go' >> "${HOME}/.zshrc";
-    source "${HOME}/.zshrc";
-  fi
-
+  addEnvVars "export GOPATH=~/go";
   mkdir $GOPATH;
 }
 
@@ -294,7 +275,7 @@ installSops() {
   title "Installing Sops v${VERSION_SOPS}";
   local DL_FILE="sops_${VERSION_SOPS}_amd64.deb";
   
-  curlToFile "https://github.com/mozilla/sops/releases/download/${VERSION_SOPS}/sops_${VERSION_SOPS}_amd64.deb" ${DL_FILE};
+  curlToFile "https://github.com/mozilla/sops/releases/download/v${VERSION_SOPS}/sops_${VERSION_SOPS}_amd64.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
 }
@@ -332,7 +313,7 @@ installApache() {
 
 installWebpack() {
   title "Installing Webpack";
-  sudo npm install -g webpack;
+  sudo npm install --location=global webpack;
 }
 
 installYarn() {
@@ -341,20 +322,31 @@ installYarn() {
 }
 
 installReactNative() {
-  title "Installing React Native";
-  sudo npm install -g create-react-native-app;
+  title "Installing Create React Native";
+  sudo npm install --location=global create-react-native-app;
+}
+
+installReactApp() {
+  title "Installing Create React App";
+  sudo npm install --location=global create-react-app;
+}
+
+installGatsby() {
+  title "Installing Gatsby CLI";
+  sudo npm install --location=global gatsby-cli;    
 }
 
 installCordova() {
   title "Installing Apache Cordova";
-  sudo npm install -g cordova;
+  sudo npm install --location=global cordova;
 }
 
 installSnap() {
   title "Installing Snap";
   sudo apt install -y \
     libsquashfuse0 \
-    squashfuse fuse;
+    squashfuse \
+    fuse;
     
   sudo apt install -y snapd;
   sudo snap install core;
@@ -424,7 +416,7 @@ installDockerCompose() {
   title "Installing Docker Compose";
   local DL_FILE="/usr/local/bin/docker-compose";
   
-  curlToFile "https://github.com/docker/compose/releases/download/${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
+  curlToFile "https://github.com/docker/compose/releases/download/v${VERSION_DOCKERCOMPOSE}/docker-compose-$(uname -s)-$(uname -m)" ${DL_FILE};
   sudo chmod +x ${DL_FILE};
 }
 
@@ -436,16 +428,6 @@ installKubectl() {
 installLaravel() {
   title "Installing Laravel Installer";
   composer global require "laravel/installer";
-
-  if [[ -f "${HOME}/.bashrc" ]]; then
-    sed -i '/export PATH/d' "${HOME}/.bashrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.bashrc";
-  fi
-  
-  if [[ -f "${HOME}/.zshrc" ]]; then
-    sed -i '/export PATH/d' "${HOME}/.zshrc";
-    echo "export PATH=\"$PATH:$HOME/.config/composer/vendor/bin\"" | tee -a "${HOME}/.zshrc";
-  fi
 }
 
 installSymfony() {
@@ -529,7 +511,7 @@ installPopcornTime() {
 installToolboxApp() {
   title "Installing JetBrains Toolbox App";
   local DL_FILE="toolbox.gz";
-  local DL_VERSION="jetbrains-toolbox-1.21.9712";
+  local DL_VERSION="jetbrains-toolbox-${VERSION_JETBRAINS_TOOLBOX}";
   
   curlToFile "https://download.jetbrains.com/toolbox/${DL_VERSION}.tar.gz" ${DL_FILE};
   tar -xvf ${DL_FILE};
@@ -552,7 +534,7 @@ installVsCode() {
 installTheme() {
   sudo apt install -y \
     gnome-tweak-tool \
-    papirus-icon-theme;
+    paper-icon-theme;
 }
 
 ## CHECKS
@@ -590,7 +572,7 @@ options=(
     golang "GoLang || Programming language" off
     
     composer "Composer || Package manager for PHP" on
-    sops "Sops v${VERSION_SOPS} || Tool for managing secrets" on
+    sops "Sops v${VERSION_SOPS} || Tool for managing secrets" off
     werf "Werf v${VERSION_WERF} || CLI tool for full deployment cycle implementation" on
     helm "Helm v${VERSION_HELM} || Manage Kubernetes applications" on
     
@@ -599,7 +581,9 @@ options=(
     
     webpack "Webpack || Bundle JS files for usage in a browser" off
     yarn "Yarn || Package manager that doubles down as project manager" off
-    react "React Native ||  Build desktop apps using React" off
+    reactnative "React Native || CLI tool for bootstraping React Native apps" off
+    reactapp "React Native || CLI tool for bootstraping React apps" on
+    gatsby "Gatsby || Build and deploy headless websites" on
     cordova "Apache Cordova || Wraps your HTML/JS app into a native container" off
 
     snap "Snap || Manage and install containerised software packages" on
@@ -634,7 +618,7 @@ options=(
     atom "Atom || A hackable text editor" on
     vscode "Visual Studio Code || Editor for building web and cloud applications" off
     
-    theme "Gnome Tweak Tool & Papirus icons" off
+    theme "Gnome Tweak Tool & Paper Icons" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -678,7 +662,17 @@ title "Adding Repositories";
             choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
         ;;
-        react)
+        reactnative)
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
+          fi
+        ;;
+        reactapp)
+          if [[ $(arrContains choices "node") -eq 0 ]]; then
+            choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
+          fi
+        ;;
+        gatsby)
           if [[ $(arrContains choices "node") -eq 0 ]]; then
             choices=("node" "${choices[@]}"); IS_OPTS_SANITISED=0;
           fi
@@ -728,7 +722,6 @@ title "Adding Repositories";
       gce) repoGoogleSdk ;;
       atom) repoAtom ;;
       vscode) repoVsCode ;;
-      theme) repoTheme ;;
     esac
   done
   
@@ -760,7 +753,9 @@ do
     
     webpack) installWebpack ;;
     yarn) installYarn ;;
-    react) installReactNative;;
+    reactnative) installReactNative;;
+    reactapp) installReactApp;;
+    gatsby) installGatsby;;
     cordova) installCordova;;
     
     snap) installSnap ;;
