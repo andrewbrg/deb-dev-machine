@@ -81,7 +81,7 @@ __Databases & Database Tools__
 - Memcached
 - MySQL Community Server
 - MongoDb
-- Redis Desktop Manager
+- Redis Desktop Manager (RESP)
 - DBeaver
 - SQLite Browser
 
