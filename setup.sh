@@ -7,7 +7,7 @@ VERSION_PHP="8.1";
 VERSION_NODE="18";
 VERSION_HELM="3";
 VERSION_SOPS="3.7.3";
-VERSION_WERF="1.1.21+fix22";
+VERSION_WERF="1.1.31";
 VERSION_DOCKERCOMPOSE="2.6.1";
 VERSION_STACER="1.1.0";
 VERSION_TOR="11.5";
@@ -16,11 +16,11 @@ VERSION_JETBRAINS_TOOLBOX="1.25.12424";
 
 ###############################################################
 
+
+###############################################################
 ## NO EDIT BELOW
 IS_REPO_ADDED=0;
 IS_OPTS_SANITISED=0;
-MAIN_REPO_URL="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
-
 
 ## HELPERS
 ###############################################################
@@ -282,14 +282,11 @@ installSops() {
 
 installWerf() {
   title "Installing Werf v${VERSION_WERF}";
-  local DL_FILE="werf_${VERSION_WERF}.gz";
+  local DL_FILE="werf";
   
-  curlToFile "${MAIN_REPO_URL}werf/${VERSION_WERF}.gz" ${DL_FILE};
-  tar -xvf ${DL_FILE};
-  rm -f ${DL_FILE};
-  
-  chmod +x ${VERSION_WERF};
-  sudo mv ${VERSION_WERF} "/usr/local/bin/werf";
+  curlToFile "https://tuf.werf.io/targets/releases/${VERSION_WERF}/linux-amd64/bin/werf" ${DL_FILE};
+  chmod +x ${DL_FILE};
+  sudo mv ${DL_FILE} "/usr/local/bin/werf";
 }
 
 installHelm() {
