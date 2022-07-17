@@ -21,6 +21,7 @@ VERSION_JETBRAINS_TOOLBOX="1.25.12424";
 ## NO EDIT BELOW
 IS_REPO_ADDED=0;
 IS_OPTS_SANITISED=0;
+ARCHITECTURE=$(dpkg --print-architecture);
 
 ## HELPERS
 ###############################################################
@@ -149,7 +150,7 @@ repoDocker() {
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Docker Repository";
     curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o "/usr/share/keyrings/docker-archive-keyring.gpg";
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
+    echo "deb [arch=${ARCHITECTURE} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -184,7 +185,7 @@ repoAtom() {
   if [[ ! -f ${REPO} ]]; then
     notify "Adding Atom IDE Repository";
     curl -fsSL "https://packagecloud.io/AtomEditor/atom/gpgkey" | sudo apt-key add -;
-    echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee ${REPO};
+    echo "deb [arch=${ARCHITECTURE}] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -195,7 +196,7 @@ repoVsCode() {
   if [[ ! -f ${REPO} ]]; then
     notify "Adding VSCode Repository";
     curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo apt-key add -;
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
+    echo "deb [arch=${ARCHITECTURE}] https://packages.microsoft.com/repos/vscode stable main" | sudo tee ${REPO};
     IS_REPO_ADDED=1;
   fi
 }
@@ -273,9 +274,9 @@ installComposer() {
 
 installSops() {
   title "Installing Sops v${VERSION_SOPS}";
-  local DL_FILE="sops_${VERSION_SOPS}_amd64.deb";
+  local DL_FILE="sops_${VERSION_SOPS}_${ARCHITECTURE}.deb";
   
-  curlToFile "https://github.com/mozilla/sops/releases/download/v${VERSION_SOPS}/sops_${VERSION_SOPS}_amd64.deb" ${DL_FILE};
+  curlToFile "https://github.com/mozilla/sops/releases/download/v${VERSION_SOPS}/sops_${VERSION_SOPS}_${ARCHITECTURE}.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
 }
@@ -284,7 +285,7 @@ installWerf() {
   title "Installing Werf v${VERSION_WERF}";
   local DL_FILE="werf";
   
-  curlToFile "https://tuf.werf.io/targets/releases/${VERSION_WERF}/linux-amd64/bin/werf" ${DL_FILE};
+  curlToFile "https://tuf.werf.io/targets/releases/${VERSION_WERF}/linux-${ARCHITECTURE}/bin/werf" ${DL_FILE};
   chmod +x ${DL_FILE};
   sudo mv ${DL_FILE} "/usr/local/bin/werf";
 }
@@ -389,9 +390,9 @@ installRedisDesktopManager() {
 
 installDbeaver() {
   title "Installing DBeaver";
-  local DL_FILE="dbeaver-ce_latest_amd64.deb";
+  local DL_FILE="dbeaver-ce_latest_${ARCHITECTURE}.deb";
   
-  curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb" ${DL_FILE};
+  curlToFile "https://dbeaver.io/files/dbeaver-ce_latest_${ARCHITECTURE}.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
 }
@@ -464,9 +465,9 @@ installRemmina() {
 
 installStacer() {
   title "Installing Stacer v${VERSION_STACER}";
-  local DL_FILE="stacer_${VERSION_STACER}_amd64.deb";
+  local DL_FILE="stacer_${VERSION_STACER}_${ARCHITECTURE}.deb";
   
-  curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_amd64.deb" ${DL_FILE};
+  curlToFile "https://github.com/oguzhaninan/Stacer/releases/download/v${VERSION_STACER}/stacer_${VERSION_STACER}_${ARCHITECTURE}.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
 }
@@ -500,7 +501,7 @@ installPopcornTime() {
     libatomic1 \
     libnss3;
     
-  curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORN}/Popcorn-Time-${VERSION_POPCORN}-amd64.deb" ${DL_FILE};
+  curlToFile "https://github.com/popcorn-official/popcorn-desktop/releases/download/v${VERSION_POPCORN}/Popcorn-Time-${VERSION_POPCORN}-${ARCHITECTURE}.deb" ${DL_FILE};
   sudo apt install -y -f ./${DL_FILE};
   rm -f ${DL_FILE};
 }
