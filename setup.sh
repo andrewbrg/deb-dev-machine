@@ -564,61 +564,61 @@ cmd=(dialog \
   --checklist "Debian 10 Dev Machine" 34 120 100)
 
 options=(
-    git "Git || Awesome version control tool" on    
-    gitcola "Git Cola || A powerful graphical Git client" off
- 
-    node "Node v${VERSION_NODE} with NPM || Programming language and node package manager" on
-    php "PHP v${VERSION_PHP} || Programming language" on
-    golang "GoLang || Programming language" off
+    git "Git - [awesome version control tool]" on    
+    gitcola "Git Cola - [a powerful graphical git client]" off
     
-    composer "Composer || Package manager for PHP" on
-    sops "Sops v${VERSION_SOPS} || Tool for managing secrets" off
-    werf "Werf v${VERSION_WERF} || CLI tool for full deployment cycle implementation" on
-    helm "Helm v${VERSION_HELM} || Manage Kubernetes applications" on
+    node "Node v${VERSION_NODE}+NPM - [js runtime + package manager]" on
+    php "PHP v${VERSION_PHP} - [programming language]" on
+    golang "GoLang - [programming language]" off
     
-    nginx "Nginx || Web Server, reverse proxy, load balancer, mail proxy and HTTP cache" off
-    apache "Apache || Web Server" off
+    composer "Composer - [package manager for php]" on
+    sops "Sops v${VERSION_SOPS} - [tool for managing secrets]" off
+    werf "Werf v${VERSION_WERF} - [cli tool for full deployment cycle implementation]" on
+    helm "Helm v${VERSION_HELM} - [manage kubernetes applications]" on
     
-    webpack "Webpack || Bundle JS files for usage in a browser" off
-    yarn "Yarn || Package manager that doubles down as project manager" off
-    reactnative "React Native || CLI tool for bootstraping React Native apps" off
-    reactapp "React Native || CLI tool for bootstraping React apps" on
-    gatsby "Gatsby || Build and deploy headless websites" on
-    cordova "Apache Cordova || Wraps your HTML/JS app into a native container" off
+    nginx "Nginx - [web server, reverse proxy, load balancer, mail proxy & http cache]" off
+    apache "Apache - [web server]" off
+    
+    webpack "Webpack - [bundle js files for usage in a browser]" on
+    yarn "Yarn - [package manager that doubles down as project manager]" off
+    reactnative "Create React Native - [cli tool for bootstraping react native apps]" off
+    reactapp "Create React App - [cli tool for bootstraping react apps]" on
+    gatsby "Gatsby - [build and deploy headless websites]" on
+    cordova "Apache Cordova - [wraps your html/js app into a mobile native container]" off
 
-    snap "Snap || Manage and install containerised software packages" on
-    wine "Wine HQ || Compatibility layer capable of running Windows applications" off
+    snap "Snap - [manage and install containerised software packages]" on
+    wine "Wine HQ - [compatibility layer capable of running Windows applications]" off
     
-    redis "Redis Server || Open source in-memory data structure store" off
-    memcached "Memcached Server || In-memory key-value store for small chunks of arbitrary data" off
-    mysql "MySql Community Server || World's most popular open source database" off   
-    mongo "MongoDB || NoSQL database solution" off
-    rdm "Redis Desktop Manager || Redis database interface" on
-    sqlitebrowser "SqLite Browser || MySQL Lite database interface" off
-    dbeaver "DBeaver || Multi-platform database tool interface" on
+    redis "Redis Server - [open source in-memory data structure store]" off
+    memcached "Memcached Server - [in-memory key-value store for small chunks of arbitrary data]" off
+    mysql "MySql Community Server - [world's most popular open source database]" off   
+    mongo "MongoDB - [noSQL database solution]" off
+    rdm "Redis Desktop Manager - [redis database interface]" off
+    sqlitebrowser "SqLite Browser - [mySQL Lite database interface]" off
+    dbeaver "DBeaver - [multi platform database tool interface]" on
     
-    docker "Docker CE || Open source containerization platform" on
-    dockercompose "Docker Compose v${VERSION_DOCKERCOMPOSE} || Defining and run multi-container Docker apps" on
-    kubectl "Kubectl || The Kubernetes command|line tool" on
+    docker "Docker CE - [open source containerization platform]" on
+    dockercompose "Docker Compose v${VERSION_DOCKERCOMPOSE} - [defining and run multi-container Docker apps]" on
+    kubectl "Kubectl - [the kubernetes cli tool]" on
 
-    laravel "Laravel Installer || PHP Framework For Web Artisans" off
-    symfony "Symfony Installer || Create Symfony Applications" on
+    laravel "Laravel Installer - [php framework for web artisans]" off
+    symfony "Symfony Installer - [create symfony applications]" off
 
-    gce "Google Cloud SDK || CLI client for Google Cloud Hosting" on
-    locust "Locust || Load testing tool" off
-    postman "Postman || API/REST tester" off
+    gce "Google Cloud SDK - [cli client for google cloud hosting]" on
+    locust "Locust - [load testing tool]" off
+    postman "Postman - [api/rest testing platform]" off
     
-    bleachbit "BleachBit || System maintenance and cleanup utility" on
-    remmina "Remmina Remote Desktop || Full-featured remote desktop client" off
-    stacer "Stacer || Performance tweaker utility" off
-    tor "Tor Browser v${VERSION_TOR} || All in one browser for the Tor network" off
-    popcorn "Popcorn Time v${VERSION_POPCORN} || Stream free movies & TV series" off
+    bleachbit "BleachBit - [system maintenance and cleanup utility]" on
+    remmina "Remmina Remote Desktop - [full featured remote desktop client]" off
+    stacer "Stacer - [performance tweaker utility]" off
+    tor "Tor Browser v${VERSION_TOR} - [all in one browser for the tor network]" off
+    popcorn "Popcorn Time v${VERSION_POPCORN} - [stream free movies & tv series]" off
     
-    jbtoolbox "JetBrains Toolbox || Installs and manages all JetBrains software" on
-    atom "Atom || A hackable text editor" on
-    vscode "Visual Studio Code || Editor for building web and cloud applications" off
+    jbtoolbox "JetBrains Toolbox v${VERSION_JETBRAINS_TOOLBOX} - [installs and manages all jetbrains software]" on
+    atom "Atom - [a hackable text editor]" off
+    vscode "Visual Studio Code - [editor for building web and cloud applications]" on
     
-    theme "Gnome Tweak Tool & Paper Icons" off
+    theme "Debian Theme - [gnome tweak tool & paper icons]" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -814,5 +814,5 @@ do
   esac
 done
   
-notify "Great, the installation is complete =)";
+notify "Great, your installation is now complete =)";
 notify "To install further tools in the future you can run this script again.";
