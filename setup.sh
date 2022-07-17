@@ -3,8 +3,8 @@
 ## SET YOUR VERSIONS
 ###############################################################
 
-VERSION_PHP="8.0";
-VERSION_NODE="16";
+VERSION_PHP="8.1";
+VERSION_NODE="18";
 VERSION_HELM="3";
 VERSION_SOPS="3.7.3";
 VERSION_WERF="1.1.21+fix22";
@@ -569,22 +569,22 @@ options=(
     
     node "Node v${VERSION_NODE}+NPM - [js runtime + package manager]" on
     php "PHP v${VERSION_PHP} - [programming language]" on
-    golang "GoLang - [programming language]" off
+    golang "GoLang - [programming language]" on
     
     composer "Composer - [package manager for php]" on
-    sops "Sops v${VERSION_SOPS} - [tool for managing secrets]" off
-    werf "Werf v${VERSION_WERF} - [cli tool for full deployment cycle implementation]" on
-    helm "Helm v${VERSION_HELM} - [manage kubernetes applications]" on
-    
+
     nginx "Nginx - [web server, reverse proxy, load balancer, mail proxy & http cache]" off
     apache "Apache - [web server]" off
     
     webpack "Webpack - [bundle js files for usage in a browser]" on
     yarn "Yarn - [package manager that doubles down as project manager]" off
+
     reactnative "Create React Native - [cli tool for bootstraping react native apps]" off
     reactapp "Create React App - [cli tool for bootstraping react apps]" on
     gatsby "Gatsby - [build and deploy headless websites]" on
     cordova "Apache Cordova - [wraps your html/js app into a mobile native container]" off
+    laravel "Laravel Installer - [php framework for web artisans]" off
+    symfony "Symfony Installer - [create symfony applications]" off
 
     snap "Snap - [manage and install containerised software packages]" on
     wine "Wine HQ - [compatibility layer capable of running Windows applications]" off
@@ -593,18 +593,18 @@ options=(
     memcached "Memcached Server - [in-memory key-value store for small chunks of arbitrary data]" off
     mysql "MySql Community Server - [world's most popular open source database]" off   
     mongo "MongoDB - [noSQL database solution]" off
-    rdm "Redis Desktop Manager - [redis database interface]" off
+    rdm "Redis Desktop Manager - [redis database interface]" on
     sqlitebrowser "SqLite Browser - [mySQL Lite database interface]" off
     dbeaver "DBeaver - [multi platform database tool interface]" on
     
     docker "Docker CE - [open source containerization platform]" on
     dockercompose "Docker Compose v${VERSION_DOCKERCOMPOSE} - [defining and run multi-container Docker apps]" on
     kubectl "Kubectl - [the kubernetes cli tool]" on
+    werf "Werf v${VERSION_WERF} - [cli tool for full deployment cycle implementation]" on
+    helm "Helm v${VERSION_HELM} - [manage kubernetes applications]" on
+    sops "Sops v${VERSION_SOPS} - [tool for managing secrets]" off
 
-    laravel "Laravel Installer - [php framework for web artisans]" off
-    symfony "Symfony Installer - [create symfony applications]" off
-
-    gce "Google Cloud SDK - [cli client for google cloud hosting]" on
+    gce "Google Cloud SDK - [cli client for google cloud hosting]" off
     locust "Locust - [load testing tool]" off
     postman "Postman - [api/rest testing platform]" off
     
@@ -616,9 +616,9 @@ options=(
     
     jbtoolbox "JetBrains Toolbox v${VERSION_JETBRAINS_TOOLBOX} - [installs and manages all jetbrains software]" on
     atom "Atom - [a hackable text editor]" off
-    vscode "Visual Studio Code - [editor for building web and cloud applications]" on
+    vscode "VS Code - [editor for building web and cloud applications]" on
     
-    theme "Debian Theme - [gnome tweak tool & paper icons]" off
+    theme "Debian 10 Theme - [gnome tweak tool & paper icons]" on
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -744,19 +744,19 @@ do
     golang) installGoLang ;;
     
     composer) installComposer;;
-    sops) installSops ;;
-    werf) installWerf ;;
-    helm) installHelm ;;
     
     nginx) installNginx ;;
     apache) installApache ;;
     
     webpack) installWebpack ;;
     yarn) installYarn ;;
+
     reactnative) installReactNative;;
     reactapp) installReactApp;;
     gatsby) installGatsby;;
     cordova) installCordova;;
+    laravel) installLaravel ;;
+    symfony) installSymfony ;;
     
     snap) installSnap ;;
     wine) installWine ;;
@@ -772,9 +772,9 @@ do
     docker) installDocker ;;
     dockercompose) installDockerCompose ;;
     kubectl) installKubectl ;;
-    
-    laravel) installLaravel ;;
-    symfony) installSymfony ;;
+    werf) installWerf ;;
+    helm) installHelm ;;
+    sops) installSops ;;
     
     gce) installGoogleSdk ;;
     locust) installLocust ;;
