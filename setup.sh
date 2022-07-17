@@ -287,9 +287,8 @@ installWerf() {
   
   curlToFile "https://tuf.werf.io/targets/releases/${VERSION_WERF}/linux-${ARCHITECTURE}/bin/werf" ${DL_FILE};
 
-  sudo chown -R "$(whoami)" ${DL_FILE};
-  sudo chmod +x ${DL_FILE};
   sudo mv ${DL_FILE} "/usr/local/bin/werf";
+  sudo chmod +x "/usr/local/bin/werf";
 }
 
 installHelm() {
@@ -509,7 +508,7 @@ installPopcornTime() {
 }
 
 installToolboxApp() {
-  title "Installing JetBrains Toolbox App";
+  title "Installing JetBrains Toolbox v${VERSION_JETBRAINS_TOOLBOX}";
   local DL_FILE="toolbox.gz";
   local DL_VERSION="jetbrains-toolbox-${VERSION_JETBRAINS_TOOLBOX}";
   
